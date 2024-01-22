@@ -7,6 +7,7 @@ import com.ssafy.backend.global.component.jwt.dto.TokenDto;
 import com.ssafy.backend.global.component.jwt.dto.TokenMemberInfoDto;
 import com.ssafy.backend.global.component.jwt.repository.RefreshRepository;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,5 +63,14 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public TokenDto reissueToken(@NonNull String memberEmail) {
         return null;
+    }
+
+    @Override
+    public String issueSignUpToken(@NonNull String email, @NonNull String provider) {
+        Claims claims = Jwts.claims();
+        claims.put(KEY_ID, email);
+        claims.put(KEY_PROVIDER, provider);
+
+        return jwtIssuer.issueToken(claims, jwtUtils.getEncodedSignupKey());
     }
 }

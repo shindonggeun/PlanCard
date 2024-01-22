@@ -69,4 +69,6 @@ public class MemberController {
         memberService.updatePasswordMember(loginActiveDto.getId(), passwordUpdateDto);
         return ResponseEntity.ok().body(Message.success());
     }
+
+
 }

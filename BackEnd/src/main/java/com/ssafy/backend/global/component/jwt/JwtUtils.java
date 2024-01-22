@@ -17,6 +17,7 @@ public class JwtUtils {
     public static final String KEY_NAME = "name";
     public static final String KEY_NICKNAME = "nickname";
     public static final String KEY_ROLE = "role";
+    public static final String KEY_PROVIDER = "provider";
 
     @Value("${jwt.secret-key.access}")
     private String accessKey;
@@ -24,14 +25,21 @@ public class JwtUtils {
     @Value("${jwt.secret-key.refresh}")
     private String refreshKey;
 
+    @Value("${jwt.secret-key.signup}")
+    private String signupKey;
+
     @Value("${jwt.expired-min.access}")
     private int accessTokenExpiredMin;
 
     @Value("${jwt.expired-min.refresh}")
     private int refreshTokenExpiredMin;
 
+    @Value("${jwt.expired-min.signup}")
+    private int signupTokenExpiredMin;
+
     private Key encodedAccessKey;
     private Key encodedRefreshKey;
+    private Key encodedSignupKey;
 
     // 로직 탈 때 수행되는 메서드
     @PostConstruct
@@ -41,5 +49,8 @@ public class JwtUtils {
 
         encodedRefreshKey = Keys.hmacShaKeyFor(
                 Base64.getEncoder().encodeToString(refreshKey.getBytes()).getBytes());
+
+        encodedRefreshKey = Keys.hmacShaKeyFor(
+                Base64.getEncoder().encodeToString(signupKey.getBytes()).getBytes());
     }
 }

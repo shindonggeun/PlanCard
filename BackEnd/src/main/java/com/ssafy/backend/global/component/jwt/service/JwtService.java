@@ -13,4 +13,6 @@ public interface JwtService {
 
     // Redis에 저장된 이메일을 통한 Access, Refresh 토큰 재발급
     TokenDto reissueToken(@NonNull String memberEmail);
+
+    String issueSignUpToken(@NonNull String email,@NonNull String provider);
 }
