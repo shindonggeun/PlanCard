@@ -1,6 +1,7 @@
 package com.ssafy.backend.domain.authentication.service;
 
 import com.ssafy.backend.domain.authentication.dto.OAuthLoginResponse;
+import com.ssafy.backend.domain.authentication.dto.OAuthSignupRequestDto;
 import com.ssafy.backend.domain.authentication.dto.OAuthTokenResponse;
 import com.ssafy.backend.domain.authentication.exception.OAuthError;
 import com.ssafy.backend.domain.authentication.exception.OAuthException;
@@ -68,6 +69,11 @@ public class OAuthServiceImpl implements OAuthService {
 
         TokenDto tokenDto = getTokens(member);
         return null;
+    }
+
+    @Override
+    public void signupOauth(OAuthSignupRequestDto signupRequestDto) {
+        
     }
 
     private TokenDto getTokens(Member member) {
