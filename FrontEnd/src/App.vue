@@ -3,7 +3,7 @@
     
     <v-app id="inspire">
 
-      <TheHeaderNavbar />
+      <!-- <TheHeaderNavbar /> -->
 
       <v-main class="bg-grey-lighten-3">
         <v-container>
@@ -27,7 +27,7 @@
 
 
 <script setup>
-  import TheHeaderNavbar from './components/layout/TheHeaderNavbar.vue'
+  // import TheHeaderNavbar from './components/layout/TheHeaderNavbar.vue'
 
 </script>
 
