@@ -16,15 +16,17 @@ export const useAccountsStore = defineStore('accounts', () => {
 
   // 회원가입
   const signUp = function (info) {
-    const {userName, userId, password1, password2} = info
+    const {userEmail,userName, userNickname,  password1, password2, userPhoto} = info
     axios({
       method: "post",
       url: `${API_URL}/users`,
       data: {
+        userEmail,
         userName,
-        userId, 
+        userNickname, 
         password1,
         password2,
+        userPhoto
       }
     })
       .then((response) => {
@@ -51,13 +53,12 @@ export const useAccountsStore = defineStore('accounts', () => {
 
   // 로그인
   const logIn = function (info) {
-    const {userName, userId, password} = info
+    const {userName, password} = info
     axios({
       method: "post",
       url: `${API_URL}/auth/login`,
       data: {
         userName,
-        userId,
         password
       }
     })
