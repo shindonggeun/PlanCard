@@ -63,13 +63,16 @@
             <v-menu v-model="profileMenu" :close-on-content-click="false" location="end">
               <template v-slot:activator="{ props }">
                 <v-btn color="indigo" v-bind="props">
-                  <img src="/프로필로고.png" alt="프로필사진" id="profile">
+                  <!-- 추후에 src값을 url로 바인딩 -->
+                  <img src="/프로필사진(예시).jpg" alt="프로필사진" id="profile">
                 </v-btn>
               </template>
               
               <v-card min-width="300">
                 <v-list>
-                  <v-list-item prepend-avatar="/프로필예시.jpg" title="이름" subtitle="이메일"></v-list-item>
+                  <!-- 추후에 prepend-avatar값을 url로 바인딩 -->
+                  <!-- title, subtitle을 이름과 이메일로 각각 바인딩 -->
+                  <v-list-item prepend-avatar="/프로필사진(예시).jpg" title="이름" subtitle="이메일"></v-list-item>
                 </v-list>
                 <div style="text-align: center;" @click="goMyPage()">
                   <button id="myPageBtn">My Page</button>
@@ -101,7 +104,7 @@
             <v-menu v-model="profileMenu" :close-on-content-click="false" location="end">
               <template v-slot:activator="{ props }">
                 <v-btn color="indigo" v-bind="props">
-                  <img src="/프로필로고.png" alt="프로필사진" id="profile">
+                  <img src="/프로필로고(로그아웃상태).png" alt="프로필사진" id="profile">
                 </v-btn>
               </template>
             </v-menu>
@@ -130,12 +133,6 @@
   // 마이페이지로 이동 (미완성-component, router추가)
   const goMyPage = function () {
     router.push({name: ""})
-  }
-
-  // 로그인 페이지로 이동
-  const goLogin = function () {
-    console.log(true)
-    router.push({name: "member-login"})
   }
 
   // modal 상태 변수
