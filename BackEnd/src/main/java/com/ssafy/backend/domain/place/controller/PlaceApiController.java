@@ -2,6 +2,7 @@ package com.ssafy.backend.domain.place.controller;
 
 import com.ssafy.backend.domain.place.service.PlaceService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,16 +14,13 @@ import java.net.URL;
 
 @RestController("/api/v1")
 @Slf4j
+@RequiredArgsConstructor
 public class PlaceApiController {
 
     @Value("${public-data.key}")
     private String key;
 
     private final PlaceService placeService;
-
-    public PlaceApiController(PlaceService placeService) {
-        this.placeService = placeService;
-    }
 
     @GetMapping("/open-api")
     @Transactional

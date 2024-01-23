@@ -31,7 +31,6 @@ public class PlaceServiceImpl implements PlaceService {
             //row 데이터 뽑기
             JSONObject data = (JSONObject) jsonObject.get("TbVwRestaurants");
             JSONArray rowData = (JSONArray) data.get("row");
-//            System.out.println(rowData);
 
             for (Object obj : rowData) {
                 JSONObject object = (JSONObject) obj;
