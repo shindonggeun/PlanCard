@@ -54,7 +54,9 @@
           </v-card-text>
         </div>
         <!--  -->
+      </div>
 
+      <div v-if="accountsStore.isLogin">
         <!-- My Profile -->
         <div>
           <v-card-text>
@@ -71,6 +73,9 @@
                 </v-list>
                 <div style="text-align: center;" @click="goMyPage()">
                   <button id="myPageBtn">My Page</button>
+                </div>
+                <div style="text-align: center;">
+                  <button id="logOutBtn">로그아웃</button>
                 </div>
                 <v-divider></v-divider>
                 <div>
@@ -177,6 +182,10 @@
   }
 
   #myPageBtn {
+    border: solid black 1px;
+  }
+
+  #logOutBtn {
     border: solid black 1px;
   }
 

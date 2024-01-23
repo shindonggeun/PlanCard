@@ -43,13 +43,17 @@ export const useAccountsStore = defineStore('accounts', () => {
   }
 
   // 로그인 유무(true/false)
-  const isLogin = computed(() => {
-    if (token.value === null) {
-      return false
-    } else {
-      return true
-    }
-  })
+  // const isLogin = computed(() => {
+  //   if (token.value === null) {
+  //     return false
+  //   } else {
+  //     return true
+  //   }
+  // })
+
+  // 로그인 유무 (테스트용)
+  const isLogin = true;
+
 
   // 로그인
   const logIn = function (info) {
