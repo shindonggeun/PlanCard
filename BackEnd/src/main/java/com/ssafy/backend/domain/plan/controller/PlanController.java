@@ -1,6 +1,7 @@
 package com.ssafy.backend.domain.plan.controller;
 
 import com.ssafy.backend.domain.plan.dto.PlanCreateRequestDto;
+import com.ssafy.backend.domain.plan.dto.PlanDateUpdateRequestDto;
 import com.ssafy.backend.domain.plan.dto.PlanNameUpdateRequestDto;
 import com.ssafy.backend.domain.plan.service.PlanService;
 import com.ssafy.backend.global.common.dto.Message;
@@ -25,10 +26,17 @@ public class PlanController {
     @PatchMapping("/update/{planId}/name")
     public ResponseEntity<Message<Void>> updatePlanName(@PathVariable("planId") Long planId,
                                                     @RequestBody PlanNameUpdateRequestDto planNameUpdateRequestDto) {
-        System.out.println(planNameUpdateRequestDto);
         planService.updatePlanName(planId, planNameUpdateRequestDto);
-        System.out.println(planNameUpdateRequestDto);
         return ResponseEntity.ok().body(Message.success());
     }
+
+    @PatchMapping("/update/{planId}/date")
+    public ResponseEntity<Message<Void>> updatePlanDate(@PathVariable("planId") Long planId,
+                                                        @RequestBody PlanDateUpdateRequestDto planDateUpdateRequestDto) {
+        planService.updatePlanDate(planId, planDateUpdateRequestDto);
+        return ResponseEntity.ok().body(Message.success());
+    }
+
+
 
 }
