@@ -73,7 +73,7 @@ public class OAuthServiceImpl implements OAuthService {
 
     @Override
     public void signupOauth(OAuthSignupRequestDto signupRequestDto) {
-        
+
     }
 
     private TokenDto getTokens(Member member) {

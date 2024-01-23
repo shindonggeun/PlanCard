@@ -1,5 +1,6 @@
 package com.ssafy.backend.global.component.jwt.service;
 
+import com.ssafy.backend.global.component.jwt.dto.SignUpTokenMemberInfoDto;
 import com.ssafy.backend.global.component.jwt.dto.TokenDto;
 import com.ssafy.backend.global.component.jwt.dto.TokenMemberInfoDto;
 import lombok.NonNull;
@@ -15,4 +16,6 @@ public interface JwtService {
     TokenDto reissueToken(@NonNull String memberEmail);
 
     String issueSignUpToken(@NonNull String email,@NonNull String provider);
+
+    SignUpTokenMemberInfoDto parseSignUpToken(@NonNull String signUpToken);
 }
