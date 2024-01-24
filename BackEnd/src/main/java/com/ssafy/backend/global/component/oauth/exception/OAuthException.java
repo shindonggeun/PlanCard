@@ -1,4 +1,4 @@
-package com.ssafy.backend.domain.authentication.exception;
+package com.ssafy.backend.global.component.oauth.exception;
 
 import lombok.Getter;
 
@@ -22,3 +22,4 @@ public class OAuthException extends RuntimeException {
         this.errorMessage = errorMessage;
     }
 }
+

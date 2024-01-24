@@ -38,7 +38,7 @@ public class MemberSignUpRequestDto {
                 .nickname(nickname)
                 .image(null)    // 일반 회원가입 시 프로필 이미지는 없음
                 .role(MemberRole.USER)
-                .providerType(null) // 일반 회원가입 시 소셜 로그인 업체 없음
+                .oAuthDomain(null) // 일반 회원가입 시 소셜 로그인 업체 없음
                 .build();
     }
 

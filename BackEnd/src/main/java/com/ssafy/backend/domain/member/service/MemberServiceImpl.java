@@ -55,6 +55,7 @@ public class MemberServiceImpl implements MemberService {
                 .email(member.getEmail())
                 .name(member.getName())
                 .nickname(member.getNickname())
+                .image(member.getImage())
                 .role(member.getRole().toString())
                 .build();
     }

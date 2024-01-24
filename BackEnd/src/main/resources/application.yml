@@ -1,7 +1,4 @@
 spring:
-  profiles:
-    include: oauth
-
   jpa:
     defer-datasource-initialization: true
     generate-ddl: true
@@ -56,3 +53,13 @@ logging:
     org.hibernate:
       type.descriptor.sql: trace
       org.hibernate.SQLQuery: debug
+
+oauth:
+  kakao:
+    redirectUri: http://localhost:8080/api/v1/oauth/KAKAO/login
+    clientId: 8fbf9a5fef015750849e18b8ff654d3c
+    clientSecret: CXN85NWOwzDtmP76Z7ckhJmIPrSgwnA6
+    scope:
+      - profile_nickname
+      - profile_image
+      - account_email

@@ -17,6 +17,7 @@ public class JwtUtils {
     public static final String KEY_NAME = "name";
     public static final String KEY_NICKNAME = "nickname";
     public static final String KEY_ROLE = "role";
+    public static final String KEY_IMAGE = "image";
     public static final String KEY_PROVIDER = "provider";
 
     @Value("${jwt.secret-key.access}")

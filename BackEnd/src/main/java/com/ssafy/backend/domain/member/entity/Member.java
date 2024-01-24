@@ -3,6 +3,7 @@ package com.ssafy.backend.domain.member.entity;
 import com.ssafy.backend.domain.member.entity.enums.MemberRole;
 import com.ssafy.backend.domain.member.entity.enums.ProviderType;
 import com.ssafy.backend.global.common.entity.BaseEntity;
+import com.ssafy.backend.global.component.oauth.vendor.enums.OAuthDomain;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,10 +30,9 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
-    // 회원 상태 나타내는 코드는 나중에
-
     @Enumerated(EnumType.STRING)
-    private ProviderType providerType;
+    @Column(name = "provider")
+    private OAuthDomain oAuthDomain;
 
     public void updatePassword(String password) {
         this.password = password;
