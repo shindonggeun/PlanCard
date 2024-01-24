@@ -9,9 +9,10 @@ import lombok.*;
 @Builder
 public class OAuthLoginResponse {
     private Long id;
+    private String email;
+    private String name;
     private String nickname;
-    private String image;
-    private String signUpToken;
+    private String role;
+    private String signupToken;
     private String accessToken;
-    private boolean loginResult;
 }

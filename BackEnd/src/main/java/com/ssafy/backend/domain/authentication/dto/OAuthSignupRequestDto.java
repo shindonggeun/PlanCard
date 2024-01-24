@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 public class OAuthSignupRequestDto {
     private String signupToken;
-    private String email;
     private String name;
     private String nickname;
+    
 }

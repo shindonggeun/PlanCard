@@ -35,6 +35,7 @@ public class MemberServiceImpl implements MemberService {
             throw new MemberException(MemberError.EXIST_MEMBER_EMAIL);
         }
         signUpRequestDto.setPassword(passwordEncoder.encode(signUpRequestDto.getPassword()));
+
         memberRepository.save(signUpRequestDto.toEntity());
     }
 

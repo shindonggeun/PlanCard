@@ -34,7 +34,6 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ProviderType providerType;
 
-
     public void updatePassword(String password) {
         this.password = password;
     }

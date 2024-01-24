@@ -7,14 +7,17 @@ import com.ssafy.backend.domain.authentication.exception.OAuthError;
 import com.ssafy.backend.domain.authentication.exception.OAuthException;
 import com.ssafy.backend.domain.authentication.oauth2.OAuth2MemberInfo;
 import com.ssafy.backend.domain.authentication.oauth2.OAuth2MemberInfoFactory;
-import com.ssafy.backend.domain.member.dto.MemberLoginResponseDto;
 import com.ssafy.backend.domain.member.entity.Member;
+import com.ssafy.backend.domain.member.entity.enums.MemberRole;
+import com.ssafy.backend.domain.member.entity.enums.ProviderType;
 import com.ssafy.backend.domain.member.repository.MemberRepository;
+import com.ssafy.backend.global.component.jwt.dto.SignUpTokenMemberInfoDto;
 import com.ssafy.backend.global.component.jwt.dto.TokenDto;
 import com.ssafy.backend.global.component.jwt.dto.TokenMemberInfoDto;
 import com.ssafy.backend.global.component.jwt.repository.RefreshRepository;
 import com.ssafy.backend.global.component.jwt.service.JwtService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -27,9 +30,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class OAuthServiceImpl implements OAuthService {
@@ -40,7 +43,7 @@ public class OAuthServiceImpl implements OAuthService {
     private final RefreshRepository refreshRepository;
 
     @Override
-    public MemberLoginResponseDto loginOauth(String code, String providerType) {
+    public OAuthLoginResponse loginOauth(String code, String providerType) {
         ClientRegistration provider = inMemoryClientRegistrationRepository.findByRegistrationId(providerType);
         OAuthTokenResponse oAuthToken = getOAuth2Token(code, provider);
         Map<String, Object> attributes = getAttributes(oAuthToken, provider);
@@ -57,7 +60,11 @@ public class OAuthServiceImpl implements OAuthService {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
 
         if (optionalMember.isEmpty()) {
-            String signUpToken = jwtService.issueSignUpToken(email, providerType.toUpperCase());
+            String signupToken = jwtService.issueSignUpToken(email, providerType.toUpperCase());
+            return OAuthLoginResponse.builder()
+                    .email(email)
+                    .signupToken(signupToken)
+                    .build();
         }
 
         Member member = optionalMember.get();
@@ -68,12 +75,34 @@ public class OAuthServiceImpl implements OAuthService {
 
 
         TokenDto tokenDto = getTokens(member);
-        return null;
+
+        return OAuthLoginResponse.builder()
+                .id(member.getId())
+                .email(member.getEmail())
+                .name(member.getName())
+                .nickname(member.getNickname())
+                .role(member.getRole().toString())
+                .accessToken(tokenDto.getAccessToken())
+                .build();
     }
 
     @Override
     public void signupOauth(OAuthSignupRequestDto signupRequestDto) {
+        SignUpTokenMemberInfoDto signUpTokenMemberInfoDto = jwtService.parseSignUpToken(signupRequestDto.getSignupToken());
 
+        // 닉네임 중복 확인하는 로직 추가하기
+
+        Member member = memberRepository.save(
+                Member.builder()
+                        .email(signUpTokenMemberInfoDto.getId())
+                        .name(signupRequestDto.getName())
+                        .nickname(signupRequestDto.getNickname())
+                        .role(MemberRole.USER)
+                        .providerType(ProviderType.valueOf(signUpTokenMemberInfoDto.getProvider()))
+                        .build()
+        );
+
+        // 나중에 회원가입 하고 난 뒤 저절로 로그인 하는 방식으로 로직 작성해야함 (return 변경)
     }
 
     private TokenDto getTokens(Member member) {
@@ -91,6 +120,7 @@ public class OAuthServiceImpl implements OAuthService {
         return WebClient.create()
                 .post()
                 .uri(provider.getProviderDetails().getTokenUri())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .headers(header -> {
                     header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
                     header.setBasicAuth(provider.getClientId(), provider.getClientSecret());
@@ -110,6 +140,8 @@ public class OAuthServiceImpl implements OAuthService {
         formData.add("redirect_uri", provider.getRedirectUri());
         formData.add("client_id", provider.getClientId());
         formData.add("client_secret", provider.getClientSecret());
+
+        log.info(formData.toString());
         return formData;
     }
 

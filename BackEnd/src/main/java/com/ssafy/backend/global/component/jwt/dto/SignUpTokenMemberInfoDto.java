@@ -11,12 +11,12 @@ import static com.ssafy.backend.global.component.jwt.JwtUtils.*;
 @Getter
 @Setter
 public class SignUpTokenMemberInfoDto {
-    private String email;
+    private String id;
     private String provider;
 
     public static SignUpTokenMemberInfoDto from(Claims claims) {
         return SignUpTokenMemberInfoDto.builder()
-                .email(claims.get(KEY_EMAIL, String.class))
+                .id(claims.get(KEY_ID, String.class))
                 .provider(claims.get(KEY_PROVIDER, String.class))
                 .build();
     }

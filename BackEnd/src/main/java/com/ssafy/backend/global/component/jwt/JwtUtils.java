@@ -50,7 +50,7 @@ public class JwtUtils {
         encodedRefreshKey = Keys.hmacShaKeyFor(
                 Base64.getEncoder().encodeToString(refreshKey.getBytes()).getBytes());
 
-        encodedRefreshKey = Keys.hmacShaKeyFor(
+        encodedSignupKey = Keys.hmacShaKeyFor(
                 Base64.getEncoder().encodeToString(signupKey.getBytes()).getBytes());
     }
 }
