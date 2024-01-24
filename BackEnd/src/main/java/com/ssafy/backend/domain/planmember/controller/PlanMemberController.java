@@ -4,6 +4,7 @@ import com.ssafy.backend.domain.member.dto.MemberLoginActiveDto;
 import com.ssafy.backend.domain.planmember.service.PlanMemberService;
 import com.ssafy.backend.global.common.dto.Message;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,7 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/planmember")
 public class PlanMemberController {
-    PlanMemberService planMemberService;
+
+    private final PlanMemberService planMemberService;
 
     /**
      * 계획 초대 수락
@@ -28,7 +30,9 @@ public class PlanMemberController {
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public ResponseEntity<Message<Void>> acceptPlan(@PathVariable("planId") Long planId,
                                                     @AuthenticationPrincipal MemberLoginActiveDto loginActiveDto) {
+        System.out.println(1);
         planMemberService.acceptPlan(planId,loginActiveDto.getId());
+        System.out.println(2);
         return ResponseEntity.ok().body(Message.success());
 
     }
