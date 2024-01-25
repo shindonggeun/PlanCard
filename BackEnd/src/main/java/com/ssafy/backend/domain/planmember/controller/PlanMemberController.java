@@ -30,9 +30,7 @@ public class PlanMemberController {
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public ResponseEntity<Message<Void>> acceptPlan(@PathVariable("planId") Long planId,
                                                     @AuthenticationPrincipal MemberLoginActiveDto loginActiveDto) {
-        System.out.println(1);
         planMemberService.acceptPlan(planId,loginActiveDto.getId());
-        System.out.println(2);
         return ResponseEntity.ok().body(Message.success());
 
     }

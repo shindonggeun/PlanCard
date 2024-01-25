@@ -1,11 +1,13 @@
 package com.ssafy.backend.domain.plan.entity;
 
 
+import com.ssafy.backend.domain.planmember.entity.PlanMember;
 import com.ssafy.backend.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Entity
@@ -23,6 +25,9 @@ public class Plan extends BaseEntity {
     private LocalDate startDate;
 
     private LocalDate endDate;
+
+    @OneToMany(mappedBy = "planmember", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PlanMember> planMembers;
 
     public void updateName(String name) {
         this.name = name;

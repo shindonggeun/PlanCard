@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlanMemberRepository extends JpaRepository<PlanMember, Long> {
     // 기본적인 CRUD는 JPA에서 제공
+
 }
