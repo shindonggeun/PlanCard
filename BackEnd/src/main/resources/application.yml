@@ -59,6 +59,16 @@ logging:
 public-data:
   key: 734364614c73656e32386579495665
 
+
+server:
+  ssl:
+    enabled: false
+
+openvidu:
+  url: http://localhost:4443/
+  secret: MY_SECRET
+
+
 # OAUTH2.0 Setting
 oauth:
   kakao:
