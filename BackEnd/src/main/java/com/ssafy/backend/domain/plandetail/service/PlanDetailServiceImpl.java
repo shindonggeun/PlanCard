@@ -21,7 +21,7 @@ public class PlanDetailServiceImpl implements PlanDetailService{
     public void createPlanDetail(Long planId, PlanDetailCreateRequestDto planDetailCreateRequestDto) {
            Plan plan = planRepository.findById(planId).orElseThrow();
            PlanDetail planDetail = PlanDetail.builder()
-//                   .card(planDetailCreateRequestDto.getCard())
+                   .card(planDetailCreateRequestDto.getCard())
                    .plan(plan)
                    .orderNumber(planDetailCreateRequestDto.getOrderNumber())
                    .day(planDetailCreateRequestDto.getDay())

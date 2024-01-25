@@ -1,5 +1,6 @@
 package com.ssafy.backend.domain.plandetail.entity;
 
+import com.ssafy.backend.domain.card.entity.Card;
 import com.ssafy.backend.domain.plan.entity.Plan;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -16,9 +17,9 @@ public class PlanDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @OneToOne
-//    @JoinColumn(name = "card_id")
-//    private Card card;
+    @OneToOne
+    @JoinColumn(name = "card_id")
+    private Card card;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "plan_id")
