@@ -31,8 +31,9 @@ public class KakaoMemberResponse {
     public Member toDomain() {
         return Member.builder()
                 .email(kakaoAccount.getEmail())
+                .name(kakaoAccount.name)
                 .nickname(kakaoAccount.getProfile().getNickname())
-                .image(kakaoAccount.getProfile().getImage())
+                .image(kakaoAccount.getProfile().getProfileImageUrl())
                 .role(MemberRole.USER)
                 .oAuthDomain(OAuthDomain.KAKAO)
                 .build();
@@ -45,8 +46,30 @@ public class KakaoMemberResponse {
     @Setter
     @JsonNaming(SnakeCaseStrategy.class)
     public static class KakaoAccount {
+        private boolean profileNeedsAgreement;
+        private boolean profileNicknameNeedsAgreement;
+        private boolean profileImageNeedsAgreement;
         private Profile profile;
+        private boolean nameNeedsAgreement;
+        private String name;
+        private boolean emailNeedsAgreement;
+        private boolean isEmailValid;
+        private boolean isEmailVerified;
         private String email;
+        private boolean ageRangeNeedsAgreement;
+        private String ageRange;
+        private boolean birthyearNeedsAgreement;
+        private String birthyear;
+        private boolean birthdayNeedsAgreement;
+        private String birthday;
+        private String birthdayType;
+        private boolean genderNeedsAgreement;
+        private String gender;
+        private boolean phoneNumberNeedsAgreement;
+        private String phoneNumber;
+        private boolean ciNeedsAgreement;
+        private String ci;
+        private LocalDateTime ciAuthenticatedAt;
     }
 
     /**
@@ -57,7 +80,9 @@ public class KakaoMemberResponse {
     @JsonNaming(SnakeCaseStrategy.class)
     public static class Profile {
         private String nickname;
-        private String image;
+        private String thumbnailImageUrl;
+        private String profileImageUrl;
+        private boolean isDefaultImag;
     }
 }
 

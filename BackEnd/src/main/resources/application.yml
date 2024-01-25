@@ -57,9 +57,10 @@ logging:
 oauth:
   kakao:
     redirectUri: http://localhost:8080/api/v1/oauth/KAKAO/login
-    clientId: 8fbf9a5fef015750849e18b8ff654d3c
-    clientSecret: CXN85NWOwzDtmP76Z7ckhJmIPrSgwnA6
+    clientId: 8e8a2a929b0cbf786ac9567191ac7ff7
+    clientSecret: OaZuL5rd6IcxxcwDd4pgcKRnJP9afsHo
     scope:
       - profile_nickname
       - profile_image
       - account_email
+      - name
