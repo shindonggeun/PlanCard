@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/oauth")
 public class OAuthController {
     private final OAuthService oAuthService;
-    
     private final JwtService jwtService;
 
     @SneakyThrows
