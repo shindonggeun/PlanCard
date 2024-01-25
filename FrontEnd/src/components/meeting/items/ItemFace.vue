@@ -54,16 +54,31 @@
         />
       </div>
 
+      <!-- 채팅창 -->
+      <div id="chat-container" style="border: 3px solid black;">
+        <div id="chat-window">
+          <ul id="chat-history">
+            <li v-for="(message, index) in messages" :key="index">
+              <strong>{{message.username}}:</strong> {{message.message}}
+            </li>
+          </ul>
+        </div>
+        <form id="chat-write">
+          <input type="text" placeholder="전달할 내용을 입력하세요." v-model="inputMessage" style="border: 3px black solid;">
+          <button @click="sendMessage" style="border: 3px black solid;">전송</button>
+        </form>
+      </div>
+
       <!-- 캠활성화, 음소거 버튼 -->
-      <button id="camera-activate" @click="handleCameraBtn">캠 비활성화</button>
-      <button id="mute-activate" @click="handleMuteBtn">마이크 활성화</button>
+      <button id="camera-activate" @click="handleCameraBtn" style="border: 3px black solid;">캠 비활성화</button>
+      <button id="mute-activate" @click="handleMuteBtn" style="border: 3px black solid;">마이크 활성화</button>
       
       <!-- 캠,오디오 선택 옵션 -->
       <div>
-        <select name="cameras" @change="handleCameraChange">
+        <select name="cameras" @change="handleCameraChange" style="border: 3px black solid;">
           <option disabled>사용할 카메라를 선택하세요</option>
         </select>
-        <select name="audios" @change="handleAudioChange">
+        <select name="audios" @change="handleAudioChange" style="border: 3px black solid;">
           <option disabled>사용할 마이크를 선택하세요</option>
         </select>
       </div>
@@ -97,7 +112,11 @@
   const mySessionId = ref("SessionCrome")
   const myUserName = ref("Participant" + Math.floor(Math.random() * 100))
 
-  // 카메라 및 오디오 설정을 위한 부분
+  // 채팅창을 위한 변수
+  const inputMessage = ref("")
+  const messages = ref([])
+
+  // 카메라 및 오디오 설정을 위한 변수
   const muted = ref(false)       // 기본은 음소거 비활성화
   const camerOff = ref(false)    // 기본 카메라 활성화
   const selectedCamera = ref("")  // 카메라 변경시 사용할 변수 
@@ -106,7 +125,6 @@
   // 다시그려내기 위해 computed 작성
   const mainStreamManagerComputed = computed(() => mainStreamManager.value);
   const publisherComputed = computed(() => publisher.value);
-  // const subscribersComputed = computed(() => subscribers);
   const subscribersComputed = computed(() => subscribers.value);
 
 
@@ -140,6 +158,14 @@
       console.warn(exception);
     });
 
+    // 채팅 이벤트 수신 처리
+    session.value.on('signal:chat', (event) => { // event.from.connectionId === session.value.connection.connectionId (수신자와 발신자가 같으면?)
+      const messageData = JSON.parse(event.data);
+      if(event.from.connectionId === session.value.connection.connectionId){
+        messageData['username'] = '나'
+      }
+      messages.value.push(messageData);
+    });
 
     // --- 4) Connect to the session with a valid user token ---
     // Get a token from the OpenVidu deployment
@@ -226,6 +252,20 @@
       headers: { 'Content-Type': 'application/json', },
     });
     return response.data; // The token
+  }
+
+
+  // 채팅창 구현을 위한 함수
+  function sendMessage(event) {
+    event.preventDefault();
+    if(inputMessage.value.trim()){
+      // 다른 참가원에게 메시지 전송하기
+      session.value.signal({
+        data: JSON.stringify({username: myUserName.value, message: inputMessage.value}), // 메시지 데이터를 문자열로 변환해서 전송
+        type: 'chat' // 신호 타입을 'chat'으로 설정
+      });
+      inputMessage.value = '';
+    }
   }
 
 
