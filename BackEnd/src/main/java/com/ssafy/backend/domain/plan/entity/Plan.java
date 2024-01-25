@@ -1,6 +1,8 @@
 package com.ssafy.backend.domain.plan.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ssafy.backend.domain.planmember.entity.PlanMember;
 import com.ssafy.backend.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -26,7 +28,7 @@ public class Plan extends BaseEntity {
 
     private LocalDate endDate;
 
-    @OneToMany(mappedBy = "planmember", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PlanMember> planMembers;
 
     public void updateName(String name) {

@@ -57,8 +57,7 @@ public class PlanServiceImpl implements PlanService {
                         plan.getId(),
                         plan.getName(),
                         plan.getStartDate(),
-                        plan.getEndDate(),
-                        plan.getPlanMembers()))
+                        plan.getEndDate()))
                 .collect(Collectors.toList());
     }
 

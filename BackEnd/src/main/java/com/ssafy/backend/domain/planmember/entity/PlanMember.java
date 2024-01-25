@@ -1,5 +1,6 @@
 package com.ssafy.backend.domain.planmember.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ssafy.backend.domain.member.entity.Member;
 import com.ssafy.backend.domain.plan.entity.Plan;
 import com.ssafy.backend.global.common.entity.BaseEntity;
