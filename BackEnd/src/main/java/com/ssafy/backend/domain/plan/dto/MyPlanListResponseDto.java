@@ -23,4 +23,5 @@ public class MyPlanListResponseDto {
 
     private LocalDate endDate;
 
+
 }
