@@ -30,6 +30,8 @@ public class CardServiceImpl implements CardService {
         Optional<Plan> currentPlan = planRepository.findById(planId);
         Optional<Place> findPlace = placeInfoRepository.findById(placeId);
         if (currentPlan.isPresent() & findPlace.isPresent()) {
+            log.info(findPlace.toString());
+            log.info(currentPlan.toString());
             cardRepository.save(cardCreateRequestDto.toEntity(findPlace.get(), currentPlan.get()));
         }
     }
