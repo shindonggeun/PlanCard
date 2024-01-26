@@ -45,9 +45,6 @@ jwt:
     refresh: 10080  # 리프레쉬 토큰 만료제한시간 10080분 (7일)
     signup: 5
 
-# firebase setting
-
-
 # log 관리
 logging:
   level:
@@ -91,3 +88,8 @@ oauth:
       - name
       - email
       - profile_image
+
+# firebase setting
+app:
+  firebase-configuration-file: ./serviceAccountKey.json
+  firebase-bucket: plancard-3b8f9.appspot.com
