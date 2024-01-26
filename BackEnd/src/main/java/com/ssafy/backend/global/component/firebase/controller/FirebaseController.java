@@ -14,7 +14,7 @@ import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/firebase/file")
+@RequestMapping("/api/v1/firebase")
 public class FirebaseController {
     private final FirebaseService firebaseService;
 

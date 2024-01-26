@@ -91,5 +91,5 @@ oauth:
 
 # firebase setting
 app:
-  firebase-configuration-file: ./serviceAccountKey.json
+  firebase-configuration-file: classpath:serviceAccountKey.json
   firebase-bucket: plancard-3b8f9.appspot.com
