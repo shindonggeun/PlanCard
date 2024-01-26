@@ -27,13 +27,14 @@ public class CardController {
         return ResponseEntity.ok().body(Message.success());
     }
 
+    //카드 전체조회
     @GetMapping("/{planId}/card")
     public ResponseEntity<List<CardResponseDto>> getCards(@PathVariable Long planId) {
         List<Card> cards = cardService.getCardsByPlanId(planId);
 
         List<CardResponseDto> rslt = new ArrayList<>();
         for (Card card : cards) {
-            rslt.add(new CardResponseDto(card.getId(), card.getPlan().getName(), card.getPlace().getName(), card.getMemo()));
+            rslt.add(new CardResponseDto(card.getId(), card.getPlace().getName(), card.getPlace().getAddress(), card.getMemo()));
         }
         return ResponseEntity.ok().body(rslt);
     }
@@ -44,7 +45,7 @@ public class CardController {
     public ResponseEntity<CardResponseDto> getCard(@PathVariable Long cardId) {
         //카드 db에 저장된 카드 아이디에 해당하는 카드 조회
         Card card = cardService.findById(cardId);
-        return ResponseEntity.ok().body(new CardResponseDto(card.getId(), card.getPlan().getName(), card.getPlace().getName(), card.getMemo()));
+        return ResponseEntity.ok().body(new CardResponseDto(card.getId(), card.getPlace().getName(), card.getPlace().getAddress(), card.getMemo()));
     }
 
 //    @PatchMapping("/{planId}/card/{cardId}")
