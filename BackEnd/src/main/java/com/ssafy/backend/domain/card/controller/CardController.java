@@ -2,6 +2,7 @@ package com.ssafy.backend.domain.card.controller;
 
 import com.ssafy.backend.domain.card.dto.CardCreateRequestDto;
 import com.ssafy.backend.domain.card.dto.CardResponseDto;
+import com.ssafy.backend.domain.card.dto.CardUpdateMemoDto;
 import com.ssafy.backend.domain.card.entity.Card;
 import com.ssafy.backend.domain.card.service.CardService;
 import com.ssafy.backend.global.common.dto.Message;
@@ -48,8 +49,9 @@ public class CardController {
         return ResponseEntity.ok().body(new CardResponseDto(card.getId(), card.getPlace().getName(), card.getPlace().getAddress(), card.getMemo()));
     }
 
-//    @PatchMapping("/{planId}/card/{cardId}")
-//    public Long updateMemo(@PathVariable Long planId, @PathVariable Long cardId, @RequestBody String updateMemo, CardUpdateMemoDto cardUpdateMemoDto) {
-//        return cardService.updateMemo(planId, cardId, updateMemo, cardUpdateMemoDto);
-//    }
+    @PatchMapping("/{planId}/card/{cardId}")
+    public ResponseEntity<String> updateMemo(@PathVariable Long planId, @PathVariable Long cardId, @RequestBody String updateMemo, CardUpdateMemoDto cardUpdateMemoDto) {
+        cardService.updateMemo(planId, cardId, updateMemo, cardUpdateMemoDto);
+        return ResponseEntity.ok().body("메모 수정 완료");
+    }
 }

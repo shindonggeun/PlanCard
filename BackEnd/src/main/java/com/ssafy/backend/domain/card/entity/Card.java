@@ -26,5 +26,11 @@ public class Card extends BaseEntity {
 
     private String memo;
 
+    private String position;
+
+    public void updateMemo(String memo) {
+        this.memo = memo;
+    }
+
 
 }
