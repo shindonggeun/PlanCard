@@ -52,6 +52,10 @@ dependencies {
 
 	// openvidu 추가
 	implementation 'io.openvidu:openvidu-java-client:2.29.0'
+
+	// https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '5.0.0-alpha.12'
+
 }
 
 tasks.named('test') {
