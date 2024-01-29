@@ -10,4 +10,6 @@ public interface AlarmService {
     void createAlarm(Long fromMemberId, AlarmCreateRequestDto createRequestDto);
 
     List<AlarmDto> getAlarmList(Long memberId, Pageable pageable);
+
+    void acceptAlarm(Long memberId, Long alarmId);
 }

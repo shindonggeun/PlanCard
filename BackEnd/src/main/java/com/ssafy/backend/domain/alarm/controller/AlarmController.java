@@ -35,6 +35,13 @@ public class AlarmController {
                                                                  Pageable pageable) {
         List<AlarmDto> alarmList = alarmService.getAlarmList(loginActiveDto.getId(), pageable);
         return ResponseEntity.ok().body(Message.success(alarmList));
+    }
 
+    @PostMapping("/accept/{alarmId}")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    public ResponseEntity<Message<Void>> acceptAlarm(@AuthenticationPrincipal MemberLoginActiveDto loginActiveDto,
+                                                     @PathVariable Long alarmId) {
+        alarmService.acceptAlarm(loginActiveDto.getId(), alarmId);
+        return ResponseEntity.ok().body(Message.success());
     }
 }
