@@ -12,7 +12,6 @@ import lombok.Setter;
 public class AlarmDto {
     private Long id;
     private Long fromMemberId;
-    private Long toMemberId;
     private AlarmType type;
     private String content;
 }

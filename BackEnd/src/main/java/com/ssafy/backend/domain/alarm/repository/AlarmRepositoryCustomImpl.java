@@ -29,7 +29,6 @@ public class AlarmRepositoryCustomImpl implements AlarmRepositoryCustom {
                         AlarmDto.class,
                         alarm.id,
                         fromMember.id.as("fromMemberId"),
-                        alarm.toMember.id.as("toMemberId"),
                         alarm.type,
                         alarm.content,
                         alarm.status
