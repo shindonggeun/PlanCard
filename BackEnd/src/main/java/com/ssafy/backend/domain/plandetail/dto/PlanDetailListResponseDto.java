@@ -12,12 +12,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PlanDetailListResponseDto {
 
-    private Card card;
+    private String placeName;
+
+    private String placeAddress;
 
     private int orderNumber;
 
     private int day;
 
-    private String memo;
 
 }

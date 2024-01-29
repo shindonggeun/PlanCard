@@ -27,7 +27,5 @@ public class PlanDetail {
 
     private int day;
 
-    private String memo;
-
 
 }

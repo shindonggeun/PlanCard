@@ -37,10 +37,10 @@ public class PlanDetailServiceImpl implements PlanDetailService{
 
         return planDetails.stream()
                 .map(planDetail -> new PlanDetailListResponseDto(
-                        planDetail.getCard(),
+                        planDetail.getCard().getPlace().getName(),
+                        planDetail.getCard().getPlace().getAddress(),
                         planDetail.getOrderNumber(),
-                        planDetail.getDay(),
-                        planDetail.getMemo()))
+                        planDetail.getDay()))
                 .collect(Collectors.toList());
     }
 }

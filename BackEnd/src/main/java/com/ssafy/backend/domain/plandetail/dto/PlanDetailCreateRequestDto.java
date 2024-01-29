@@ -26,7 +26,6 @@ public class PlanDetailCreateRequestDto {
                 .plan(plan)
                 .orderNumber(orderNumber)
                 .day(day)
-                .memo(memo)
                 .build();
     }
 
