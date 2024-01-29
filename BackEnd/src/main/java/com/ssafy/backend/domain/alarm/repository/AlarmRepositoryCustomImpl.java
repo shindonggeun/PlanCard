@@ -3,6 +3,7 @@ package com.ssafy.backend.domain.alarm.repository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.backend.domain.alarm.dto.AlarmDto;
+import com.ssafy.backend.domain.alarm.entity.enums.AlarmStatus;
 import com.ssafy.backend.domain.member.entity.QMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +36,8 @@ public class AlarmRepositoryCustomImpl implements AlarmRepositoryCustom {
                 ))
                 .from(alarm)
                 .leftJoin(alarm.fromMember, fromMember)
-                .where(alarm.toMember.id.eq(memberId))
+                .where(alarm.toMember.id.eq(memberId)
+                        .and(alarm.status.ne(AlarmStatus.ACCEPTED))) // '수락된' 상태가 아닌 알람만 필터링)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
                 .fetch();
