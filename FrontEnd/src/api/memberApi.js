@@ -7,6 +7,7 @@ async function memberLoginApi(param, success, fail) {
     await local.post(`/member/login`, param).then(success).catch(fail);
 }
 
+
 export {
     memberLoginApi,
 };

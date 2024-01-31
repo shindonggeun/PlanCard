@@ -1,13 +1,16 @@
 <template>
   <div class="card p-fluid" id="box">
-    <div class="container card p-fluid" id="logInBox">
-      <form @submit.prevent="login">
-        <div class="box card p-fluid" id="idInput">
+    <div class="container; card p-fluid" id="logInBox">
+      <h1 id="logInTitle">Login</h1>
+      <form @submit.prevent="login()" id="logInForm">
+        <div class="box, card p-fluid" id="idInput">
           <img src="/아이디 아이콘.png" alt="아이디" id="idIcon">
-          <input type="text" id="memberEmail" v-model.trim="memberEmail" placeholder="ID">
+          <label for="memberEmail"></label>
+          <input type="text" id="memberEmail" v-model.trim="memberEmail" placeholder="EMAIL">
         </div>
         <div class="box card p-fluid" id="pwInput">
           <img src="/비밀번호 아이콘.png" alt="비밀번호" id="pwIcon">
+          <label for="memberPassword"></label>
           <input type="password" id="memberPassword" v-model.trim="memberPassword" placeholder="PW">
         </div>
         <div class="box card p-fluid" id="loginSubmit">
@@ -29,43 +32,33 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { memberLoginApi } from "@/api/memberApi";
 
-const router = useRouter();
-
+const router = useRouter()
 
 const memberEmail = ref('');
 const memberPassword = ref('');
 
 const login = async () => {
   const param = {
-    email: memberEmail.value,
+    email: memberEmail.value,   // userId는 이메일 필드에 대응
     password: memberPassword.value
   };
 
   try {
     await memberLoginApi(param,
       (response) => {
-        // 서버에서 성공적인 응답을 받은 경우
         if (response.data.dataHeader.successCode === 0) {
-          console.log(response.data.dataBody);
-          router.push({ name: 'main' });
+          router.push({ name: 'main' });  // 로그인 성공 후 메인 페이지로 이동  
         } else {
-          // 로그인 실패 처리
+          // 로그인 실패 처리 메시지
           alert(response.data.dataHeader.resultMessage);
         }
-
-
-        // router.push({ name: 'main' });  // 로그인 성공 후 메인 페이지로 이동
-      },
-      (err) => {
-        console.error(err);
-        alert('로그인에 실패했습니다.');
       }
     );
   } catch (err) {
     console.error(err);
-    alert("로그인에 실패했습니다.");
+    alert("로그인 과정 중 문제가 발생했습니다.");
   }
-}
+};
 
 const goSignUp = function () {
   router.push({ name: 'member-signup' });
