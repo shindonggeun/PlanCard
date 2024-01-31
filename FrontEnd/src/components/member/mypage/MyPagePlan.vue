@@ -93,6 +93,7 @@
     margin-top: 0;
     margin-bottom: 0;
     width: 70%;
+    
     /* 작아지면 텍스트 가리기 */
     white-space: nowrap;
     overflow: hidden;
