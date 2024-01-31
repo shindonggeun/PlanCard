@@ -1,10 +1,18 @@
 package com.ssafy.backend.stt.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
+import com.ssafy.backend.domain.card.dto.CardCreateRequestDto;
+import com.ssafy.backend.domain.card.service.CardService;
+import com.ssafy.backend.domain.place.entity.Place;
+import com.ssafy.backend.domain.place.repository.PlaceInfoRepository;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import okio.ByteString;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +29,15 @@ import java.util.logging.Logger;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
-public class sttServiceImpl implements sttService {
+public class SttServiceImpl implements SttService {
 
     @Value("${stt.client_id}")
     String client_id;
 
     @Value("${stt.client_secret}")
     String client_secret;
+
+
 
     @Override
     public String getAccessToken() throws IOException {
@@ -86,7 +95,10 @@ public class sttServiceImpl implements sttService {
         line.open(audioFormat);
         line.start();
 
+
         byte[] buffer = new byte[1024];
+        ObjectMapper objectMapper = new ObjectMapper();
+
         while (true) {
             int bytesRead = line.read(buffer, 0, buffer.length);
             if (bytesRead > 0) {
@@ -95,9 +107,22 @@ public class sttServiceImpl implements sttService {
         }
 
     }
+
+
 }
 
+
+@Slf4j
 class RTZRWebSocketListener extends WebSocketListener {
+
+//    private PlaceInfoRepository placeInfoRepository;
+//    private CardService cardServiceImpl;
+//
+//    public RTZRWebSocketListener(PlaceInfoRepository placeInfoRepository, CardService cardServiceImpl) {
+//        this.placeInfoRepository = placeInfoRepository;
+//        this.cardServiceImpl = cardServiceImpl;
+//    }
+
     private static final Logger logger = Logger.getLogger(RTZRWebSocketListener.class.getName());
     private static final int NORMAL_CLOSURE_STATUS = 1000;
 
@@ -112,7 +137,29 @@ class RTZRWebSocketListener extends WebSocketListener {
 
     @Override
     public void onMessage(WebSocket webSocket, String text) {
-        System.out.println(text);
+//        sttServiceImpl.sttToCard(text);
+
+//        JSONParser jsonParser = new JSONParser();
+//        JSONObject jsonObject = null;
+//        try {
+//            jsonObject = (JSONObject) jsonParser.parse(text);
+//            JSONArray alterText = (JSONArray) jsonObject.get("alternatives");
+//
+//
+//            for (Object obj : alterText) {
+//                JSONObject object = (JSONObject) jsonParser.parse(obj.toString());
+//                String data = (String) object.get("text");
+//                log.info(data);
+//
+//                //저장된 여행지 목록에서 말하는 단어가 포함이 되는지 확인
+//                Place findPlace = placeInfoRepository.findByName(data);
+//                cardServiceImpl.createCard(1L, findPlace.getId(), new CardCreateRequestDto(""));
+//
+//            }
+//
+//        } catch (ParseException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     @Override
