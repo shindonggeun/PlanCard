@@ -1,24 +1,22 @@
 <template>
   <div class="card p-fluid" id="box">
-    <div class="container; card p-fluid" id="logInBox">
-      <form @submit.prevent="signIn">
-        <div class="box, card p-fluid" id="idInput">
+    <div class="container card p-fluid" id="logInBox">
+      <form @submit.prevent="login">
+        <div class="box card p-fluid" id="idInput">
           <img src="/아이디 아이콘.png" alt="아이디" id="idIcon">
-          <label for="username"></label>
-          <input type="text" id="username" v-model.trim="username" placeholder="ID">
+          <input type="text" id="memberEmail" v-model.trim="memberEmail" placeholder="ID">
         </div>
-        <div class="box, card p-fluid" id="pwInput">
+        <div class="box card p-fluid" id="pwInput">
           <img src="/비밀번호 아이콘.png" alt="비밀번호" id="pwIcon">
-          <label for="password"></label>
-          <input type="password" id="password" v-model.trim="password" placeholder="PW">
+          <input type="password" id="memberPassword" v-model.trim="memberPassword" placeholder="PW">
         </div>
-        <div class="box, card p-fluid" id="loginSubmit">
+        <div class="box card p-fluid" id="loginSubmit">
           <input type="submit" style="display: inline-block;" value="LogIn">
         </div>
       </form> 
       <div>
-          <p>아직 회원이 아니신가요?</p>
-          <button @click="goSignUp()">[회원가입]</button>
+        <p>아직 회원이 아니신가요?</p>
+        <button @click="goSignUp">[회원가입]</button>
       </div>
     </div>
   </div>
@@ -27,28 +25,51 @@
 
 
 <script setup>
-  import { ref } from 'vue';
-  import { useAccountsStore } from '@/stores/accountsStore.js';
-  import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { memberLoginApi } from "@/api/memberApi";
 
-  const router = useRouter()
+const router = useRouter();
 
-  const accountsStore = useAccountsStore()
 
-  const username = ref(null)
-  const password = ref(null)
+const memberEmail = ref('');
+const memberPassword = ref('');
 
-  const signIn = function () {
-      const info = {
-          username: username.value,
-          password: password.value
+const login = async () => {
+  const param = {
+    email: memberEmail.value,
+    password: memberPassword.value
+  };
+
+  try {
+    await memberLoginApi(param,
+      (response) => {
+        // 서버에서 성공적인 응답을 받은 경우
+        if (response.data.dataHeader.successCode === 0) {
+          console.log(response.data.dataBody);
+          router.push({ name: 'main' });
+        } else {
+          // 로그인 실패 처리
+          alert(response.data.dataHeader.resultMessage);
+        }
+
+
+        // router.push({ name: 'main' });  // 로그인 성공 후 메인 페이지로 이동
+      },
+      (err) => {
+        console.error(err);
+        alert('로그인에 실패했습니다.');
       }
-      accountsStore.signIn(info)
+    );
+  } catch (err) {
+    console.error(err);
+    alert("로그인에 실패했습니다.");
   }
+}
 
-  const goSignUp = function () {
-    router.push({name: 'member-signup'});
-  }
+const goSignUp = function () {
+  router.push({ name: 'member-signup' });
+}
 </script>
 
 

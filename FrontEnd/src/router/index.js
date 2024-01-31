@@ -1,8 +1,8 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import AppLayout from "@/layout/AppLayout.vue";
 //  createWebHistory,
 const router = createRouter({
-  history: createWebHashHistory(),  // 브라우저 히스토리 관리 (createWebHashHistory로 해시모드를 선택)
+  history: createWebHistory(import.meta.env.BASE_URL),  // 변경된 부분
   routes: [  // routes : 라우터 경로와 해당 컴포넌트를 정의
     {
       path: "",
