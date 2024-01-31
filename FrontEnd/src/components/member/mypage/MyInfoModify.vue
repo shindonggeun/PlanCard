@@ -1,28 +1,20 @@
 <template>
   <div class="card p-fluid" id="box">
-    <div class="container; card p-fluid" id="signUpBox">
-      <h1 id="signUpTitle">SignUp</h1>
-      <form @submit.prevent="signUp" id="signUpForm">
+    <div class="container; card p-fluid" id="modifyBox">
+      <h1 id="modifyTitle">회원 정보 변경</h1>
+
+      <form id="modifyForm">
+
         <div v-if="userPhotoUrl" id="profileImg">
           <img :src="userPhotoUrl" alt="프로필 이미지">
         </div>
         <div v-else></div>
-        <div class="box, card p-fluid" id="userEmailInput">
-            <input type="userEmail" id="userEmail" v-model.trim="userEmail" placeholder="이메일">
-        </div>
-        <div class="box, card p-fluid" id="userNameInput">
-            <input type="userName" id="userName" v-model.trim="userName" placeholder="이름">
-        </div>
+
+
         <div class="box, card p-fluid" id="userNicknameInput">
-            <input type="userNickname" id="userNickname" v-model.trim="userNickname" placeholder="닉네임">
+            <input type="userNickname" id="userNickname" v-model.trim="userNickname" placeholder="새로운 닉네임">
         </div>
-        <div class="box, card p-fluid" id="password1Input">
-            <input type="password" id="password1" v-model.trim="password1" placeholder="비밀번호">
-        </div>
-        <div class="box, card p-fluid" id="password2Input">
-            <input type="password" id="password2" v-model.trim="password2" placeholder="비밀번호 재입력">
-        </div>
-<!--  -->
+      
         <div class="card p-fluid" id="profilePhoto">
         <p id="profilePhotoGuide">프로필 사진</p>
         <hr id="separator">
@@ -30,10 +22,9 @@
                 <input type="file" id="userPhoto" accept="image/*" @change="handlePhotoUpload">
             </div>
       </div>
-<!--  -->
 
-        <div class="box, card p-fluid"  id="signUpSubmit" style=" text-align: center;">
-            <input type="submit" value="가입하기">
+        <div class="box, card p-fluid"  id="modifySubmit">
+            <input type="submit" value="변경하기">
         </div>
       </form>
 
@@ -44,31 +35,13 @@
   </div>
 </template>
 
+
+
 <script setup>
   import { ref } from 'vue';
-  import { useAccountsStore } from '@/stores/accountsStore.js';
 
-  const accountsStore = useAccountsStore()
-
-  const userEmail = ref(null);
-  const userName = ref(null);
-  const userNickname = ref(null);
-  const password1 = ref(null);
-  const password2 = ref(null);
   const userPhoto = ref(null);
   const userPhotoUrl = ref('');
-
-  const signUp = function () {
-      const info = {
-          userEmail: userEmail.value,
-          userName: userName.value,
-          userNickname: userNickname.value,
-          password1: password1.value,
-          password2: password2.value,
-          userPhoto: userPhoto.value,
-      }
-      accountsStore.signUp(info)
-  }
 
   // 파일 업로드를 위한 이벤트 핸들러
   const handlePhotoUpload = (event) => {
@@ -83,11 +56,10 @@
 
 <style scoped>
   #box {
-  display: flex;
-  justify-content: center;
+    display: flex;
+    justify-content: center;
   }
-
-  #signUpBox {
+  #modifyBox {
     background-color: #FFFFFF;
     border: 1px solid rgba(52, 152, 219, 0.5);
     width: 400px;
@@ -99,15 +71,16 @@
     justify-content: space-around;
     align-items: center;
   }
-  #signUpTitle {
+  #modifyTitle {
     color: #3498db;
     font-weight: bold;
   }
-  #signUpForm {
+  #modifyForm {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
+
   #profileImg {
     border-radius: 50%;
     border: 1px solid rgba(52, 152, 219, 0.5);
@@ -122,7 +95,6 @@
     margin-top: 10px;
     margin-bottom: 20px;
   }
-
   #profileImg img {
     max-width: none; /* 이미지 너비를 원본 크기로 설정 */
     max-height: none; /* 이미지 높이를 원본 크기로 설정 */
@@ -134,26 +106,12 @@
     left: 50%;
     transform: translate(-50%, -50%); /* 이미지를 수평 및 수직 가운데 정렬 */
   }
-  #userEmail, #userName, #userNickname, #password1, #password2, #userPhoto {
-    height: 35px;
-    width: 250px;
-  }
-  #idInput, #userEmailInput, #userNameInput, #userNicknameInput, #password1Input, #password2Input {
-    background-color: rgba(245, 245, 245, 0.1);
-    width: 90%;
-    display: flex;
-    align-items: center;
-    border: 1px solid rgba(52, 152, 219, 0.5);
-    height: 40px;
-    margin-bottom: 10px;
-  }
   #separator {
     margin-top: 3px;
     border: none;
     border-top:  1px solid rgba(52, 152, 219, 0.5);
     border-radius: 10px;
   }
-
   #profilePhoto {
     background-color: #FFFFFF;
     border: 1px solid rgba(52, 152, 219, 0.5);
@@ -177,11 +135,27 @@
     margin: 0 auto; /* 가운데 정렬을 위한 외부 여백 설정 */
     margin-bottom: 10px;
   }
-  #signUpSubmit {
+
+  #userNickname, #userPhoto {
+    height: 35px;
+    width: 250px;
+  }
+  #userNicknameInput {
+    background-color: rgba(245, 245, 245, 0.1);
+    width: 90%;
+    display: flex;
+    align-items: center;
+    border: 1px solid rgba(52, 152, 219, 0.5);
+    height: 40px;
+    margin-bottom: 10px;
+  }
+
+  #modifySubmit {
     width: 90%;
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
     border: 1px solid rgba(0, 0, 0, 0.1);
     background-color: #3498db;
     color: #FFFFFF;
@@ -190,5 +164,4 @@
     height: 20px;
     padding: 20px;
   }
-
 </style>

@@ -7,12 +7,12 @@ const router = createRouter({
     {
       path: "",
       component: AppLayout,
+      redirect: { name: "main" },
       children: [  // children : 하위 경로
         {
           path: "main",  // 메인 페이지
           name: "main",
           component: () => import("@/views/TheMainView.vue"),
-          // redirect: { name: "main" },
           // children: [
           //   {
           //     path: "plan",  // 메인 페이지에 나오는 지도
@@ -40,11 +40,27 @@ const router = createRouter({
               path: "mypage",
               name: "member-mypage",
               component: () => import("@/components/member/MemberMyPage.vue"),
+              redirect: { name: "mypage-mypagemain" },
               children: [
+                {
+                  path: "mypagemain",
+                  name: "mypage-mypagemain",
+                  component: () => import("@/components/member/mypage/MyPageMain.vue"),
+                },
                 {
                   path: "myplan",
                   name: "mypage-myplan",
                   component: () => import("@/components/member/mypage/MyPagePlan.vue"),
+                },
+                {
+                  path: "myPasswordResetting",
+                  name: "mypage-myPasswordResetting",
+                  component: () => import("@/components/member/mypage/myPasswordResetting.vue"),
+                },
+                {
+                  path: "myInfoModify",
+                  name: "mypage-myInfoModify",
+                  component: () => import("@/components/member/mypage/myInfoModify.vue"),
                 },
               ],
             },
