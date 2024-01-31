@@ -1,28 +1,31 @@
 <template>
+  <div class="card p-fluid">
+
     <div id="div1">
-        <h1>My plan</h1>
-        <v-btn class="startBtn" id="addBtn">
-            <p style="margin-bottom: 20%;">+</p>
-        </v-btn>
+      <h1>My plan</h1>
+      <v-btn class="startBtn" id="addBtn">
+        <p style="margin-bottom: 20%;">+</p>
+      </v-btn>
     </div>
     
     <hr id="separator">
-
+    
     <div v-for="plan in plans" :key="plan.index" class="card f-fluid" id="plan">
-        <div id="planName">
-            <p>{{ plan.name }}</p>
-        </div>
-        <div id="div2">
-            <p class="card f-fluid" id="planPeople">인원 : {{ plan.people }}명</p>
-            <p class="card f-fluid" id="planDate">{{ plan.startDate }} ~ {{ plan.EndDate }}</p>
-            <v-btn class="startBtn">
-                <router-link :to="{path: 'view/:id'}" class="router-link-active">
-                    Start
-                </router-link>
-            </v-btn>
-        </div>
+      <div id="planName">
+        <p>{{ plan.name }}</p>
+      </div>
+      <div id="div2">
+        <p class="card f-fluid" id="planPeople">인원 : {{ plan.people }}명</p>
+        <p class="card f-fluid" id="planDate">{{ plan.startDate }} ~ {{ plan.EndDate }}</p>
+        <v-btn class="startBtn">
+          <router-link :to="{path: 'view/:id'}" class="router-link-active">
+            Start
+          </router-link>
+        </v-btn>
+      </div>
     </div>
-</template>
+  </div>
+  </template>
 
 
 
