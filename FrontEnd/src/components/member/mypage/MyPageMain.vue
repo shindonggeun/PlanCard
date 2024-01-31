@@ -1,5 +1,11 @@
 <template>
     <div class="card p-fluid">
+      <div>
+        <h1>My page</h1>
+      </div>
+      
+      <hr id="separator">
+
 
         <div class="box card p-fluid" id="infoBox">
             <div id="profileImg">
@@ -56,6 +62,15 @@
 
 
 <style scoped>
+  h1 {
+    font-weight: bold;
+  }
+  #separator {
+    border: none;
+    border-top: 4px solid #3498DB;
+    border-radius: 10px;
+  }
+
   #infoBox {
     display: flex;
     justify-content: space-between;

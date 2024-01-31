@@ -1,39 +1,49 @@
 <template>
-  <div class="card p-fluid" id="box">
-    <div class="container; card p-fluid" id="modifyBox">
-      <h1 id="modifyTitle">회원 정보 변경</h1>
-
-      <form id="modifyForm">
-
-        <div v-if="userPhotoUrl" id="profileImg">
-          <img :src="userPhotoUrl" alt="프로필 이미지">
-        </div>
-        <div v-else></div>
-
-
-        <div class="box, card p-fluid" id="userNicknameInput">
-            <input type="userNickname" id="userNickname" v-model.trim="userNickname" placeholder="새로운 닉네임">
-        </div>
+  <div class="card p-fluid">
+    <div>
+      <h1>회원 정보 수정</h1>
+    </div>
       
-        <div class="card p-fluid" id="profilePhoto">
-        <p id="profilePhotoGuide">프로필 사진</p>
-        <hr id="separator">
+    <hr id="separator">
+    
+    <div id="box">
+
+      <div class="container; card p-fluid" id="modifyBox">
+        <h1 id="modifyTitle">회원 정보 수정</h1>
+        
+        <form id="modifyForm">
+          
+          <div v-if="userPhotoUrl" id="profileImg">
+            <img :src="userPhotoUrl" alt="프로필 이미지">
+          </div>
+          <div v-else></div>
+          
+          
+          <div class="box, card p-fluid" id="userNicknameInput">
+            <input type="userNickname" id="userNickname" v-model.trim="userNickname" placeholder="새로운 닉네임">
+          </div>
+          
+          <div class="card p-fluid" id="profilePhoto">
+            <p id="profilePhotoGuide">프로필 사진</p>
+            <hr id="separator">
             <div class="box, card p-fluid" id="userPhotoInput">
-                <input type="file" id="userPhoto" accept="image/*" @change="handlePhotoUpload">
+              <input type="file" id="userPhoto" accept="image/*" @change="handlePhotoUpload">
             </div>
-      </div>
-
-        <div class="box, card p-fluid"  id="modifySubmit">
+          </div>
+          
+          <div class="box, card p-fluid"  id="modifySubmit">
             <input type="submit" value="변경하기">
-        </div>
-      </form>
+          </div>
+        </form>
 
-
-
-
+        
+        
+        
+      </div>
     </div>
   </div>
-</template>
+  </template>
+
 
 
 
@@ -55,10 +65,20 @@
 
 
 <style scoped>
+  h1 {
+    font-weight: bold;
+  }
+  #separator {
+    border: none;
+    border-top: 4px solid #3498DB;
+    border-radius: 10px;
+  }
+
   #box {
     display: flex;
     justify-content: center;
   }
+
   #modifyBox {
     background-color: #FFFFFF;
     border: 1px solid rgba(52, 152, 219, 0.5);

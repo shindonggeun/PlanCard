@@ -59,9 +59,6 @@
     align-items: center; /* 하위 요소들을 수직 가운데 정렬. */
     justify-content: space-between; /* 좌우 정렬 */
   }
-  h1 {
-    font-weight: bold;
-  }
   #addBtn {
     background-color: #3498DB;
     color: white;
@@ -69,12 +66,15 @@
     font-weight: bold;
     padding: 0;
     margin: 0;
-
+    
     display: flex;
     justify-content: center;
     align-items: center;
   }
-
+  
+  h1 {
+    font-weight: bold;
+  }
   #separator {
     border: none;
     border-top: 4px solid #3498DB;
