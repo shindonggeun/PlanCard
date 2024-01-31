@@ -1,14 +1,14 @@
 <template>
   <div class="card p-fluid" id="box">
     <div class="container; card p-fluid" id="logInBox">
-      <h1 id="logInTitle">LogIn</h1>
-      <form @submit.prevent="logIn()" id="logInForm">
+      <h1 id="logInTitle">Login</h1>
+      <form @submit.prevent="login()" id="logInForm">
         <div class="box, card p-fluid" id="idInput">
           <img src="/아이디 아이콘.png" alt="아이디" id="idIcon">
-          <label for="userId"></label>
-          <input type="text" id="userId" v-model.trim="userId" placeholder="ID">
+          <label for="memberEmail"></label>
+          <input type="text" id="memberEmail" v-model.trim="memberEmail" placeholder="EMAIL">
         </div>
-        <div class="box card p-fluid" id="pwInput">
+        <div class="box, card p-fluid" id="pwInput">
           <img src="/비밀번호 아이콘.png" alt="비밀번호" id="pwIcon">
           <label for="memberPassword"></label>
           <input type="password" id="memberPassword" v-model.trim="memberPassword" placeholder="PW">
@@ -29,8 +29,8 @@
         <p id="otherLoginGuide">다른 방법으로 로그인</p>
         <hr id="separator">
         <div id="otherLoginBtn">
-          <img src="/네이버 로그인 버튼.png" alt="네이버로그인" id="loginLogoImg" @click="accountsStore.naverLogin()">
-          <img src="/카카오 로그인 버튼.png" alt="카카오로그인" id="loginLogoImg" @click="accountsStore.kakaoLogin()">
+          <img src="/네이버 로그인 버튼.png" alt="네이버로그인" id="loginLogoImg" @click="socialLogin('naver')">
+          <img src="/카카오 로그인 버튼.png" alt="카카오로그인" id="loginLogoImg" @click="socialLogin('kakao')">
         </div>
       </div>
     </div>
@@ -42,21 +42,52 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { memberLoginApi } from "@/api/memberApi";
+import { memberLoginApi, startSocialLoginApi } from "@/api/memberApi";
 
-  const router = useRouter()
-  const accountsStore = useAccountsStore()
+const router = useRouter()
 
-  const userId = ref(null)
-  const password = ref(null)
+const memberEmail = ref('');
+const memberPassword = ref('');
 
-  const logIn = function () {
-    const info = {
-        userId: userId.value,
-        password: password.value
-    }
-    accountsStore.logIn(info)
+const login = async () => {
+  const param = {
+    email: memberEmail.value,
+    password: memberPassword.value
+  };
+
+  try {
+    await memberLoginApi(param,
+      (response) => {
+        if (response.data.dataHeader.successCode === 0) {
+          router.push({ name: 'main' });  // 로그인 성공 후 메인 페이지로 이동  
+        } else {
+          // 로그인 실패 처리 메시지
+          alert(response.data.dataHeader.resultMessage);
+        }
+      }
+    );
+  } catch (error) {
+    console.error(error);
+    alert("로그인 과정 중 문제가 발생했습니다.");
   }
+};
+
+const socialLogin = async (oAuthDomain) => {
+  // window.location.href = `${import.meta.env.VITE_VUE_API_URL}/oauth/${oAuthDomain}`;
+
+  try {
+    const response = await startSocialLoginApi(oAuthDomain);
+
+        if (response.data.dataHeader.successCode === 0) {
+          window.location.href = response.data.dataBody;
+        } else {
+            alert(response.data.dataHeader.resultMessage);
+        }
+  } catch (error) {
+    console.error(error);
+    alert("소셜 로그인 완료 과정 중 문제가 발생했습니다.");
+  }
+
 };
 
 const goSignUp = function () {

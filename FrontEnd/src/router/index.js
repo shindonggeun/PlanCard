@@ -32,6 +32,11 @@ const router = createRouter({
               component: () => import("@/components/member/MemberLogin.vue"),
             },
             {
+              path: "loading/:oAuthDomain",
+              name: "member-loading",
+              component: () => import("@/components/member/MemberLoading.vue"),
+            },
+            {
               path: "signup",
               name: "member-signup",
               component: () => import("@/components/member/MemberSignUp.vue"),
@@ -83,7 +88,7 @@ const router = createRouter({
               component: () => import("@/components/meeting/MeetingDetail.vue"),
             },
           ],
-        },        
+        }     
       ],
     },
   ],
