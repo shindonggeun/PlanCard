@@ -78,5 +78,11 @@ public class MemberController {
         return ResponseEntity.ok().body(Message.success());
     }
 
+    @GetMapping("/get")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    public ResponseEntity<Message<MemberGetResponseDto>> getMember(@AuthenticationPrincipal MemberLoginActiveDto loginActiveDto) {
+        MemberGetResponseDto memberGetResponseDto = memberService.getMember(loginActiveDto.getId());
+        return ResponseEntity.ok().body(Message.success(memberGetResponseDto));
+    }
 
 }
