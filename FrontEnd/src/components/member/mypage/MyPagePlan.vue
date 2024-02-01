@@ -3,7 +3,7 @@
 
     <div id="div1">
       <h1>My plan</h1>
-      <v-btn class="startBtn" id="addBtn">
+      <v-btn class="startBtn" id="addBtn" @click="showCreateMeeting">
         <p style="margin-bottom: 20%;">+</p>
       </v-btn>
     </div>
@@ -24,13 +24,29 @@
         </v-btn>
       </div>
     </div>
+
+    <div id="overlay" v-if="showCreateMeetingModal"></div>
+    <div id="createMeetingBox">
+      <MeetingCreate v-if="showCreateMeetingModal" @close-meeting-create="closeMeetingCreate" />
+    </div>
+
   </div>
   </template>
 
 
 
 <script setup>
+  import router from "@/router";
   import { ref } from "vue";
+  import MeetingCreate from "@/components/meeting/MeetingCreate.vue";
+
+  const showCreateMeetingModal = ref(false)
+  const closeMeetingCreate = () => {
+    showCreateMeetingModal.value = false;
+  }
+  const showCreateMeeting = () => {
+    showCreateMeetingModal.value = !showCreateMeetingModal.value
+  }
 
   const plans = ref([
     {
@@ -46,7 +62,6 @@
         EndDate: "2024.02.28"
     },
   ])
-
 
 </script>
 
@@ -145,5 +160,28 @@
   .router-link-active { /* router-link의 글자 색이 변하지 않게 하는 css */
     background-color: transparent !important; /* 배경색을 투명으로 설정 */
     color: inherit !important; /* 글자색을 상속 받음 */
+  }
+
+
+
+
+
+  #overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
+    z-index: 997; /* 모달보다 한 단계 낮은 z-index */
+  }
+  #createMeetingBox {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 998;
+    max-height: 70vh;
+    overflow-y: auto;
   }
 </style>
