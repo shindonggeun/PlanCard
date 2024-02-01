@@ -16,10 +16,10 @@
         <div class="box, card p-fluid" id="memberNicknameInput">
             <input type="text" id="memberNickname" v-model.trim="memberNickname" placeholder="닉네임">
         </div>
-        <div class="box, card p-fluid" id="memberpasswordInput">
+        <div class="box, card p-fluid" id="memberPasswordInput">
             <input type="password" id="memberPassword" v-model.trim="memberPassword" placeholder="비밀번호">
         </div>
-        <div class="box, card p-fluid" id="memberpasswordCheckInput">
+        <div class="box, card p-fluid" id="memberPasswordCheckInput">
             <input type="password" id="memberPasswordCheck" v-model.trim="memberPasswordCheck" placeholder="비밀번호 재입력">
         </div>
 <!--  -->
@@ -219,11 +219,11 @@ const imageUpload = async (file) => {
     left: 50%;
     transform: translate(-50%, -50%); /* 이미지를 수평 및 수직 가운데 정렬 */
   }
-  #memberEmail, #memberName, #memberNickname, #memberpassword, #memberpasswordCheck, #memberPhoto {
+  #memberEmail, #memberName, #memberNickname, #memberPassword, #memberPasswordCheck, #memberPhoto {
     height: 35px;
     width: 250px;
   }
-  #idInput, #memberEmailInput, #memberNameInput, #memberNicknameInput, #memberpasswordInput, #memberpasswordCheckInput {
+  #memberEmailInput, #memberNameInput, #memberNicknameInput, #memberPasswordInput, #memberPasswordCheckInput {
     background-color: rgba(245, 245, 245, 0.1);
     width: 90%;
     display: flex;

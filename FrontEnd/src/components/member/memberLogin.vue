@@ -81,7 +81,7 @@ const socialLogin = async (oAuthDomain) => {
         if (response.data.dataHeader.successCode === 0) {
           window.location.href = response.data.dataBody;
         } else {
-            alert(response.data.dataHeader.resultMessage);
+          alert(response.data.dataHeader.resultMessage);
         }
   } catch (error) {
     console.error(error);
@@ -138,11 +138,11 @@ const goSignUp = function () {
     margin-right: 10px;
     margin-left: -15px;
   }
-  #userId {
+  #memberEmail {
     height: 35px;
     width: 250px;
   }
-  #password {
+  #memberPassword {
     height: 35px;
     width: 250px;
   }
@@ -176,6 +176,7 @@ const goSignUp = function () {
     font-size: medium;
     height: 20px;
     padding: 20px;
+    
   }
 
   #etc1 {

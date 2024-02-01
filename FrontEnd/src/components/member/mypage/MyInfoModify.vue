@@ -235,6 +235,7 @@
     z-index: 997; /* 모달보다 한 단계 낮은 z-index */
   }
   #withdrawalBox {
+    border: 1px solid rgba(52, 152, 219, 0.5);
     position: fixed;
     top: 30%;
     left: 50%;

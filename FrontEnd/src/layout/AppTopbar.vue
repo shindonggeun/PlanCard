@@ -9,25 +9,19 @@
 
         <v-spacer></v-spacer>
 
-
-
         <!-- Button -->
-        <v-btn class="myPlanBtn">
+        <v-btn class="myPlanBtn" v-show="accountsStore.isLogin">
             <router-link :to="{name: 'mypage-myplan'}" class="router-link-active"><b>My Plan</b></router-link>
         </v-btn>
 
-        <v-btn class="startBtn">
+        <v-btn class="startBtn" v-show="accountsStore.isLogin">
             <p class="router-link-active" @click="showCreateMeeting"><b>Start</b></p>
         </v-btn>
 
-        <!-- <v-btn class="startBtn">
-            <router-link :to="{name: 'meeting-create'}" class="router-link-active" @click="showCreateMeeting"><b>Start</b></router-link>
-        </v-btn> -->
-        <!--  -->
 
         <div class="layout-topbar-menu" :class="topbarMenuClasses">
             <!-- Notification -->
-            <button @click="onTopBarMenuNotificationButton()" class="p-link layout-topbar-button">
+            <button @click="onTopBarMenuNotificationButton()" class="p-link layout-topbar-button" v-show="accountsStore.isLogin">
                 <i class="pi pi-bell"></i>
                 <span>Plan</span>
             </button>
@@ -36,11 +30,9 @@
                 <i class="pi pi-user"></i>
                 <span>Profile</span>
             </button>
-            <p id="userName" @click="onTopBarMenuProfileButton()" >김싸피</p>
-            <p style="padding-top: 10px; font-weight: 900;">님</p>
+            <p id="userName" @click="onTopBarMenuProfileButton()" v-show="accountsStore.isLogin">김싸피</p>
+            <p style="padding-top: 10px; font-weight: 900;" v-show="accountsStore.isLogin">님</p>
         </div>
-
-
 
 
 
@@ -66,7 +58,6 @@
             </v-card>
         </div>
         
-
         <!-- 프로필 클릭 시 나오는 창 -->
         <div>
             <v-card :class="[topbarProfileActive? 'profileActive':'profileHidden']" id="popUp">
@@ -111,12 +102,10 @@
                     </v-btn>
                 </v-card-actions>
             </v-card>
-        </div>
-            
+        </div>  
 
-        <!-- 친구 요청 -->
+        <!-- 친구 요청 창 -->
         <div id="overlay" v-if="friendRequestActive"></div>
-
         <div class="card p-fluid" v-if="friendRequestActive" id="friendRequestBox">
             <h3 id="friendRequestTitle">친구 요청</h3>
                 <form class="box, card p-fluid" @submit.prevent="SendFriendRequest()" id="friendRequestForm">
@@ -128,6 +117,7 @@
             </div>
         </div>
 
+        <!-- 미팅 생성 창 -->
         <div id="overlay" v-if="showCreateMeetingModal"></div>
         <div id="createMeetingBox">
             <MeetingCreate v-if="showCreateMeetingModal" @close-meeting-create="closeMeetingCreate" />
@@ -264,7 +254,6 @@
             topbarMenuActive.value = !topbarMenuActive.value;
             topbarProfileActive.value = !topbarProfileActive.value;
             topbarNotificationActive.value = false;
-
         } else if (!accountsStore.isLogin) {
             router.push({name: "member-login"})
         }
@@ -325,7 +314,7 @@
     }
 // 프로필 팝업 부분 코드 끝
 
-
+    // topbar에서 미팅 생성
     const showCreateMeetingModal = ref(false)
     const closeMeetingCreate = () => {
         showCreateMeetingModal.value = false;
