@@ -14,8 +14,13 @@ async function finishSocialLoginApi(oAuthDomain, code) {
     return await local.get(`/oauth/${oAuthDomain}/login`, { params: { code } });
 }
 
+async function memberSignUpApi(param, success, fail) {
+    await local.post(`/member/signup`, param).then(success).catch(fail);
+}
+
 export {
     memberLoginApi,
     startSocialLoginApi,
     finishSocialLoginApi,
+    memberSignUpApi,
 };

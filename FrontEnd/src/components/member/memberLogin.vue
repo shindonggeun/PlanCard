@@ -1,7 +1,7 @@
 <template>
   <div class="card p-fluid" id="box">
     <div class="container; card p-fluid" id="logInBox">
-      <h1 id="logInTitle">Login</h1>
+      <h1 id="logInTitle">로그인</h1>
       <form @submit.prevent="login()" id="logInForm">
         <div class="box, card p-fluid" id="idInput">
           <img src="/아이디 아이콘.png" alt="아이디" id="idIcon">
@@ -237,5 +237,11 @@ const goSignUp = function () {
     margin-right: 5px;
     margin-left: 5px;
     margin-bottom: 5px;
+    transition: transform 0.2s, border-color 0.2s; /* 부드러운 전환 효과를 위한 설정 */
+    cursor: pointer; /* 마우스 포인터를 손가락 모양으로 변경 */
+  }
+  #loginLogoImg:hover {
+    transform: scale(1.05); /* 이미지를 약간 확대 */
+    border-color: #3498db; /* 테두리 색상 변경 */
   }
 </style>

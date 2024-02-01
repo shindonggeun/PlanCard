@@ -1,33 +1,33 @@
 <template>
   <div class="card p-fluid" id="box">
     <div class="container; card p-fluid" id="signUpBox">
-      <h1 id="signUpTitle">SignUp</h1>
+      <h1 id="signUpTitle">회원가입</h1>
       <form @submit.prevent="signUp" id="signUpForm">
-        <div v-if="userPhotoUrl" id="profileImg">
-          <img :src="userPhotoUrl" alt="프로필 이미지">
+        <div v-if="memberPreviewPhotoUrl" id="profileImg">
+          <img :src="memberPreviewPhotoUrl" alt="프로필 이미지">
         </div>
         <div v-else></div>
-        <div class="box, card p-fluid" id="userEmailInput">
-            <input type="userEmail" id="userEmail" v-model.trim="userEmail" placeholder="이메일">
+        <div class="box, card p-fluid" id="memberEmailInput">
+            <input type="text" id="memberEmail" v-model.trim="memberEmail" placeholder="이메일">
         </div>
-        <div class="box, card p-fluid" id="userNameInput">
-            <input type="userName" id="userName" v-model.trim="userName" placeholder="이름">
+        <div class="box, card p-fluid" id="memberNameInput">
+            <input type="text" id="memberName" v-model.trim="memberName" placeholder="이름">
         </div>
-        <div class="box, card p-fluid" id="userNicknameInput">
-            <input type="userNickname" id="userNickname" v-model.trim="userNickname" placeholder="닉네임">
+        <div class="box, card p-fluid" id="memberNicknameInput">
+            <input type="text" id="memberNickname" v-model.trim="memberNickname" placeholder="닉네임">
         </div>
-        <div class="box, card p-fluid" id="password1Input">
-            <input type="password" id="password1" v-model.trim="password1" placeholder="비밀번호">
+        <div class="box, card p-fluid" id="memberpasswordInput">
+            <input type="password" id="memberPassword" v-model.trim="memberPassword" placeholder="비밀번호">
         </div>
-        <div class="box, card p-fluid" id="password2Input">
-            <input type="password" id="password2" v-model.trim="password2" placeholder="비밀번호 재입력">
+        <div class="box, card p-fluid" id="memberpasswordCheckInput">
+            <input type="password" id="memberPasswordCheck" v-model.trim="memberPasswordCheck" placeholder="비밀번호 재입력">
         </div>
 <!--  -->
         <div class="card p-fluid" id="profilePhoto">
         <p id="profilePhotoGuide">프로필 사진</p>
         <hr id="separator">
-            <div class="box, card p-fluid" id="userPhotoInput">
-                <input type="file" id="userPhoto" accept="image/*" @change="handlePhotoUpload">
+            <div class="box, card p-fluid" id="memberPhotoInput">
+                <input type="file" id="memberPhoto" accept="image/*" @change="handlePhotoUpload" ref="fileInput">
             </div>
       </div>
 <!--  -->
@@ -45,38 +45,122 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue';
-  import { useAccountsStore } from '@/stores/accountsStore.js';
+import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { memberSignUpApi } from "@/api/memberApi";
+import { fileUploadApi } from "@/api/commonApi";
 
-  const accountsStore = useAccountsStore()
+const router = useRouter();
 
-  const userEmail = ref(null);
-  const userName = ref(null);
-  const userNickname = ref(null);
-  const password1 = ref(null);
-  const password2 = ref(null);
-  const userPhoto = ref(null);
-  const userPhotoUrl = ref('');
+const memberEmail = ref('');
+const memberName = ref('');
+const memberNickname = ref('');
+const memberPassword = ref('');
+const memberPasswordCheck = ref('');
+const memberImage = ref('');
 
-  const signUp = function () {
-      const info = {
-          userEmail: userEmail.value,
-          userName: userName.value,
-          userNickname: userNickname.value,
-          password1: password1.value,
-          password2: password2.value,
-          userPhoto: userPhoto.value,
-      }
-      accountsStore.signUp(info)
+const memberPreviewPhotoUrl = ref('');
+const fileInput = ref('');
+
+// 이메일 유효성 검사
+const isValidEmail = computed(() => {
+  // 이메일 정규식
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+  return emailRegex.test(memberEmail.value);
+});
+
+// 비밀번호 일치 검사
+const doPasswordsMatch = computed(() => {
+  return memberPassword.value === memberPasswordCheck.value;
+});
+
+// 회원가입 폼 유효성 검사
+const isFormValid = computed(() => {
+  return isValidEmail.value && doPasswordsMatch.value && memberNickname.value.trim().length > 0;
+});
+
+
+const signUp = async () => {
+  if (!isFormValid.value) {
+    alert("폼을 올바르게 작성해주세요.");
+    return;
   }
 
-  // 파일 업로드를 위한 이벤트 핸들러
-  const handlePhotoUpload = (event) => {
-      const file = event.target.files[0];
-      // 파일을 FormData에 추가하여 전송 가능
-      userPhoto.value = file;
-      userPhotoUrl.value = URL.createObjectURL(file);
+  const signUpData = {
+    email: memberEmail.value,
+    password: memberPassword.value,
+    name: memberName.value,
+    nickname: memberNickname.value,
+    image: memberImage.value
+  };
+
+  try {
+    await memberSignUpApi(signUpData,
+      (response) => {
+        if (response.data.dataHeader.successCode === 0) {
+          alert("회원가입에 성공했습니다.");
+          router.push('/member/login');  // 로그인 페이지로 이동
+        } else {
+          alert(response.data.dataHeader.resultMessage);
+        }
+      });
+  } catch (error) {
+    console.error(error);
+    alert("회원가입 중 오류가 발생했습니다.");
   }
+};
+
+// 파일 업로드를 위한 이벤트 핸들러
+const handlePhotoUpload = (event) => {
+  const file = event.target.files[0];
+  const maxFileSize = 1 * 1024 * 1024; // 1MB
+
+  if (!file.type.includes("jpeg") && !file.type.includes("png")) {
+    alert("JPG 또는 PNG 이미지만 업로드 가능합니다.");
+    resetFileInput();
+    return;
+  }
+
+  if (file.size > maxFileSize) {
+    alert("이미지 파일 크기는 1MB 이하만 가능합니다.");
+    resetFileInput();
+    return;
+  }
+
+  // memberPhoto.value = file;
+  memberPreviewPhotoUrl.value = URL.createObjectURL(file);
+  imageUpload(file);
+}
+
+// 입력 필드 리셋
+const resetFileInput = () => {
+  if (fileInput.value) {
+    fileInput.value.value = ""; // Vue 3 Composition API에서 ref를 사용할 경우 .value 사용
+  }
+  memberPreviewPhotoUrl.value = "";
+};
+
+const imageUpload = async (file) => {
+  // 파일을 FormData에 추가하여 전송 가능
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('nameFile', file.name);
+
+  try {
+    const response = await fileUploadApi(formData);
+    if (response.data.dataHeader.successCode === 0) {
+      console.log("이미지가 이미지 서버에 업로드 되었습니다.");
+      memberImage.value = response.data.dataBody;
+    }
+    else {
+      alert(response.data.dataHeader.resultMessage);
+    }
+  } catch (error) {
+    alert(error);
+  }
+  
+  
+}
 </script>
 
 
@@ -134,11 +218,11 @@
     left: 50%;
     transform: translate(-50%, -50%); /* 이미지를 수평 및 수직 가운데 정렬 */
   }
-  #userEmail, #userName, #userNickname, #password1, #password2, #userPhoto {
+  #memberEmail, #memberName, #memberNickname, #memberpassword, #memberpasswordCheck, #memberPhoto {
     height: 35px;
     width: 250px;
   }
-  #idInput, #userEmailInput, #userNameInput, #userNicknameInput, #password1Input, #password2Input {
+  #idInput, #memberEmailInput, #memberNameInput, #memberNicknameInput, #memberpasswordInput, #memberpasswordCheckInput {
     background-color: rgba(245, 245, 245, 0.1);
     width: 90%;
     display: flex;
@@ -189,6 +273,12 @@
     font-size: medium;
     height: 20px;
     padding: 20px;
+    transition: transform 0.2s, border-color 0.2s; /* 부드러운 전환 효과를 위한 설정 */
+    cursor: pointer; /* 마우스 포인터를 손가락 모양으로 변경 */
+  }
+  #signUpSubmit:hover {
+    transform: scale(1.05); /* 이미지를 약간 확대 */
+    border-color: #3498db; /* 테두리 색상 변경 */
   }
 
 </style>

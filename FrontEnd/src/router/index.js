@@ -10,7 +10,7 @@ const router = createRouter({
       redirect: { name: "main" },
       children: [  // children : 하위 경로
         {
-          path: "main",  // 메인 페이지
+          path: "/",  // 메인 페이지
           name: "main",
           component: () => import("@/views/TheMainView.vue"),
           // children: [

@@ -22,6 +22,7 @@ onMounted(async () => {
             router.push({ name: 'main' });
         } else {
             alert(response.data.dataHeader.resultMessage);
+            router.push({ name: 'main' });
         }
     } catch (error) {
         console.error(error);
