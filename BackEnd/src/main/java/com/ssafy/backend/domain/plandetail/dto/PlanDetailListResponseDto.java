@@ -14,7 +14,7 @@ public class PlanDetailListResponseDto {
 
     private Long cardId;
 
-    private String cardPosition;
+    private String placePosition;
 
     private String cardMemo;
 
