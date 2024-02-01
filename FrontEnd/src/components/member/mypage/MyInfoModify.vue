@@ -36,6 +36,22 @@
           </div>
         </form>
 
+        <div id="etc1">
+          <p id="withdrawalGuide">탈퇴하려고? </p>
+          <button id="withdrawalBtn" @click="withdrawalRequest()">[회원탈퇴]</button>
+        </div>
+
+        <div id="overlay" v-if="withdrawalActive"></div>
+        <div class="card p-fluid" v-if="withdrawalActive" id="withdrawalBox">
+          <h3 id="withdrawalTitle">회원 탈퇴 확인</h3>
+            <p>진짜 탈퇴해?</p>
+            <div style="display: flex;">
+              <form class="box, card p-fluid" @submit.prevent="" id="withdrawalForm">
+                <input class="box card p-fluid" type="submit" id="withdrawalSubmit" value="탈퇴">
+              </form>
+              <button @click="withdrawalRequest()" id="withdrawalCloseBtn">취소</button>
+            </div>
+        </div>
         
         
         
@@ -60,6 +76,12 @@
       userPhoto.value = file;
       userPhotoUrl.value = URL.createObjectURL(file);
   }
+
+  const withdrawalActive = ref(false);
+  // 회원탈퇴 팝업 on/off
+  const withdrawalRequest = () => {
+    withdrawalActive.value = !withdrawalActive.value;
+  };
 </script>
 
 
@@ -167,7 +189,7 @@
     align-items: center;
     border: 1px solid rgba(52, 152, 219, 0.5);
     height: 40px;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
   }
 
   #modifySubmit {
@@ -184,4 +206,87 @@
     height: 20px;
     padding: 20px;
   }
+
+
+
+
+  #etc1 {
+    display: flex;
+    margin-top: 10px;
+  }
+  #withdrawalGuide {
+    color: rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+    margin: 0;
+    margin-right: 10px;
+  }
+  #withdrawalBtn {
+    font-weight: bold;
+    color: rgba(255, 0, 0, 1);
+  }
+
+  #overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
+    z-index: 997; /* 모달보다 한 단계 낮은 z-index */
+  }
+  #withdrawalBox {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+  }
+
+
+
+
+  #withdrawalForm {
+    border: none;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    padding-bottom: 0;
+  }
+  #withdrawalTitle {
+    color: #3498db;
+    font-weight: bold;
+    margin: 0;
+  }
+  #withdrawalSubmit {
+    width: 100px;
+    height: 30px;
+    text-align: center;
+    color: #FFFFFF;
+    background-color: #FF0000;
+    position: relative;
+    font-weight: bold;
+    border-radius: 5cm;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    margin-top: 5px; /* 위쪽 여백 추가 */
+    line-height: 0px;
+
+  }
+
+  #withdrawalCloseBtn {
+    width: 100px;
+    height: 30px;
+    text-align: center;
+    color: #FFFFFF;
+    background-color: #3498DB;
+    position: relative;
+    line-height: 25px;
+    font-weight: bold;
+    border-radius: 5cm;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    top: 15px;
+  }
+
 </style>

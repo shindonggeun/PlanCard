@@ -542,16 +542,6 @@
 
 
 
-
-  #overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
-    z-index: 9998; /* 모달보다 한 단계 낮은 z-index */
-  }
   #friendRequestBox {
     position: fixed;
     top: 30%;
