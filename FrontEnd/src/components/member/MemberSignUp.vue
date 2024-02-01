@@ -156,7 +156,8 @@ const imageUpload = async (file) => {
       alert(response.data.dataHeader.resultMessage);
     }
   } catch (error) {
-    alert(error);
+    console.error(error);
+    alert("이미지 파일 업로드 과정에서 문제가 발생했습니다.");
   }
   
   
