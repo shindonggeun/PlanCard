@@ -13,9 +13,7 @@
           <label for="password"></label>
           <input type="password" id="password" v-model.trim="password" placeholder="PW">
         </div>
-        <div class="box, card p-fluid" id="loginSubmit">
-          <input type="submit" value="LogIn">
-        </div>
+          <input class="box, card p-fluid" id="loginSubmit" type="submit" value="LogIn">
       </form> 
       <div id="etc1">
           <p id="signUpGuide">아직 회원이 아니신가요?</p>
@@ -144,6 +142,7 @@
     font-size: medium;
     height: 20px;
     padding: 20px;
+    line-height: 0px;
   }
 
   #etc1 {

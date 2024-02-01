@@ -32,9 +32,7 @@
       </div>
 <!--  -->
 
-        <div class="box, card p-fluid"  id="signUpSubmit" style=" text-align: center;">
-            <input type="submit" value="가입하기">
-        </div>
+            <input class="box, card p-fluid"  id="signUpSubmit" type="submit" value="가입하기">
       </form>
 
 
@@ -178,6 +176,7 @@
     margin-bottom: 10px;
   }
   #signUpSubmit {
+    text-align: center;
     width: 90%;
     display: flex;
     align-items: center;
@@ -189,6 +188,7 @@
     font-size: medium;
     height: 20px;
     padding: 20px;
+    line-height: 0px;
   }
 
 </style>

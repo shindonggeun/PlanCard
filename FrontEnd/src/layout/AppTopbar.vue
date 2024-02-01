@@ -15,10 +15,14 @@
         <v-btn class="myPlanBtn">
             <router-link :to="{name: 'mypage-myplan'}" class="router-link-active"><b>My Plan</b></router-link>
         </v-btn>
-        
+
         <v-btn class="startBtn">
-            <router-link :to="{name: 'meeting-create'}" class="router-link-active"><b>Start</b></router-link>
+            <p class="router-link-active" @click="showCreateMeeting"><b>Start</b></p>
         </v-btn>
+
+        <!-- <v-btn class="startBtn">
+            <router-link :to="{name: 'meeting-create'}" class="router-link-active" @click="showCreateMeeting"><b>Start</b></router-link>
+        </v-btn> -->
         <!--  -->
 
         <div class="layout-topbar-menu" :class="topbarMenuClasses">
@@ -121,6 +125,12 @@
             </div>
         </div>
 
+        <div id="overlay" v-if="showCreateMeetingModal"></div>
+        <div id="createMeetingBox">
+            <MeetingCreate v-if="showCreateMeetingModal" @close-meeting-create="closeMeetingCreate" />
+        </div>
+
+
 
     </div>
 </template>
@@ -131,6 +141,8 @@
     import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
     import { useRouter } from 'vue-router';
     import { useAccountsStore } from '@/stores/accountsStore';
+    import MeetingCreate from "@/components/meeting/MeetingCreate.vue";
+
     const accountsStore = useAccountsStore()
     const router = useRouter()
     
@@ -303,6 +315,15 @@
         // 친구 요청 로직
     }
 // 프로필 팝업 부분 코드 끝
+
+
+    const showCreateMeetingModal = ref(false)
+    const closeMeetingCreate = () => {
+        showCreateMeetingModal.value = false;
+    }
+    const showCreateMeeting = () => {
+        showCreateMeetingModal.value = !showCreateMeetingModal.value
+    }
 </script>
 
 
@@ -364,7 +385,7 @@
   }
   #notificationsList {
     max-height: 200px;
-    overflow-y: scroll;
+    overflow-y: auto;
     width: 100%;
     border-radius: 15px;
     border: 1px solid rgba(52, 152, 219, 0.5);
@@ -445,7 +466,7 @@
     border-radius: 15px;
     border: 1px solid rgba(52, 152, 219, 0.5);
     max-height: 200px;
-    overflow-y: scroll;
+    overflow-y: auto;
     margin-bottom: -50px;
     margin-top: -17px;
   }
@@ -589,5 +610,26 @@
     border-radius: 5cm;
     border: 1px solid rgba(0, 0, 0, 0.1);
     top: 15px;
+  }
+
+
+
+  #overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
+    z-index: 997; /* 모달보다 한 단계 낮은 z-index */
+  }
+  #createMeetingBox {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 998;
+    max-height: 70vh;
+    overflow-y: auto;
   }
 </style>
