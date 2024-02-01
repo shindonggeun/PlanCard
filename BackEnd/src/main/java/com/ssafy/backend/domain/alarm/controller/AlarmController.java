@@ -5,6 +5,7 @@ import com.ssafy.backend.domain.alarm.dto.AlarmDto;
 import com.ssafy.backend.domain.alarm.service.AlarmService;
 import com.ssafy.backend.domain.member.dto.MemberLoginActiveDto;
 import com.ssafy.backend.global.common.dto.Message;
+import com.ssafy.backend.global.common.dto.SliceResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -31,10 +32,10 @@ public class AlarmController {
 
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public ResponseEntity<Message<List<AlarmDto>>> getAlarmList(@AuthenticationPrincipal MemberLoginActiveDto loginActiveDto,
+    public ResponseEntity<Message<SliceResponse>> getAlarmList(@AuthenticationPrincipal MemberLoginActiveDto loginActiveDto,
                                                                  Pageable pageable) {
-        List<AlarmDto> alarmList = alarmService.getAlarmList(loginActiveDto.getId(), pageable);
-        return ResponseEntity.ok().body(Message.success(alarmList));
+        SliceResponse alarms = alarmService.getAlarmList(loginActiveDto.getId(), pageable);
+        return ResponseEntity.ok().body(Message.success(alarms));
     }
 
     @PostMapping("/accept/{alarmId}")

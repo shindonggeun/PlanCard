@@ -1,5 +1,5 @@
 <template>
-    <div id="detail">
+    <div id="detail" class="card p-fluid">
         <h1>itemdetailplanlist</h1>
         <div v-for="day in days" :key="day" class="col-12">
             <h1>{{ day }}</h1>

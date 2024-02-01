@@ -1,10 +1,10 @@
 import axios from "axios";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import { useRouter } from "vue-router";
 
 export const useAccountsStore = defineStore(
-  "accounts",
+  "accountsStore",
   () => {
     const router = useRouter();
     const API_URL = "/api/v1";
@@ -35,11 +35,12 @@ export const useAccountsStore = defineStore(
           console.log(response.data.key);
           token.value = response.data.key;
           alert("회원가입이 완료되었습니다.");
-          router.push({ name: "main" });
+          router.push({ name: "member-login" });
         })
         .catch((error) => {
-          alert("회원가입에 실패했습니다.");
           console.log(error);
+          alert("회원가입에 실패했습니다.");
+          router.push({ name: "member-signup" });
         });
     };
 
@@ -51,18 +52,18 @@ export const useAccountsStore = defineStore(
     //     return true
     //   }
     // })
-
     // 로그인 유무 (테스트용)
-    const isLogin = true;
+    const isLogin = false;
+
 
     // 로그인
     const logIn = function (info) {
-      const { userName, password } = info;
+      const { userID, password } = info;
       axios({
         method: "post",
         url: `${API_URL}/member/login`,
         data: {
-          userName,
+          userID,
           password,
         },
       })
@@ -76,8 +77,50 @@ export const useAccountsStore = defineStore(
         .catch((err) => {
           console.log(err);
           alert("로그인에 실패했습니다.");
+          router.push({ name: "member-login" });
         });
     };
+
+    // 소셜로그인1: Naver
+    const naverlogIn = function () {
+      axios({
+        method: "get",
+        url: `${API_URL}/oauth/naver`,
+      })
+        .then((response) => {
+          console.log(response.data);
+          console.log(response.data.key);
+          token.value = response.data.key;
+          console.log(response);
+          router.push({ name: "main" });
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("로그인에 실패했습니다.");
+          router.push({ name: "member-login" });
+        });
+    };
+
+    // 소셜로그인2: Kakao
+    const kakaologIn = function () {
+      axios({
+        method: "get",
+        url: `${API_URL}/oauth/kakao`,
+      })
+        .then((response) => {
+          console.log(response.data);
+          console.log(response.data.key);
+          token.value = response.data.key;
+          console.log(response);
+          router.push({ name: "main" });
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("로그인에 실패했습니다.");
+          router.push({ name: "member-login" });
+        });
+    };
+
 
     // 로그아웃
     const logOut = function () {
@@ -127,6 +170,8 @@ export const useAccountsStore = defineStore(
       isLogin,
       signUp,
       logIn,
+      naverlogIn,
+      kakaologIn, 
       logOut,
       passwordResetting,
     };

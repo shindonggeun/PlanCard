@@ -12,6 +12,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PlanDetailListResponseDto {
 
+    private Long cardId;
+
+    private String cardPosition;
+
+    private String cardMemo;
+
     private String placeName;
 
     private String placeAddress;

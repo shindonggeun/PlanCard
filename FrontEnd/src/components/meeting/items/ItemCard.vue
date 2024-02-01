@@ -2,7 +2,7 @@
 
     <div class="card card-w-title">
         <!-- {{ card.card_id }} -->
-        {{ card.place.name }}
+        <!-- {{ card.place.name }} -->
     </div>
 </template>
 

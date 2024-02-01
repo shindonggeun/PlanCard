@@ -11,6 +11,7 @@ import com.ssafy.backend.domain.member.entity.Member;
 import com.ssafy.backend.domain.member.exception.MemberError;
 import com.ssafy.backend.domain.member.exception.MemberException;
 import com.ssafy.backend.domain.member.repository.MemberRepository;
+import com.ssafy.backend.global.common.dto.SliceResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -40,9 +41,10 @@ public class AlarmServiceImpl implements AlarmService {
     }
 
     @Override
-    public List<AlarmDto> getAlarmList(Long memberId, Pageable pageable) {
-        Slice<AlarmDto> alarmSlice = alarmRepository.findAlarmSliceByMemberId(memberId, pageable);
-        return alarmSlice.getContent();
+    public SliceResponse getAlarmList(Long memberId, Pageable pageable) {
+        Slice<AlarmDto> alarms = alarmRepository.findAlarmSliceByMemberId(memberId, pageable);
+
+        return SliceResponse.of(alarms);
     }
 
     @Override
