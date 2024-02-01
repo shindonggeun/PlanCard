@@ -72,12 +72,6 @@ stt:
   secret: -wXxmNVuqYD-F1_jNH7DRYgQOs0SlL8Vb2W2ArJR
 
 
-# stt
-stt:
-  client_id: Kcey7tPho7hTPtsYySL7
-  client_secret: Lmsx1b6BC9VfTwoznyoFzrAQygQoz9iIJRqnSGVH
-
-
 server:
   ssl:
     enabled: false
