@@ -96,7 +96,10 @@
                             <img :src=friend.profileImg alt="프로필 이미지" id="friendProfileImg">
                         </div>
                         <div>
-                            <p id="friendName">{{ friend.name}} </p>
+                            <div style="display: flex;">
+                                <p id="friendName">{{ friend.name}} </p>
+                                <p :class="friend.status ? 'onLine' : 'offLine'">&nbsp;●</p>
+                            </div>
                             <p id="friendEmail">{{ friend.email }}</p>
                         </div>
                     </div>
@@ -276,32 +279,38 @@
         {
             name: "신동근",
             email: "tlsehdrms95@ssafy.com",
-            profileImg: "/로고 3.png"
+            profileImg: "/로고 3.png",
+            status : true
         },
         {
             name: "박정인",
             email: "qkrwjddls96@ssafy.com",
-            profileImg: "/로고 3.png"
+            profileImg: "/로고 3.png",
+            status : false
         },
         {
             name: "강지수",
             email: "rkdwltn96@ssafy.com",
-            profileImg: "/로고 3.png"
+            profileImg: "/로고 3.png",
+            status : true
         },
         {
             name: "김혁일",
             email: "rlagurdlf97@ssafy.com",
-            profileImg: "/로고 3.png"
+            profileImg: "/로고 3.png",
+            status : false
         },
         {
             name: "김재훈",
             email: "rlawogns98@ssafy.com",
-            profileImg: "/로고 3.png"
+            profileImg: "/로고 3.png",
+            status : true
         },
         {
             name: "이세은",
             email: "dltpdms99@ssafy.com",
-            profileImg: "/로고 3.png"
+            profileImg: "/로고 3.png",
+            status : true
         }
     ]);
 
@@ -621,5 +630,14 @@
     z-index: 998;
     max-height: 70vh;
     overflow-y: auto;
+  }
+
+
+
+  .onLine {
+    color: #2ECC71;
+  }
+  .offLine {
+    color: #808080;
   }
 </style>
