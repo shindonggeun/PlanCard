@@ -1,8 +1,13 @@
 package com.ssafy.backend.domain.fcm.service;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.Notification;
 import com.ssafy.backend.domain.fcm.repository.FCMRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +27,31 @@ public class FCMServiceImpl implements FCMService {
     }
 
     @Override
-    public void sendMessage() {
+    public void sendMessageTo(Long memberId, String title, String content) {
         // token 찾고
+        Optional<String> fcmToken = fcmRepository.find(memberId);
 
+        if (fcmToken.isEmpty()) {
+            return;
+        }
 
-        // FCM에 전송
+        String token = fcmToken.get();
+
+        // makeMessage 로 리팩토링
+        Message message = Message.builder()
+                .putData("title", title)
+                .putData("content", content)
+                .setToken(token)
+                .build();
+
+        /*Message.builder()
+                .setToken(token)
+                .setNotification(Notification.builder()
+                        .setTitle(title)
+                        .setBody(body)
+                        .build());*/
+
+        // firebase에 비동기 전송
+        FirebaseMessaging.getInstance().sendAsync(message);
     }
 }

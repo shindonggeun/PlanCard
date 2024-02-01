@@ -45,5 +45,4 @@ public class FCMController {
 
         return ResponseEntity.ok(Message.success());
     }
-
 }

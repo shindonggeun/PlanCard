@@ -65,7 +65,12 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
+	// 쿼리내용 확인, 성능 테스트 후 사용여부 결정
+	implementation 'p6spy:p6spy:3.9.1'
+	implementation 'com.github.gavlyukovskiy:datasource-decorator-spring-boot-autoconfigure:1.9.0'
 
+	// firebase 추가
+//	implementation 'com.google.firebase:firebase-admin:9.2.0'
 }
 
 tasks.named('test') {

@@ -14,7 +14,7 @@ public class FCMRepository {
     private static final String KEY_PREFIX = "fcmToken::";
 
     public void save(Long memberId, String token) {
-        redisTemplate.opsForValue().set(KEY_PREFIX + memberId, token, Duration.ofDays(60));
+        redisTemplate.opsForValue().set(KEY_PREFIX + memberId, token, Duration.ofDays(60)); // FCM Token은 2개월 유효 권장
     }
 
     public void delete(Long memberId) {
