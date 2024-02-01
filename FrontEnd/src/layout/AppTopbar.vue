@@ -30,6 +30,9 @@
                 <i class="pi pi-user"></i>
                 <span>Profile</span>
             </button>
+            <!-- 비로그인 상태 -->
+            <p id="userName" @click="onTopBarMenuProfileButton()" v-show="!accountsStore.isLogin">로그인</p>
+            <!-- 로그인 상태 -->
             <p id="userName" @click="onTopBarMenuProfileButton()" v-show="accountsStore.isLogin">김싸피</p>
             <p style="padding-top: 10px; font-weight: 900;" v-show="accountsStore.isLogin">님</p>
         </div>
