@@ -2,7 +2,7 @@
     <div class="layout-topbar">
 
         <!-- 로고 -->
-        <router-link to="/main" class="layout-topbar-logo">
+        <router-link :to="{name: 'main'}" class="layout-topbar-logo">
             <img src="/로고 3.png" alt="로고" style="height: 100%; width: 55px; border-radius: 50%;"/>
             <span>Plan Card</span>
         </router-link>
