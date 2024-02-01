@@ -22,10 +22,9 @@ public class PlanDetailServiceImpl implements PlanDetailService{
 
     private final PlanRepository planRepository;
     private final CardRepository cardRepository;
-
     private final PlanDetailRepository planDetailRepository;
     @Override
-    public void createPlanDetail(Long planId, PlanDetailCreateRequestDto planDetailCreateRequestDto) {
+    public void createAndUpdatePlanDetail(Long planId, PlanDetailCreateRequestDto planDetailCreateRequestDto) {
            Plan plan = planRepository.findById(planId).orElseThrow();
            Card card = cardRepository.findById(planDetailCreateRequestDto.getCardId()).orElseThrow();
            planDetailRepository.save(planDetailCreateRequestDto.toEntity(card, plan));

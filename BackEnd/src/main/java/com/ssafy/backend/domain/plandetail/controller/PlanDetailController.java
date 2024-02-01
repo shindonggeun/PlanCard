@@ -21,7 +21,7 @@ public class PlanDetailController {
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public ResponseEntity<Message<Void>> createAndUpdatePlanDetail(@PathVariable("planId") Long planId,
                                                           @RequestBody PlanDetailCreateRequestDto planDetailCreateRequestDto) {
-        planDetailService.createPlanDetail(planId, planDetailCreateRequestDto);
+        planDetailService.createAndUpdatePlanDetail(planId, planDetailCreateRequestDto);
         return ResponseEntity.ok().body(Message.success());
 
 
