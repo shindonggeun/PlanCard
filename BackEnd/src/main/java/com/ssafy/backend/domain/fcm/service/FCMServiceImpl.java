@@ -27,7 +27,7 @@ public class FCMServiceImpl implements FCMService {
     }
 
     @Override
-    public void sendMessageTo(Long memberId, String title, String content) {
+    public void sendMessageTo(Long memberId, String title, String body) {
         // token 찾고
         Optional<String> fcmToken = fcmRepository.find(memberId);
 
@@ -39,17 +39,13 @@ public class FCMServiceImpl implements FCMService {
 
         // makeMessage 로 리팩토링
         Message message = Message.builder()
-                .putData("title", title)
-                .putData("content", content)
-                .setToken(token)
-                .build();
-
-        /*Message.builder()
                 .setToken(token)
                 .setNotification(Notification.builder()
                         .setTitle(title)
                         .setBody(body)
-                        .build());*/
+//                        .setImage(image)
+                        .build())
+                .build();
 
         // firebase에 비동기 전송
         FirebaseMessaging.getInstance().sendAsync(message);
