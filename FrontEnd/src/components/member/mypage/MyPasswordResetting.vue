@@ -47,29 +47,33 @@
   const nowPassword = ref(null);
   const changePassword1 = ref(null);
   const changePassword2 = ref(null);
-
+  
   const passwordResetting = async () => {
-    const passwordResettingData = {
-    nowPassword: nowPassword.value,
-    changePassword: changePassword1.value
-    };
-
-    try {
-    await passwordResettingApi(passwordResettingData,
-      (response) => {
-        if (response.data.dataHeader.successCode === 0) {
-          alert("비밀번호 변경에 성공했습니다.");
-          router.push('');
-        } else {
-          alert(response.data.dataHeader.resultMessage);
-        }
-      });
-  } catch (error) {
-    console.error(error);
-    alert("비밀번호 변경 중 오류가 발생했습니다.");
+    if (changePassword1.value !== changePassword2.value) {
+      alert("변경할 비밀번호가 같지 않습니다.")
+    } else {
+      const passwordResettingData = {
+        nowPassword: nowPassword.value,
+        changePassword: changePassword1.value
+      };
+      
+      try {
+        await passwordResettingApi(passwordResettingData,
+        (response) => {
+          if (response.data.dataHeader.successCode === 0) {
+            alert("비밀번호 변경에 성공했습니다.");
+            router.push('');
+          } else {
+            alert(response.data.dataHeader.resultMessage);
+          }
+        });
+      } catch (error) {
+        console.error(error);
+        alert("비밀번호 변경 중 오류가 발생했습니다.");
+      }
+    }
   }
-  }
-</script>
+  </script>
 
 
 
