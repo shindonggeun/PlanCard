@@ -2,6 +2,7 @@ package com.ssafy.backend.domain.alarm.controller;
 
 import com.ssafy.backend.domain.alarm.dto.AlarmCreateRequestDto;
 import com.ssafy.backend.domain.alarm.dto.AlarmDto;
+import com.ssafy.backend.domain.alarm.entity.enums.AlarmStatus;
 import com.ssafy.backend.domain.alarm.service.AlarmService;
 import com.ssafy.backend.domain.member.dto.MemberLoginActiveDto;
 import com.ssafy.backend.global.common.dto.Message;
@@ -38,11 +39,11 @@ public class AlarmController {
         return ResponseEntity.ok().body(Message.success(alarms));
     }
 
-    @PostMapping("/accept/{alarmId}")
+    @PostMapping("/{alarmId}/{action}")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public ResponseEntity<Message<Void>> acceptAlarm(@AuthenticationPrincipal MemberLoginActiveDto loginActiveDto,
-                                                     @PathVariable Long alarmId) {
-        alarmService.acceptAlarm(loginActiveDto.getId(), alarmId);
+                                                     @PathVariable Long alarmId, @PathVariable AlarmStatus action) {
+        alarmService.handleAlarm(loginActiveDto.getId(), alarmId, action);
         return ResponseEntity.ok().body(Message.success());
     }
 }

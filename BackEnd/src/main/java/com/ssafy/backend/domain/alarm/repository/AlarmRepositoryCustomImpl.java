@@ -34,7 +34,7 @@ public class AlarmRepositoryCustomImpl implements AlarmRepositoryCustom {
                         ))
                 .from(alarm)
                 .where(alarm.toMember.id.eq(memberId)
-                        .and(alarm.status.ne(AlarmStatus.ACCEPTED)))
+                        .and(alarm.status.ne(AlarmStatus.ACCEPT)))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
                 .fetch();

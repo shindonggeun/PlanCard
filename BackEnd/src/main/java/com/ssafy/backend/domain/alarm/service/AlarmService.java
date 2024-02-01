@@ -2,6 +2,7 @@ package com.ssafy.backend.domain.alarm.service;
 
 import com.ssafy.backend.domain.alarm.dto.AlarmCreateRequestDto;
 import com.ssafy.backend.domain.alarm.dto.AlarmDto;
+import com.ssafy.backend.domain.alarm.entity.enums.AlarmStatus;
 import com.ssafy.backend.global.common.dto.SliceResponse;
 import org.springframework.data.domain.Pageable;
 
@@ -12,5 +13,5 @@ public interface AlarmService {
 
     SliceResponse getAlarmList(Long memberId, Pageable pageable);
 
-    void acceptAlarm(Long memberId, Long alarmId);
+    void handleAlarm(Long memberId, Long alarmId, AlarmStatus action);
 }
