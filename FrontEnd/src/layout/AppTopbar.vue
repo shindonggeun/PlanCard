@@ -76,7 +76,7 @@
                 </v-list>
                 <div @click="goMyPage()" style="text-align: center;">
                     <button id="myPageBtn">My Page</button>
-                    <button id="logOutBtn" @click="accountsStore.logOut()">LogOut</button>
+                    <button id="logOutBtn" @click="logOut()">LogOut</button>
                 </div>
                 <v-divider></v-divider>
                 <div id="friendsList">
@@ -138,6 +138,7 @@
     import { useRouter } from 'vue-router';
     import { useAccountsStore } from '@/stores/accountsStore';
     import MeetingCreate from "@/components/meeting/MeetingCreate.vue";
+    import { memberLogoutApi } from "@/api/memberApi";
 
     const accountsStore = useAccountsStore()
     const router = useRouter()
@@ -325,6 +326,23 @@
     const showCreateMeeting = () => {
         showCreateMeetingModal.value = !showCreateMeetingModal.value
     }
+  
+  // 로그아웃
+  const logOut = async () => {
+    try {
+      await memberLogoutApi((response) => {
+        if (response.data.dataHeader.successCode === 0) {
+          alert("로그아웃 되었습니다.");
+          router.push('');
+        } else {
+          alert(response.data.dataHeader.resultMessage);
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      alert("로그아웃 중 오류가 발생했습니다.");
+    }
+  }
 </script>
 
 

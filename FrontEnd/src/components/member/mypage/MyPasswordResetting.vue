@@ -13,16 +13,16 @@
           
           <form @submit.prevent="passwordResetting()" id="passwordResettingForm">
             
-            <div class="box, card p-fluid" id="currentPasswordInput">
-              <input type="password" id="currentPassword" v-model.trim="currentPassword" placeholder="기존 비밀번호">
+            <div class="box, card p-fluid" id="nowPasswordInput">
+              <input type="password" id="nowPassword" v-model.trim="nowPassword" placeholder="기존 비밀번호">
             </div>
             
-            <div class="box, card p-fluid" id="newPassword1Input">
-              <input type="password" id="newPassword1" v-model.trim="newPassword1" placeholder="새로운 비밀번호">
+            <div class="box, card p-fluid" id="changePassword1Input">
+              <input type="password" id="changePassword1" v-model.trim="changePassword1" placeholder="새로운 비밀번호">
             </div>
             
-            <div class="box, card p-fluid" id="newPassword2Input">
-              <input type="password" id="newPassword2" v-model.trim="newPassword2" placeholder="새로운 비밀번호 확인">
+            <div class="box, card p-fluid" id="changePassword2Input">
+              <input type="password" id="changePassword2" v-model.trim="changePassword2" placeholder="새로운 비밀번호 확인">
             </div>
             
             <div class="box, card p-fluid"  id="resettingSubmit" style=" text-align: center;">
@@ -39,21 +39,35 @@
 
 <script setup>
   import { ref } from 'vue';
-  import { useAccountsStore } from '@/stores/accountsStore.js';
+  import { passwordResettingApi } from "@/api/memberApi";
+  import { useRouter } from 'vue-router';
+  const router = useRouter();
 
-  const accountsStore = useAccountsStore()
 
-  const currentPassword = ref(null);
-  const newPassword1 = ref(null);
-  const newPassword2 = ref(null);
+  const nowPassword = ref(null);
+  const changePassword1 = ref(null);
+  const changePassword2 = ref(null);
 
-  const passwordResetting = function () {
-      const info = {
-        currentPassword: currentPassword.value,
-        newPassword1: newPassword1.value,
-        newPassword2: newPassword2.value,
-      }
-      accountsStore.passwordResetting(info)
+  const passwordResetting = async () => {
+    const passwordResettingData = {
+    nowPassword: nowPassword.value,
+    changePassword: changePassword1.value
+    };
+
+    try {
+    await passwordResettingApi(passwordResettingData,
+      (response) => {
+        if (response.data.dataHeader.successCode === 0) {
+          alert("비밀번호 변경에 성공했습니다.");
+          router.push('');
+        } else {
+          alert(response.data.dataHeader.resultMessage);
+        }
+      });
+  } catch (error) {
+    console.error(error);
+    alert("비밀번호 변경 중 오류가 발생했습니다.");
+  }
   }
 </script>
 
@@ -97,11 +111,11 @@
   }
 
 
-  #currentPassword, #newPassword1, #newPassword2 {
+  #nowPassword, #changePassword1, #changePassword2 {
     height: 35px;
     width: 250px;
   }
-  #currentPasswordInput, #newPassword1Input, #newPassword2Input {
+  #nowPasswordInput, #changePassword1Input, #changePassword2Input {
     background-color: rgba(245, 245, 245, 0.1);
     width: 90%;
     display: flex;
