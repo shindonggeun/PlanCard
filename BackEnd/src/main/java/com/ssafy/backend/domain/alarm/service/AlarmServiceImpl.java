@@ -68,11 +68,11 @@ public class AlarmServiceImpl implements AlarmService {
     }
 
     private void processAcceptAlarm(Alarm alarm, Long memberId) {
-        alarm.accept();
+        /*alarm.accept();
         if (alarm.getType() == AlarmType.FRIEND) {
             friendshipService.accept(memberId, alarm.getFromMember().getId());
         } else if (alarm.getType() == AlarmType.CONFERENCE) {
             // TODO: 회의 참여 요청 알람인 경우, 추가적인 처리하기 (화상회의 url 반환 등)
-        }
+        }*/
     }
 }

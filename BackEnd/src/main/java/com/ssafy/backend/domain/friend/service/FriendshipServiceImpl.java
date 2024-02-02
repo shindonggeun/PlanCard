@@ -9,6 +9,8 @@ import com.ssafy.backend.domain.friend.dto.FriendshipDto;
 import com.ssafy.backend.domain.friend.entity.Friendship;
 import com.ssafy.backend.domain.friend.repository.FriendshipRepository;
 import com.ssafy.backend.domain.member.entity.Member;
+import com.ssafy.backend.domain.member.exception.MemberError;
+import com.ssafy.backend.domain.member.exception.MemberException;
 import com.ssafy.backend.domain.member.repository.MemberRepository;
 import com.ssafy.backend.global.common.dto.SliceResponse;
 import jakarta.transaction.Transactional;
@@ -32,9 +34,9 @@ public class FriendshipServiceImpl implements FriendshipService {
      * @param friendId 친구추가 요청한 회원 id
      */
     @Override
-    public void accept(Long ownerId, Long friendId) {
-        Member owner = memberRepository.findById(ownerId).orElseThrow();
-        Member target = memberRepository.findById(friendId).orElseThrow();
+    public void accept(Long alarmId, Long ownerId, Long friendId) {
+        Member owner = memberRepository.findById(ownerId).orElseThrow(() -> new MemberException(MemberError.NOT_FOUND_MEMBER));
+        Member target = memberRepository.findById(friendId).orElseThrow(() -> new MemberException(MemberError.NOT_FOUND_MEMBER));
 
         Friendship ownerFriendship = Friendship.builder()
                 .owner(owner)
@@ -46,7 +48,8 @@ public class FriendshipServiceImpl implements FriendshipService {
                 .friend(owner)
                 .build();
 
-        Alarm alarm = Alarm.builder().fromMember(owner)
+        // 친구요청 부분으로 이동
+        /*Alarm alarm = Alarm.builder().fromMember(owner)
                 .toMember(target)
                 .content(owner.getNickname() + AlarmType.FRIEND.getContent())
                 .type(AlarmType.FRIEND)
@@ -55,11 +58,24 @@ public class FriendshipServiceImpl implements FriendshipService {
 
         alarmRepository.save(alarm);
 
-        fcmService.sendMessageTo(alarm.getId(), AlarmType.FRIEND.getTitle(), alarm.getContent());
+        fcmService.sendMessageTo(alarm.getId(), AlarmType.FRIEND.getTitle(), alarm.getContent());*/
+        
+        // alarm 찾고 
+        // 해당 alarm 상태 변경
+        Alarm alarm = alarmRepository.findById(alarmId).orElseThrow();
+        alarm.accept();
 
         friendshipRepository.save(ownerFriendship);
         friendshipRepository.save(targetFriendship);
     }
+
+    @Override
+    public void refuse(Long alarmId) {
+        Alarm alarm = alarmRepository.findById(alarmId).orElseThrow();
+        alarmRepository.delete(alarm);
+    }
+
+    // 친구추가 요청
 
     @Override
     public SliceResponse getFriends(Long ownerId, Pageable pageable) {
