@@ -24,10 +24,19 @@ public class PlanDetailServiceImpl implements PlanDetailService{
     private final CardRepository cardRepository;
     private final PlanDetailRepository planDetailRepository;
     @Override
-    public void createAndUpdatePlanDetail(Long planId, PlanDetailCreateRequestDto planDetailCreateRequestDto) {
-           Plan plan = planRepository.findById(planId).orElseThrow();
-           Card card = cardRepository.findById(planDetailCreateRequestDto.getCardId()).orElseThrow();
-           planDetailRepository.save(planDetailCreateRequestDto.toEntity(card, plan));
+    public void createAndUpdatePlanDetail(Long planId, String action,
+                                          List<PlanDetailCreateRequestDto> planDetailCreateRequestDtoList) {
+        if (planDetailCreateRequestDtoList == null || planDetailCreateRequestDtoList.isEmpty()) {
+            throw new RuntimeException("생성할 여행 상세 계획이 없습니다.");
+        }
+        Plan plan = planRepository.findById(planId).orElseThrow();
+
+
+        for (PlanDetailCreateRequestDto planDetailCreateRequestDto : planDetailCreateRequestDtoList) {
+//            if pla
+            Card card = cardRepository.findById(planDetailCreateRequestDto.getCardId()).orElseThrow();
+            planDetailRepository.save(planDetailCreateRequestDto.toEntity(card, plan));
+        }
     }
 
     @Override
@@ -36,6 +45,7 @@ public class PlanDetailServiceImpl implements PlanDetailService{
 
         return planDetails.stream()
                 .map(planDetail -> new PlanDetailListResponseDto(
+                        planDetail.getId(),
                         planDetail.getCard().getId(),
                         planDetail.getCard().getPosition(),
                         planDetail.getCard().getMemo(),

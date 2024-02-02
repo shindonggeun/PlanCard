@@ -17,11 +17,11 @@ import java.util.List;
 public class PlanDetailController {
     private final PlanDetailService planDetailService;
 
-    @PostMapping("/{planId}/detail")
+    @PostMapping("/{planId}/detail/{action}")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public ResponseEntity<Message<Void>> createAndUpdatePlanDetail(@PathVariable("planId") Long planId,
-                                                          @RequestBody PlanDetailCreateRequestDto planDetailCreateRequestDto) {
-        planDetailService.createAndUpdatePlanDetail(planId, planDetailCreateRequestDto);
+    public ResponseEntity<Message<Void>> createAndUpdatePlanDetail(@PathVariable("planId") Long planId, @PathVariable("action") String action,
+                                                          @RequestBody List<PlanDetailCreateRequestDto> planDetailCreateRequestDtoList) {
+        planDetailService.createAndUpdatePlanDetail(planId, action, planDetailCreateRequestDtoList);
         return ResponseEntity.ok().body(Message.success());
 
 
