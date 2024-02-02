@@ -64,8 +64,6 @@ public class FriendshipServiceImpl implements FriendshipService {
     }
 
     // 친구추가 요청
-
-
     @Override
     public void requestFriendship(Long ownerId, Long friendId) {
         Member owner = memberRepository.findById(ownerId).orElseThrow(() -> new MemberException(MemberError.NOT_FOUND_MEMBER));
@@ -74,6 +72,7 @@ public class FriendshipServiceImpl implements FriendshipService {
         // 친구요청 부분으로 이동
         Alarm alarm = Alarm.builder().fromMember(owner)
                 .toMember(target)
+                .title(AlarmType.FRIEND.getTitle())
                 .content(owner.getNickname() + AlarmType.FRIEND.getContent())
                 .type(AlarmType.FRIEND)
                 .status(AlarmStatus.UNREAD)
@@ -81,7 +80,7 @@ public class FriendshipServiceImpl implements FriendshipService {
 
         alarmRepository.save(alarm);
 
-        fcmService.sendMessageTo(alarm.getId(), AlarmType.FRIEND.getTitle(), alarm.getContent());
+        fcmService.sendMessageTo(target.getId(), alarm.getTitle(), alarm.getContent());
     }
 
     @Override

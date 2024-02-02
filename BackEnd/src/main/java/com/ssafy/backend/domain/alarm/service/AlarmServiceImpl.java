@@ -6,6 +6,7 @@ import com.ssafy.backend.domain.alarm.entity.Alarm;
 import com.ssafy.backend.domain.alarm.entity.enums.AlarmStatus;
 import com.ssafy.backend.domain.alarm.entity.enums.AlarmType;
 import com.ssafy.backend.domain.alarm.repository.AlarmRepository;
+import com.ssafy.backend.domain.fcm.service.FCMService;
 import com.ssafy.backend.domain.friend.repository.FriendshipRepository;
 import com.ssafy.backend.domain.friend.service.FriendshipService;
 import com.ssafy.backend.domain.member.entity.Member;
@@ -29,6 +30,7 @@ public class AlarmServiceImpl implements AlarmService {
     private final MemberRepository memberRepository;
     private final AlarmRepository alarmRepository;
     private final FriendshipService friendshipService;
+    private final FCMService fcmService;
 
     @Override
     public void createAlarm(Long fromMemberId, AlarmCreateRequestDto createRequestDto) {
@@ -39,6 +41,8 @@ public class AlarmServiceImpl implements AlarmService {
 
         Alarm alarm = createRequestDto.toEntity(fromMember, toMember);
         alarmRepository.save(alarm);
+
+        fcmService.sendMessageTo(toMember.getId(), "test", "test");
     }
 
     @Override
