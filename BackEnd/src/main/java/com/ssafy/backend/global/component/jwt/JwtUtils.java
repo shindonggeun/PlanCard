@@ -26,8 +26,6 @@ public class JwtUtils {
     @Value("${jwt.secret-key.refresh}")
     private String refreshKey;
 
-    @Value("${jwt.secret-key.signup}")
-    private String signupKey;
 
     @Value("${jwt.expired-min.access}")
     private int accessTokenExpiredMin;
@@ -40,8 +38,6 @@ public class JwtUtils {
 
     private Key encodedAccessKey;
     private Key encodedRefreshKey;
-    private Key encodedSignupKey;
-
     // 로직 탈 때 수행되는 메서드
     @PostConstruct
     private void init() {
@@ -50,8 +46,5 @@ public class JwtUtils {
 
         encodedRefreshKey = Keys.hmacShaKeyFor(
                 Base64.getEncoder().encodeToString(refreshKey.getBytes()).getBytes());
-
-        encodedSignupKey = Keys.hmacShaKeyFor(
-                Base64.getEncoder().encodeToString(signupKey.getBytes()).getBytes());
     }
 }

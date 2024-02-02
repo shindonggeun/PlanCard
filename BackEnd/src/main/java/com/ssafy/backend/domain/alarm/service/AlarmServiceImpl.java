@@ -48,8 +48,12 @@ public class AlarmServiceImpl implements AlarmService {
     @Override
     public SliceResponse getAlarmList(Long memberId, Pageable pageable) {
         Slice<AlarmDto> alarms = alarmRepository.findAlarmSliceByMemberId(memberId, pageable);
-
         return SliceResponse.of(alarms);
+    }
+
+    @Override
+    public List<AlarmDto> getAlarmList(Long memberId, Long lastAlarmId, int limit) {
+        return alarmRepository.findAlarmsAfterId(memberId, lastAlarmId, limit);
     }
 
     @Override

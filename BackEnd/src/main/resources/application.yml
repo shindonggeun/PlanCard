@@ -61,12 +61,10 @@ jwt:
   secret-key:
     access: TestAccessKey111111122222222223333333333333aaaaaaaaabbbbbbbbccccccccdddddddddfqwrqwfqwifjaisfjoihfoiqwflasjdglkkjasdlgjlkasdgjiowejgliasjglasjdgio
     refresh: TestRefreshKey111111122222222223333333333333aaaaaaaaabbbbbbbbccccccccdddddddddfqwrqwfqwifjaisfjoihfoiqwflasjdglkkjasdlgjlkasdgjiowejgliasjglasjdgio
-    signup: TestSignupKey111111122222222223333333333333aaaaaaaaabbbbbbbbccccccccdddddddddfqwrqwfqwifjaisfjoihfoiqwflasjdglkkjasdlgjlkasdgjiowejgliasjglasjdgio
 
   expired-min:
     access: 60   # 액세스 토큰 만료제한시간 60분 (1시간)
     refresh: 10080  # 리프레쉬 토큰 만료제한시간 10080분 (7일)
-    signup: 5
 
 # log 관리
 logging:
