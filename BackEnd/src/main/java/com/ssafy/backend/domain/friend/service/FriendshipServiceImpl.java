@@ -48,18 +48,6 @@ public class FriendshipServiceImpl implements FriendshipService {
                 .friend(owner)
                 .build();
 
-        // 친구요청 부분으로 이동
-        /*Alarm alarm = Alarm.builder().fromMember(owner)
-                .toMember(target)
-                .content(owner.getNickname() + AlarmType.FRIEND.getContent())
-                .type(AlarmType.FRIEND)
-                .status(AlarmStatus.UNREAD)
-                .build();
-
-        alarmRepository.save(alarm);
-
-        fcmService.sendMessageTo(alarm.getId(), AlarmType.FRIEND.getTitle(), alarm.getContent());*/
-        
         // alarm 찾고 
         // 해당 alarm 상태 변경
         Alarm alarm = alarmRepository.findById(alarmId).orElseThrow();
@@ -76,6 +64,25 @@ public class FriendshipServiceImpl implements FriendshipService {
     }
 
     // 친구추가 요청
+
+
+    @Override
+    public void requestFriendship(Long ownerId, Long friendId) {
+        Member owner = memberRepository.findById(ownerId).orElseThrow(() -> new MemberException(MemberError.NOT_FOUND_MEMBER));
+        Member target = memberRepository.findById(friendId).orElseThrow(() -> new MemberException(MemberError.NOT_FOUND_MEMBER));
+
+        // 친구요청 부분으로 이동
+        Alarm alarm = Alarm.builder().fromMember(owner)
+                .toMember(target)
+                .content(owner.getNickname() + AlarmType.FRIEND.getContent())
+                .type(AlarmType.FRIEND)
+                .status(AlarmStatus.UNREAD)
+                .build();
+
+        alarmRepository.save(alarm);
+
+        fcmService.sendMessageTo(alarm.getId(), AlarmType.FRIEND.getTitle(), alarm.getContent());
+    }
 
     @Override
     public SliceResponse getFriends(Long ownerId, Pageable pageable) {

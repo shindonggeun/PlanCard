@@ -2,6 +2,7 @@ package com.ssafy.backend.domain.friend.controller;
 
 
 import com.ssafy.backend.domain.friend.dto.AcceptDto;
+import com.ssafy.backend.domain.friend.dto.FriendshipRequestDto;
 import com.ssafy.backend.domain.friend.dto.RefuseDto;
 import com.ssafy.backend.domain.friend.service.FriendshipService;
 import com.ssafy.backend.domain.member.dto.MemberLoginActiveDto;
@@ -38,6 +39,13 @@ public class FriendController {
     @PreAuthorize("hasAuthority('USER') or hasAnyAuthority('ADMIN')")
     public ResponseEntity refuseFriend(@RequestBody RefuseDto refuseDto) {
         friendshipService.refuse(refuseDto.getAlarmId());
+        return ResponseEntity.ok(Message.success());
+    }
+
+    @PostMapping("/request")
+    @PreAuthorize("hasAnyAuthority('USER') or hasAnyAuthority('ADMIN')")
+    public ResponseEntity requestFriend(@RequestBody FriendshipRequestDto friendshipRequestDto) {
+        friendshipService.requestFriendship(friendshipRequestDto.getOwnerId(), friendshipRequestDto.getFriendId());
         return ResponseEntity.ok(Message.success());
     }
 

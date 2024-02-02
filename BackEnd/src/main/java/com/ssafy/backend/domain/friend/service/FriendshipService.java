@@ -8,5 +8,7 @@ public interface FriendshipService {
 
     void refuse(Long alarmId);
 
+    void requestFriendship(Long ownerId, Long friendId);
+
     SliceResponse getFriends(Long ownerId, Pageable pageable);
 }
