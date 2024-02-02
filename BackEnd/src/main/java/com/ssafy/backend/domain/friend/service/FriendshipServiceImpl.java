@@ -1,5 +1,10 @@
 package com.ssafy.backend.domain.friend.service;
 
+import com.ssafy.backend.domain.alarm.entity.Alarm;
+import com.ssafy.backend.domain.alarm.entity.enums.AlarmStatus;
+import com.ssafy.backend.domain.alarm.entity.enums.AlarmType;
+import com.ssafy.backend.domain.alarm.repository.AlarmRepository;
+import com.ssafy.backend.domain.fcm.service.FCMService;
 import com.ssafy.backend.domain.friend.dto.FriendshipDto;
 import com.ssafy.backend.domain.friend.entity.Friendship;
 import com.ssafy.backend.domain.friend.repository.FriendshipRepository;
@@ -18,6 +23,8 @@ import org.springframework.stereotype.Service;
 public class FriendshipServiceImpl implements FriendshipService {
     private final FriendshipRepository friendshipRepository;
     private final MemberRepository memberRepository;
+    private final AlarmRepository alarmRepository;
+    private final FCMService fcmService;
 
     /**
      * 친구추가 수락 처리
@@ -38,6 +45,17 @@ public class FriendshipServiceImpl implements FriendshipService {
                 .owner(target)
                 .friend(owner)
                 .build();
+
+        Alarm alarm = Alarm.builder().fromMember(owner)
+                .toMember(target)
+                .content(owner.getNickname() + AlarmType.FRIEND.getContent())
+                .type(AlarmType.FRIEND)
+                .status(AlarmStatus.UNREAD)
+                .build();
+
+        alarmRepository.save(alarm);
+
+        fcmService.sendMessageTo(alarm.getId(), AlarmType.FRIEND.getTitle(), alarm.getContent());
 
         friendshipRepository.save(ownerFriendship);
         friendshipRepository.save(targetFriendship);
