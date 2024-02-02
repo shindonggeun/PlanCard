@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,19 +25,27 @@ public class PlanDetailServiceImpl implements PlanDetailService{
     private final CardRepository cardRepository;
     private final PlanDetailRepository planDetailRepository;
     @Override
-    public void createAndUpdatePlanDetail(Long planId, String action,
+    public void updatePlanDetail(Long planId,
                                           List<PlanDetailCreateRequestDto> planDetailCreateRequestDtoList) {
         if (planDetailCreateRequestDtoList == null || planDetailCreateRequestDtoList.isEmpty()) {
             throw new RuntimeException("생성할 여행 상세 계획이 없습니다.");
         }
         Plan plan = planRepository.findById(planId).orElseThrow();
-
-
-        for (PlanDetailCreateRequestDto planDetailCreateRequestDto : planDetailCreateRequestDtoList) {
-//            if pla
-            Card card = cardRepository.findById(planDetailCreateRequestDto.getCardId()).orElseThrow();
-            planDetailRepository.save(planDetailCreateRequestDto.toEntity(card, plan));
+        Map<Long, PlanDetail> existingPlanDetails = planDetailRepository.findByPlanId(planId)
+                .stream()
+                .collect(Collectors.toMap(PlanDetail::getId, planDetail -> planDetail));
+        for (PlanDetailCreateRequestDto newplanDetail : planDetailCreateRequestDtoList) {
+            if (newplanDetail.getId() == null) {
+                Card card = cardRepository.findById(newplanDetail.getCardId()).orElseThrow();
+                planDetailRepository.save(newplanDetail.toEntity(card, plan));
+            } else {
+                PlanDetail planDetail = planDetailRepository.findById(newplanDetail.getId()).orElseThrow();
+                planDetail.update(newplanDetail.getOrderNumber(), newplanDetail.getDay());
+                planDetailRepository.save(planDetail);
+                existingPlanDetails.remove(newplanDetail.getId());
+            }
         }
+        planDetailRepository.deleteAll(existingPlanDetails.values());
     }
 
     @Override
