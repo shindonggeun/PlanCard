@@ -52,7 +52,7 @@ public class PlanDetailServiceImpl implements PlanDetailService{
     public List<PlanDetailListResponseDto> getPlanDetailList(Long planId) {
         List<PlanDetail> planDetails = planDetailRepository.findByPlanId(planId);
 
-        return planDetails.stream()
+        List<PlanDetailListResponseDto> sortedPlanDetailList = planDetails.stream()
                 .map(planDetail -> new PlanDetailListResponseDto(
                         planDetail.getId(),
                         planDetail.getCard().getId(),
@@ -62,6 +62,9 @@ public class PlanDetailServiceImpl implements PlanDetailService{
                         planDetail.getCard().getPlace().getAddress(),
                         planDetail.getOrderNumber(),
                         planDetail.getDay()))
+                .sorted() // Comparable에 따라 정렬
                 .collect(Collectors.toList());
+
+        return sortedPlanDetailList;
     }
 }
