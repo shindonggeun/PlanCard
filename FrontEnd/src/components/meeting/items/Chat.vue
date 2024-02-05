@@ -18,7 +18,8 @@
   import Stomp from 'webstomp-client';
   import { localAxios } from '@/util/http-commons';
   import { useAccountsStore } from '@/stores/accountsStore'; // accountsStore 가져오기
-  
+
+
   const { cookies } = useCookies();
   const route = useRoute();
   const roomId = route.params.id; // vue-router를 통해 roomId를 동적으로 받아옴
@@ -31,8 +32,9 @@
   // 채팅방 내역 불러오기
   const fetchChatHistory = async () => {
     try {
-      const response = await localAxios().get(`/chat/history/${roomId}`);
-      chats.value = response.data; // 서버에서 채팅 내역을 받아옴
+      const response = await localAxios().get(`/history/${roomId}`);
+      console.log(response.data.dataBody);
+      chats.value = response.data.dataBody; // 서버에서 채팅 내역을 받아옴
     } catch (error) {
       console.error("Chat history fetch error: ", error);
     }
@@ -72,7 +74,7 @@
       // 메시지 전송 전에 로컬 채팅 목록에 추가
       chats.value.push(message);
   
-      stompClient.send(`/pub/chat/${roomId}`, JSON.stringify(message), {
+      stompClient.send(`/pub/api/v1/chat/${roomId}`, JSON.stringify(message), {
         Authorization: `Bearer ${cookies.get("accessToken")}`
       });
       chatText.value = '';
