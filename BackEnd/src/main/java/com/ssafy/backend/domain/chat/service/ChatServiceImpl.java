@@ -34,6 +34,7 @@ public class ChatServiceImpl implements ChatService {
 
         Chat chat = Chat.builder()
                 .roomId(roomId)
+                .memberId(memberId)
                 .nickname(messageDto.getNickname())
                 .image(messageDto.getImage())
                 .message(messageDto.getMessage())

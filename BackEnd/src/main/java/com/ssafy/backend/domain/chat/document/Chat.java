@@ -18,6 +18,8 @@ public class Chat {
     private String id;
     @Field("room_id")
     private Long roomId;
+    @Field("member_id")
+    private Long memberId;
     @Field("sender_name")
     private String nickname;
     @Field("image")
