@@ -33,9 +33,6 @@ public class JwtUtils {
     @Value("${jwt.expired-min.refresh}")
     private int refreshTokenExpiredMin;
 
-    @Value("${jwt.expired-min.signup}")
-    private int signupTokenExpiredMin;
-
     private Key encodedAccessKey;
     private Key encodedRefreshKey;
     // 로직 탈 때 수행되는 메서드

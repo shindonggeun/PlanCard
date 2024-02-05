@@ -56,6 +56,14 @@ spring:
           starttls:
             enable: true
 
+  # RabbitMQ setting
+  rabbitmq:
+    host: localhost  # RabbitMQ 서버 호스트
+    port: 15672       # RabbitMQ 서버 포트, 기본값은 15672
+    username: guest  # RabbitMQ 사용자 이름, 기본값은 guest
+    password: guest  # RabbitMQ 비밀번호, 기본값은 guest
+    virtual-host: /  # RabbitMQ 가상 호스트, 기본값은 /
+
 # jwt setting
 jwt:
   secret-key:

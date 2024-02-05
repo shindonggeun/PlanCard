@@ -1,7 +1,3 @@
-
-
-
-
 <template>
     <div>
         <div class="col-12 mt-0 pt-0">
@@ -25,6 +21,7 @@
             </div> -->
         </div>
     </div>
+    <Chat></Chat>
 </template>
 
 
@@ -35,6 +32,7 @@ import ItemDetailPlanList from '@/components/meeting/items/detailplan/ItemDetail
 import ItemFace from '@/components/meeting/items/ItemFace.vue'
 import ItemTitle from '@/components/meeting/items/ItemTitle.vue'
 // import ItemMap from '@/components/meeting/items/ItemMap.vue'
+import Chat from '@/components/meeting/items/Chat.vue'
 import { ref } from "vue"
 const cardList = ref([])
 const detailPlanList = ref([])
