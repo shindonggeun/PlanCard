@@ -21,8 +21,9 @@ public class Place {
     private String image;
     private String category;
     private String address;
-    private String latitude;
-    private String logitude;
+
+    private Double latitude;
+    private Double logitude;
 
 
 }

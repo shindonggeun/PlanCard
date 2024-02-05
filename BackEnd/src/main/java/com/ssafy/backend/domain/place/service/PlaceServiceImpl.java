@@ -9,6 +9,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Service;
 
+import java.awt.geom.Point2D;
+
 
 @Slf4j
 @Service
@@ -106,26 +108,21 @@ public class PlaceServiceImpl implements PlaceService {
                         String adds = (String)address.get(1); //한글인 주소만 추출
                         String image = (String)images.get(0); //한개의 이미지만 추출
 
-//                        //BigDecimal로 위도 경도 타입 변경중....
-//                        BigDecimal newLat;
-//                        BigDecimal newLon;
-//                        try {
-//                            newLon = new BigDecimal(lon);
-//                            newLat = new BigDecimal(lat);
-//                        } catch (NumberFormatException e) {
-//                            newLon = new BigDecimal("0");
-//                            newLat = new BigDecimal("0");
-//                        }
 
                         //값이 유효한 경우만 데이터로 저장합니다
                         if (!title.isBlank() && !adds.isBlank() && !image.isBlank() && !lat.isBlank() && !lon.isBlank()) {
+
+                            //문자열로 받은 위도 경도 데이터 타입 변경
+                            Point2D.Double location = new Point2D.Double(Double.parseDouble(lat), Double.parseDouble(lon));
+//                            log.info(String.valueOf(location.x));
+//                            log.info(String.valueOf(location.y));
 
                             PlaceRegisterDto dto = new PlaceRegisterDto();
                             dto.setName(title);
                             dto.setAddress(adds);
                             dto.setImg(image);
-                            dto.setLatitude(lat);
-                            dto.setLongitude(lon);
+                            dto.setLatitude(location.getX());
+                            dto.setLongitude(location.getX());
 
                             placeInfoRepository.save(dto.toEntity());
                         }
