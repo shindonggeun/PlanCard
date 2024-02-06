@@ -12,23 +12,31 @@
         </div>
         <!-- 조건부 렌더링으로 채팅 컴포넌트 표시 -->
         <Chat v-if="activeTab === 'chat'"></Chat>
+        <RealTimeEditor :roomId="roomId"></RealTimeEditor>
     </div>
 </template>
 
 
 
 <script setup>
+import { onBeforeMount, ref } from "vue";
+import { useRoute } from 'vue-router';
+
 import ItemFace from '@/components/meeting/items/ItemFace.vue'
 import Chat from '@/components/meeting/items/Chat.vue'
 import ItemDrag from "@/components/meeting/items/ItemDrag.vue"
-import { onBeforeMount, onBeforeUnmount, onUnmounted, ref } from "vue"
 import { useLayout } from '@/layout/composables/layout';
+import RealTimeEditor from '@/components/meeting/RealTimeEditor.vue';
 
+const route = useRoute();
 const { layoutState } = useLayout();
 
-const cardList = ref([])
+// const cardList = ref([])
 const detailPlanList = ref([])
 
+// URL에서 id 파라미터 추출
+const roomId = ref(route.params.id);
+console.log(roomId.value);
 
 const cardUpdate = (emitCardList) => {
     cardList.value = emitCardList
