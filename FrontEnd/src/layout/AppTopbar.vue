@@ -1,5 +1,5 @@
 <template>
-      <!-- 로고
+  <!-- 로고
   <router-link :to="{ name: 'main' }" class="layout-topbar-logo">
     <img src="/로고 3.png" alt="로고" style="height: 100%; width: 55px; border-radius: 50%;" />
     <span>Plan Card</span>
@@ -19,7 +19,7 @@
     </v-btn>
 
     <v-btn class="startBtn" v-show="accountsStore.isLogin">
-      <p class="router-link-active" @click="showCreateMeeting"><b>Start</b></p>
+      <p class="router-link-active" @click="showCreateMeeting"><b>빠른 시작</b></p>
     </v-btn>
 
 
@@ -131,10 +131,8 @@
     <!-- 미팅 생성 창 -->
     <div id="overlay" v-if="showCreateMeetingModal"></div>
     <div id="createMeetingBox">
-      <MeetingCreate v-if="showCreateMeetingModal" @close-meeting-create="closeMeetingCreate" />
+      <MeetingCreate v-if="showCreateMeetingModal" @close-meeting-create="closeMeetingCreateHandler"></MeetingCreate>
     </div>
-
-
 
   </div>
 </template>
@@ -142,7 +140,7 @@
 
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAccountsStore } from '@/stores/accountsStore';
 import MeetingCreate from "@/components/meeting/MeetingCreate.vue";
@@ -152,6 +150,8 @@ const accountsStore = useAccountsStore()
 const planStore = usePlanStore()
 const router = useRouter()
 
+
+
 const outsideClickListener = ref(null);
 const topbarMenuActive = ref(false);
 const topbarNotificationActive = ref(false);  // 알림 팝업 유무 변수
@@ -160,7 +160,11 @@ const friendRequestActive = ref(false);  // 친구요청창
 
 const friendEmail = ref("");  // 친구 요청할 때 입력하는 email
 
-let isMeeting = computed(()=> planStore.isMeetingView)
+let isMeeting = computed(() => planStore.isMeetingView);
+
+const closeMeetingCreateHandler = () => {
+  showCreateMeetingModal.value = false;
+};
 
 onMounted(() => {
   bindOutsideClickListener();
@@ -222,14 +226,6 @@ const logout = async () => {
     alert("로그아웃 과정 중 문제가 발생했습니다.");
   }
 }
-
-
-
-
-
-
-
-
 
 
 // 알림 팝업 부분 코드 시작
@@ -358,22 +354,6 @@ const showCreateMeeting = () => {
   showCreateMeetingModal.value = !showCreateMeetingModal.value
 }
 
-// 로그아웃
-const logOut = async () => {
-  try {
-    await memberLogoutApi((response) => {
-      if (response.data.dataHeader.successCode === 0) {
-        alert("로그아웃 되었습니다.");
-        router.push('');
-      } else {
-        alert(response.data.dataHeader.resultMessage);
-      }
-    });
-  } catch (error) {
-    console.error(error);
-    alert("로그아웃 중 오류가 발생했습니다.");
-  }
-}
 </script>
 
 
@@ -731,4 +711,5 @@ const logOut = async () => {
 
 .offLine {
   color: #808080;
-}</style>
+}
+</style>

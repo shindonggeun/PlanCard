@@ -2,7 +2,7 @@
   <div class="card p-fluid">
 
     <div id="div1">
-      <h1>My plan</h1>
+      <h1>나의 여행 계획들</h1>
       <v-btn class="startBtn" id="addBtn" @click="showCreateMeeting">
         <p style="margin-bottom: 20%;">+</p>
       </v-btn>
@@ -18,7 +18,7 @@
         <p class="card f-fluid" id="planPeople">인원 : {{ plan.people }}명</p>
         <p class="card f-fluid" id="planDate">{{ plan.startDate }} ~ {{ plan.EndDate }}</p>
         <v-btn class="startBtn">
-          <router-link :to="{ path: 'view/:id' }" class="router-link-active">
+          <router-link :to="{ name: 'meeting-detail', params: { id: plan.id } }" class="router-link-active">
             Start
           </router-link>
         </v-btn>
@@ -27,7 +27,7 @@
 
     <div id="overlay" v-if="showCreateMeetingModal"></div>
     <div id="createMeetingBox">
-      <MeetingCreate v-if="showCreateMeetingModal" @close-meeting-create="closeMeetingCreate" />
+      <MeetingCreate v-if="showCreateMeetingModal" @close-meeting-create="closeMeetingCreate"></MeetingCreate>
     </div>
 
   </div>
@@ -55,9 +55,10 @@ const showCreateMeeting = () => {
 
 // 여행 계획 목록을 불러오는 함수
 const fetchPlans = async () => {
+  console.log("이벤트 발생된거 확인 해보자!!!");
   try {
     const response = await planListGetApi();
-    if(response.data.dataHeader.successCode == 0) {
+    if(response.data.dataHeader.successCode === 0) {
       plans.value = response.data.dataBody.map(plan => ({
         ...plan,
         people: plan.planMemberCount, // API 응답과 컴포넌트 내 변수명 매핑
