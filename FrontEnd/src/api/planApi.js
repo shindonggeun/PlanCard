@@ -8,7 +8,10 @@ async function planCreateApi(param, success, fail) {
   await local.post(`/plan`, param).then(success).catch(fail);
 }
 
-// 여행 계획 조회
+// 나의 여행 계획 조회
+async function planListGetApi() {
+  return local.get(`/plan/myplanlist`);
+}
 
 // 여행 계획 수정 (계획명)
 async function planNameUpdateApi(planId, param, success, fail) {
@@ -47,4 +50,5 @@ export {
   planDetailCreateApi,
   planDetailGetApi,
   planDetailUpdateApi,
+  planListGetApi,
 };
