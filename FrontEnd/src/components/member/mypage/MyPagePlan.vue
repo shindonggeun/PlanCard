@@ -2,14 +2,14 @@
   <div class="card p-fluid">
 
     <div id="div1">
-      <h1>나의 여행 계획들</h1>
+      <h1>My plan</h1>
       <v-btn class="startBtn" id="addBtn" @click="showCreateMeeting">
         <p style="margin-top: 8px;">+</p>
       </v-btn>
     </div>
-
+    
     <hr id="separator">
-
+    
     <div v-for="plan in plans" :key="plan.index" class="card f-fluid" id="plan">
       <div id="planName">
         <p>{{ truncateName(plan.name) }}</p>
@@ -18,7 +18,7 @@
         <p class="card f-fluid" id="planPeople">인원 : {{ plan.people }}명</p>
         <p class="card f-fluid" id="planDate">{{ plan.startDate }} ~ {{ plan.EndDate }}</p>
         <v-btn class="startBtn">
-          <router-link :to="{ name: 'meeting-detail', params: { id: plan.id } }" class="router-link-active">
+          <router-link :to="{path: 'view/:id'}" class="router-link-active">
             Start
           </router-link>
         </v-btn>
@@ -27,54 +27,26 @@
 
     <div id="overlay" v-if="showCreateMeetingModal"></div>
     <div id="createMeetingBox">
-      <MeetingCreate v-if="showCreateMeetingModal" @close-meeting-create="closeMeetingCreate"></MeetingCreate>
+      <MeetingCreate v-if="showCreateMeetingModal" @close-meeting-create="closeMeetingCreate" />
     </div>
 
   </div>
-</template>
+  </template>
 
 
 
 <script setup>
-import { onMounted, ref } from 'vue';
-import router from "@/router";
-import MeetingCreate from "@/components/meeting/MeetingCreate.vue";
-import { planListGetApi } from "@/api/planApi"; // API 함수를 import
+  import router from "@/router";
+  import { ref } from "vue";
+  import MeetingCreate from "@/components/meeting/MeetingCreate.vue";
 
-
-const showCreateMeetingModal = ref(false);
-const plans = ref([]); // 초기 plans를 빈 배열로 설정
-
-const closeMeetingCreate = () => {
-  showCreateMeetingModal.value = false;
-}
-
-const showCreateMeeting = () => {
-  showCreateMeetingModal.value = !showCreateMeetingModal.value;
-}
-
-// 여행 계획 목록을 불러오는 함수
-const fetchPlans = async () => {
-  console.log("이벤트 발생된거 확인 해보자!!!");
-  try {
-    const response = await planListGetApi();
-    if(response.data.dataHeader.successCode === 0) {
-      plans.value = response.data.dataBody.map(plan => ({
-        ...plan,
-        people: plan.planMemberCount, // API 응답과 컴포넌트 내 변수명 매핑
-      startDate: plan.startDate.split('-').join('.'),
-      EndDate: plan.endDate.split('-').join('.'),
-      }))
-    } else {
-      alert(response.data.dataHeader.resultMessage);
-    }
-    
-
-  } catch (error) {
-    console.error(error);
-    alert("나의 여행 계획 리스트 불러오기 중 오류가 발생했습니다.");
+  const showCreateMeetingModal = ref(false)
+  const closeMeetingCreate = () => {
+    showCreateMeetingModal.value = false;
   }
-}
+  const showCreateMeeting = () => {
+    showCreateMeetingModal.value = !showCreateMeetingModal.value
+  }
 
   const plans = ref([
     {
@@ -205,24 +177,22 @@ const fetchPlans = async () => {
 
 
 
-#overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  /* 어두운 배경 */
-  z-index: 997;
-  /* 모달보다 한 단계 낮은 z-index */
-}
-
-#createMeetingBox {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 998;
-  max-height: 70vh;
-  overflow-y: auto;
-}</style>
+  #overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
+    z-index: 997; /* 모달보다 한 단계 낮은 z-index */
+  }
+  #createMeetingBox {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 998;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+</style>

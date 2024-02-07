@@ -1,14 +1,14 @@
 <template>
     <div>
         <div class="mt-0 pt-0">
-            <ItemDrag></ItemDrag>
+            <ItemDrag />
             <div class="chat-tab">
                 <div class="chat-container">
                     <button @click="activeTab = !activeTab" class="chat-btn">
                         <i class="pi pi-comments" style="font-size: 27px;"></i> 채 팅
                     </button>
                     <div :class="{ 'sidebar-active': activeTab, 'sidebar-hidden': !activeTab }">
-                        <ItemFace></ItemFace>
+                        <ItemFace />
                         <!-- 조건부 렌더링으로 채팅 컴포넌트 표시 -->
                         <Chat class="chat" v-if="activeTab"></Chat>
                     </div>
