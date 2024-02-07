@@ -25,7 +25,7 @@ public class AlarmFriendRequestDto {
                 .fromMember(fromMember)
                 .toMember(toMember)
                 .type(type)
-                .content(FRIEND_ALARM_CONTENT)
+                .content(fromMember.getNickname() + FRIEND_ALARM_CONTENT)
                 .status(AlarmStatus.UNREAD)
                 .build();
     }

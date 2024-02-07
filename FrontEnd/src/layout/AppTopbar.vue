@@ -163,12 +163,12 @@
 
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAccountsStore } from '@/stores/accountsStore';
 import MeetingCreate from "@/components/meeting/MeetingCreate.vue";
 import { memberLogoutApi } from "@/api/memberApi";
-import { alarmFriendRequestApi } from "@/api/alarmApi";
+import { alarmFriendRequestApi, alarmGetListApi } from "@/api/alarmApi";
 import { usePlanStore } from "@/stores/planStore";
 const accountsStore = useAccountsStore()
 const planStore = usePlanStore()
@@ -186,10 +186,14 @@ let isMeeting = computed(() => planStore.isMeetingView)
 
 onMounted(() => {
   bindOutsideClickListener();
+  fetchAlarms(); // 컴포넌트가 마운트될 때 초기 알람 목록을 가져온다.
 });
+
 onBeforeUnmount(() => {
   unbindOutsideClickListener();
 });
+
+
 // const onTopBarMenuNotificationButton = () => {
 //     topbarMenuActive.value = !topbarMenuActive.value;
 //     topbarNotificationActive.value = !topbarNotificationActive.value;    
@@ -224,6 +228,8 @@ const isOutsideClicked = (event) => {
   return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
 };
 
+
+// 로그아웃 요청 메서드
 const logout = async () => {
   try {
     await memberLogoutApi(
@@ -266,34 +272,35 @@ const onTopBarMenuNotificationButton = () => {
   }
 };
 
-const notifications = [
-  {
-    "alarmId": 11,
-    "fromMemberId": 5,
-    "toMemberId": 1,
-    "type": "CONFERENCE",
-    "status": "UNREAD",
-    "content": "신동근1234 님."
-  },
-  {
-    "alarmId": 11,
-    "fromMemberId": 5,
-    "toMemberId": 1,
-    "type": "CONFERENCE",
-    "status": "UNREAD",
-    "content": "신동근1234 님이 회의를 시작하였습니다."
-  },
-  {
-    "alarmId": 11,
-    "fromMemberId": 5,
-    "toMemberId": 1,
-    "type": "CONFERENCE",
-    "status": "UNREAD",
-    "content": "니노막시무스카이저쏘제쏘냐도르앤스파르타죽지않아나는죽지않아오오오오옹ㅇ나는죽지않아키가작은꼬마동훈이예이예에"
-  },
-]
 // 알림 팝업 부분 코드 끝
 
+const lastAlarmId = ref(null);
+const notifications = ref([]);
+
+// 알람 가져오기 메서드
+const fetchAlarms = async () => {
+  try {
+    const response = await alarmGetListApi(lastAlarmId.value);
+    if (response.data.dataHeader.successCode === 0) {
+      const fetchedNotifications = response.data.dataBody;
+      if (fetchedNotifications.length) {
+        notifications.value.push(...fetchedNotifications);
+        lastAlarmId.value = fetchedNotifications[fetchedNotifications.length - 1].alarmId;
+      }
+    } else {
+      alert(response.data.dataHeader.resultMessage);
+    }
+  } catch (error) {
+    if (error.response) {
+      console.error(error);
+      const errorResponse = error.response.data;
+      alert(errorResponse.dataHeader.resultMessage);
+    } else if (error.message === 'Network Error' || error.code === 'ERR_NETWORK') {
+      // 네트워크 에러 처리
+      alert("서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.");
+    }
+  }
+};
 
 
 // 프로필 팝업 부분 코드 시작
@@ -865,4 +872,5 @@ const showCreateMeeting = () => {
 
 .offLine {
   color: #808080;
-}</style>
+}
+</style>
