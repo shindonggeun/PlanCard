@@ -16,14 +16,14 @@
         <div class="box, card p-fluid" id="loginSubmit">
           <input type="submit" value="LogIn">
         </div>
-      </form> 
+      </form>
       <div id="etc1">
-          <p id="signUpGuide">아직 회원이 아니신가요?</p>
-          <button id="signUpBtn" @click="goSignUp()">[회원가입]</button>
+        <p id="signUpGuide">아직 회원이 아니신가요?</p>
+        <button id="signUpBtn" @click="goSignUp()">[회원가입]</button>
       </div>
       <div id="etc2">
-          <p id="pwSearchGuide">비밀번호를 잊어버렸나요?</p>
-          <button id="pwSearchBtn">[비밀번호 찾기]</button>
+        <p id="pwSearchGuide">비밀번호를 잊어버렸나요?</p>
+        <button id="pwSearchBtn">[비밀번호 찾기]</button>
       </div>
       <div class="card p-fluid" id="otherLogin">
         <p id="otherLoginGuide">다른 방법으로 로그인</p>
@@ -77,11 +77,11 @@ const login = async () => {
       console.error(error);
       const errorResponse = error.response.data;
       alert(errorResponse.dataHeader.resultMessage);
-    } else if(error.message === 'Network Error' || error.code === 'ERR_NETWORK') {
+    } else if (error.message === 'Network Error' || error.code === 'ERR_NETWORK') {
       // 네트워크 에러 처리
       alert("서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.");
     }
-    
+
   }
 };
 
@@ -91,21 +91,21 @@ const socialLogin = async (oAuthDomain) => {
   try {
     const response = await startSocialLoginApi(oAuthDomain);
 
-        if (response.data.dataHeader.successCode === 0) {
-          window.location.href = response.data.dataBody;
-        } else {
-          alert(response.data.dataHeader.resultMessage);
-        }
+    if (response.data.dataHeader.successCode === 0) {
+      window.location.href = response.data.dataBody;
+    } else {
+      alert(response.data.dataHeader.resultMessage);
+    }
   } catch (error) {
     if (error.response) {
       console.error(error);
       const errorResponse = error.response.data;
-      alert(errorResponse.dataHeader.resultMessage); 
-    } else if(error.message === 'Network Error' || error.code === 'ERR_NETWORK') {
+      alert(errorResponse.dataHeader.resultMessage);
+    } else if (error.message === 'Network Error' || error.code === 'ERR_NETWORK') {
       // 네트워크 에러 처리
       alert("서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.");
     }
-    
+
   }
 
 };
@@ -118,162 +118,187 @@ const goSignUp = function () {
 
 
 <style scoped>
-  #box {
+#box {
   display: flex;
   justify-content: center;
-  }
-  #logInForm {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  #logInBox {
-    border: 1px solid rgba(52, 152, 219, 0.5);
+}
 
-    background-color: #FFFFFF;
-    width: 400px;
-    height: 50%;
-    padding: 40px;
+#logInForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-  }
-  #logInTitle {
-    color: #3498db;
-    /* font-weight: bold; */
-    padding-bottom: 40px;
-  }
+#logInBox {
+  border: 1px solid rgba(52, 152, 219, 0.5);
 
-  #idIcon {
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
-    margin-left: -15px;
-  }
-  #pwIcon {
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
-    margin-left: -15px;
-  }
-  #memberEmail {
-    height: 35px;
-    width: 250px;
-  }
-  #memberPassword {
-    height: 35px;
-    width: 250px;
-  }
-  #idInput {
-    background-color: rgba(245, 245, 245, 0.1);
-    width: 90%;
-    display: flex;
-    align-items: center;
-    border: 1px solid rgba(52, 152, 219, 0.5);
-    height: 40px;
-    margin-bottom: 10px;
-  }
-  #pwInput {
-    background-color: rgba(245, 245, 245, 0.1);
-    width: 90%;
-    display: flex;
-    align-items: center;
-    border: 1px solid rgba(52, 152, 219, 0.5);
-    height: 40px;
-    margin-bottom: 10px;
-  }
-  #loginSubmit {
-    width: 90%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    background-color: #3498db;
-    color: #FFFFFF;
-    /* font-weight: bold; */
-    font-size: medium;
-    height: 20px;
-    padding: 20px;
-  }
-  #loginSubmit:hover {
-    transform: scale(1.05);
-    border-color: #3498db;
-  }
+  background-color: #FFFFFF;
+  width: 400px;
+  height: 50%;
+  padding: 40px;
 
-  #etc1 {
-    display: flex;
-    margin-top: 10px;
-  }
-  #signUpGuide {
-    color: rgba(0, 0, 0, 0.3);
-    /* font-weight: bold; */
-    margin: 0;
-    margin-right: 10px;
-  }
-  #signUpBtn {
-    /* font-weight: bold; */
-    color: #3498db;
-  }
-  #signUpBtn:hover {
-    transform: scale(1.05);
-    border-color: #3498db;
-    }
-  #etc2 {
-    display: flex;
-  }
-  #pwSearchGuide {
-    color: rgba(0, 0, 0, 0.3);
-    /* font-weight: bold; */
-    margin: 0;
-    margin-right: 10px;
-  }
-  #pwSearchBtn {
-    /* font-weight: bold; */
-    color: #3498db;
-  }
-  #pwSearchBtn:hover {
-    transform: scale(1.05);
-    border-color: #3498db;
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
 
-  #otherLogin {
-    background-color: #FFFFFF;
-    color: rgba(0, 0, 0, 0.5);
-    /* font-weight: bold; */
-    width: 100%;
-    padding: 5px;
-    margin-top: 20px;
-    border: 1px solid rgba(52, 152, 219, 0.5);
-  }
-  #otherLoginGuide {
-    text-align: center;
-    padding-top: 5px;
-    margin: 0;
-  }
-  #separator {
-    margin-top: 3px;
-    border: none;
-    border: 1px solid rgba(52, 152, 219, 0.5);
-    border-radius: 10px;
-  }
-  #otherLoginBtn {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-  }
-  #loginLogoImg {
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    width: 130px;
-    margin-right: 5px;
-    margin-left: 5px;
-    margin-bottom: 5px;
-    transition: transform 0.2s, border-color 0.2s; /* 부드러운 전환 효과를 위한 설정 */
-    cursor: pointer; /* 마우스 포인터를 손가락 모양으로 변경 */
-  }
-  #loginLogoImg:hover {
-    transform: scale(1.05); /* 이미지를 약간 확대 */
-    border-color: #3498db; /* 테두리 색상 변경 */
-  }
-</style>
+#logInTitle {
+  color: #3498db;
+  /* font-weight: bold; */
+  padding-bottom: 40px;
+}
+
+#idIcon {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  margin-left: -15px;
+}
+
+#pwIcon {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  margin-left: -15px;
+}
+
+#memberEmail {
+  height: 35px;
+  width: 250px;
+}
+
+#memberPassword {
+  height: 35px;
+  width: 250px;
+}
+
+#idInput {
+  background-color: rgba(245, 245, 245, 0.1);
+  width: 90%;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(52, 152, 219, 0.5);
+  height: 40px;
+  margin-bottom: 10px;
+}
+
+#pwInput {
+  background-color: rgba(245, 245, 245, 0.1);
+  width: 90%;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(52, 152, 219, 0.5);
+  height: 40px;
+  margin-bottom: 10px;
+}
+
+#loginSubmit {
+  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: #3498db;
+  color: #FFFFFF;
+  /* font-weight: bold; */
+  font-size: medium;
+  height: 20px;
+  padding: 20px;
+}
+
+#loginSubmit:hover {
+  transform: scale(1.05);
+  border-color: #3498db;
+}
+
+#etc1 {
+  display: flex;
+  margin-top: 10px;
+}
+
+#signUpGuide {
+  color: rgba(0, 0, 0, 0.3);
+  /* font-weight: bold; */
+  margin: 0;
+  margin-right: 10px;
+}
+
+#signUpBtn {
+  /* font-weight: bold; */
+  color: #3498db;
+}
+
+#signUpBtn:hover {
+  transform: scale(1.05);
+  border-color: #3498db;
+}
+
+#etc2 {
+  display: flex;
+}
+
+#pwSearchGuide {
+  color: rgba(0, 0, 0, 0.3);
+  /* font-weight: bold; */
+  margin: 0;
+  margin-right: 10px;
+}
+
+#pwSearchBtn {
+  /* font-weight: bold; */
+  color: #3498db;
+}
+
+#pwSearchBtn:hover {
+  transform: scale(1.05);
+  border-color: #3498db;
+}
+
+#otherLogin {
+  background-color: #FFFFFF;
+  color: rgba(0, 0, 0, 0.5);
+  /* font-weight: bold; */
+  width: 100%;
+  padding: 5px;
+  margin-top: 20px;
+  border: 1px solid rgba(52, 152, 219, 0.5);
+}
+
+#otherLoginGuide {
+  text-align: center;
+  padding-top: 5px;
+  margin: 0;
+}
+
+#separator {
+  margin-top: 3px;
+  border: none;
+  border: 1px solid rgba(52, 152, 219, 0.5);
+  border-radius: 10px;
+}
+
+#otherLoginBtn {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+#loginLogoImg {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  width: 130px;
+  margin-right: 5px;
+  margin-left: 5px;
+  margin-bottom: 5px;
+  transition: transform 0.2s, border-color 0.2s;
+  /* 부드러운 전환 효과를 위한 설정 */
+  cursor: pointer;
+  /* 마우스 포인터를 손가락 모양으로 변경 */
+}
+
+#loginLogoImg:hover {
+  transform: scale(1.05);
+  /* 이미지를 약간 확대 */
+  border-color: #3498db;
+  /* 테두리 색상 변경 */
+}</style>

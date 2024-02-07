@@ -2,6 +2,7 @@ package com.ssafy.backend.domain.alarm.controller;
 
 import com.ssafy.backend.domain.alarm.dto.AlarmCreateRequestDto;
 import com.ssafy.backend.domain.alarm.dto.AlarmDto;
+import com.ssafy.backend.domain.alarm.dto.AlarmFriendRequestDto;
 import com.ssafy.backend.domain.alarm.entity.enums.AlarmStatus;
 import com.ssafy.backend.domain.alarm.service.AlarmService;
 import com.ssafy.backend.domain.member.dto.MemberLoginActiveDto;
@@ -25,6 +26,14 @@ public class AlarmController {
     public ResponseEntity<Message<Void>> createAlarm(@AuthenticationPrincipal MemberLoginActiveDto loginActiveDto,
                                                      @RequestBody AlarmCreateRequestDto createRequestDto) {
         alarmService.createAlarm(loginActiveDto.getId(), createRequestDto);
+        return ResponseEntity.ok().body(Message.success());
+    }
+
+    @PostMapping("/friend/request")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    public ResponseEntity<Message<Void>> friendRequestAlarm(@AuthenticationPrincipal MemberLoginActiveDto loginActiveDto,
+                                                     @RequestBody AlarmFriendRequestDto friendRequestDto) {
+        alarmService.friendRequestAlarm(loginActiveDto.getId(), friendRequestDto);
         return ResponseEntity.ok().body(Message.success());
     }
 
