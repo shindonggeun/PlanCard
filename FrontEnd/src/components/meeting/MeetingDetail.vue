@@ -4,31 +4,23 @@
             <ItemDrag />
             <div class="chat-tab">
                 <div class="chat-container">
-                    <button @click="activeTab=!activeTab" class="chat-btn"><i class="pi pi-comments" style="font-size: 27px;"></i> 채 팅</button>
-                    <div :class="{'sidebar-active':activeTab, 'sidebar-hidden':!activeTab}">
+                    <button @click="activeTab = !activeTab" class="chat-btn">
+                        <i class="pi pi-comments" style="font-size: 27px;"></i> 채 팅
+                    </button>
+                    <div :class="{ 'sidebar-active': activeTab, 'sidebar-hidden': !activeTab }">
                         <ItemFace />
                         <!-- 조건부 렌더링으로 채팅 컴포넌트 표시 -->
-                        <Chat class="chat" v-if="activeTab === 'chat'"></Chat>
+                        <Chat class="chat" v-if="activeTab"></Chat>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- 기존 코드 유지 -->
-        <div class="tab-container">
-            <button @click="toggleTab('chat')">채팅</button>
-        </div>
-        <!-- 조건부 렌더링으로 채팅 컴포넌트 표시 -->
-        <Chat v-if="activeTab === 'chat'"></Chat>
-        <RealTimeEditor :roomId="roomId"></RealTimeEditor>
     </div>
 </template>
 
 
 
 <script setup>
-import { onBeforeMount, ref } from "vue";
-import { useRoute } from 'vue-router';
-
 import ItemFace from '@/components/meeting/items/ItemFace.vue'
 import Chat from '@/components/meeting/items/Chat.vue'
 import ItemDrag from "@/components/meeting/items/ItemDrag.vue"
@@ -52,33 +44,40 @@ onBeforeUnmount(() => {
 //     activeTab.value = activeTab.value === tabName ? '' : tabName;
 // };
 
-const activeTab = ref(false)
+// 탭 상태 추가
+const activeTab = ref('');
+
 </script>
 
 <style scoped>
-.meeting{
+.meeting {
     width: 100vw;
     height: 100vh;
 }
-.card-list{
+
+.card-list {
     height: 60vh;
 }
-.sidebar-active{
+
+.sidebar-active {
     display: block;
     width: 30vw;
-    transition: width 1s ;
+    transition: width 1s;
     transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
-.sidebar-hidden{
+
+.sidebar-hidden {
     display: block;
     width: 0vw;
-    transition: width 1s ;
+    transition: width 1s;
     transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
-.plan{
+
+.plan {
     height: 30vh;
 }
-.chat-tab{
+
+.chat-tab {
     position: absolute;
     top: 0px;
     right: 0px;
@@ -86,12 +85,14 @@ const activeTab = ref(false)
     background-color: #ddd;
     z-index: 10;
 }
-.chat-container{
+
+.chat-container {
     position: relative;
 }
-.chat-btn{
+
+.chat-btn {
     position: absolute;
-    top:5rem;
+    top: 5rem;
     left: -40px;
     z-index: 5;
     background-color: #3498DB;
@@ -102,8 +103,6 @@ const activeTab = ref(false)
     color: #fff;
 }
 
-.chat{
+.chat {
     background-color: aqua;
-}
-
-</style>
+}</style>
