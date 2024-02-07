@@ -73,8 +73,15 @@ const login = async () => {
       }
     );
   } catch (error) {
-    console.error(error);
-    alert("로그인 과정 중 문제가 발생했습니다.");
+    if (error.response) {
+      console.error(error);
+      const errorResponse = error.response.data;
+      alert(errorResponse.dataHeader.resultMessage);
+    } else if(error.message === 'Network Error' || error.code === 'ERR_NETWORK') {
+      // 네트워크 에러 처리
+      alert("서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.");
+    }
+    
   }
 };
 
@@ -90,8 +97,15 @@ const socialLogin = async (oAuthDomain) => {
           alert(response.data.dataHeader.resultMessage);
         }
   } catch (error) {
-    console.error(error);
-    alert("소셜 로그인 완료 과정 중 문제가 발생했습니다.");
+    if (error.response) {
+      console.error(error);
+      const errorResponse = error.response.data;
+      alert(errorResponse.dataHeader.resultMessage); 
+    } else if(error.message === 'Network Error' || error.code === 'ERR_NETWORK') {
+      // 네트워크 에러 처리
+      alert("서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.");
+    }
+    
   }
 
 };
