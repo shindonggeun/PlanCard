@@ -1,5 +1,9 @@
 package com.ssafy.backend.test;
 
+import com.ssafy.backend.domain.alarm.entity.Alarm;
+import com.ssafy.backend.domain.alarm.entity.enums.AlarmStatus;
+import com.ssafy.backend.domain.alarm.entity.enums.AlarmType;
+import com.ssafy.backend.domain.alarm.repository.AlarmRepository;
 import com.ssafy.backend.domain.member.entity.Member;
 import com.ssafy.backend.domain.member.entity.enums.MemberRole;
 import com.ssafy.backend.domain.member.repository.MemberRepository;
@@ -21,6 +25,7 @@ public class TestConfig {
     private final PasswordEncoder passwordEncoder;
     private final PlanRepository planRepository;
     private final PlanMemberRepository planMemberRepository;
+    private final AlarmRepository alarmRepository;
 
     @PostConstruct
     public void init() {
@@ -96,5 +101,60 @@ public class TestConfig {
         planMemberRepository.save(planMember1);
         planMemberRepository.save(planMember2);
         planMemberRepository.save(planMember3);
+
+        Alarm alarm1 = Alarm.builder()
+                .fromMember(member2)
+                .toMember(member1)
+                .type(AlarmType.CONFERENCE)
+                .content(member2.getNickname() + " 님이 화상 회의 요청을 보냈습니다.")
+                .status(AlarmStatus.UNREAD)
+                .build();
+
+        Alarm alarm2 = Alarm.builder()
+                .fromMember(member2)
+                .toMember(member1)
+                .type(AlarmType.FRIEND)
+                .content(member2.getNickname() + " 님이 친구 요청을 보냈습니다.")
+                .status(AlarmStatus.UNREAD)
+                .build();
+
+        Alarm alarm3 = Alarm.builder()
+                .fromMember(member3)
+                .toMember(member1)
+                .type(AlarmType.CONFERENCE)
+                .content(member3.getNickname() + " 님이 화상 회의 요청을 보냈습니다.")
+                .status(AlarmStatus.UNREAD)
+                .build();
+
+        Alarm alarm4 = Alarm.builder()
+                .fromMember(member3)
+                .toMember(member1)
+                .type(AlarmType.FRIEND)
+                .content(member3.getNickname() + " 님이 친구 요청을 보냈습니다.")
+                .status(AlarmStatus.UNREAD)
+                .build();
+
+        Alarm alarm5 = Alarm.builder()
+                .fromMember(member4)
+                .toMember(member1)
+                .type(AlarmType.FRIEND)
+                .content(member4.getNickname() + " 님이 친구 요청을 보냈습니다.")
+                .status(AlarmStatus.UNREAD)
+                .build();
+
+        Alarm alarm6 = Alarm.builder()
+                .fromMember(member4)
+                .toMember(member1)
+                .type(AlarmType.CONFERENCE)
+                .content(member4.getNickname() + " 님이 화상 회의 요청을 보냈습니다.")
+                .status(AlarmStatus.UNREAD)
+                .build();
+
+        alarmRepository.save(alarm1);
+        alarmRepository.save(alarm2);
+        alarmRepository.save(alarm3);
+        alarmRepository.save(alarm4);
+        alarmRepository.save(alarm5);
+        alarmRepository.save(alarm6);
     }
 }
