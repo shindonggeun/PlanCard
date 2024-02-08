@@ -203,10 +203,6 @@ h1 {
   /* 글자색을 상속 받음 */
 }
 
-
-
-
-
 #overlay {
   position: fixed;
   top: 0;
@@ -228,4 +224,5 @@ h1 {
   max-height: 70vh;
   overflow-y: auto;
 }
+
 </style>
