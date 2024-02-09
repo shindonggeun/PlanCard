@@ -40,7 +40,7 @@ spring:
   data:
     # Redis setting
     redis:
-      host: localhost
+      host: i10C110.p.ssafy.io
       port: 6379
 
     # mongodb setting
