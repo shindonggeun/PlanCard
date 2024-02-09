@@ -20,6 +20,11 @@ spring:
     username: admin                     # 데이터베이스 계정명
     password: ssafy1234                       # 데이터베이스 계정 비밀번호
 
+  # data.sql 실행 setting
+  sql:
+    init:
+      mode: always
+
   #    open-in-view: false
 
   #    properties:
