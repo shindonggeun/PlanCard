@@ -23,9 +23,8 @@ async function planNameUpdateApi(planId, param) {
 }
 
 // 여행 계획 수정 (일정)
-async function planDateUpdateApi(planId, param, success, fail) {
-  console.log("param", param);
-  await local.post(`/plan/${planId}`, param).then(success).catch(fail);
+async function planDateUpdateApi(planId, param) {
+  return await local.patch(`/plan/update/${planId}/date`, param);
 }
 
 // 여행 세부 계획 생성

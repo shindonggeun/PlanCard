@@ -9,21 +9,22 @@
             </form>
         </div>
         <div class="title-date font-content" style="color:silver;">
-            <div :class="[checkDate === '0' ? 'active' : 'hidden']" @click="goDateUpdate()">{{ parsedStartDate.year }}년 {{
-                parsedStartDate.month
-            }}월 {{ parsedStartDate.date }}일({{ parsedStartDate.day }}) ~ {{ parsedEndDate.year }}년 {{
+            <div :class="[checkDate === '0' ? 'active' : 'hidden']" @click="fetchPlanDateUpdate()">{{ parsedStartDate.year
+            }}년 {{
+    parsedStartDate.month
+}}월 {{ parsedStartDate.date }}일({{ parsedStartDate.day }}) ~ {{ parsedEndDate.year }}년 {{
     parsedEndDate.month }}월 {{ parsedEndDate.date }}일({{ parsedEndDate.day }})</div>
-            <form :class="[checkDate === '0' ? 'hidden' : 'active']" @submit.prevent="goDateUpdate()">
-                <input type="number" step="1" v-model="parsedStartDate.startYear" id="startYear" style="width: 45px;">년
-                <input type="number" step=1 v-model="parsedStartDate.startMonth" min="1" max="12" id="startMonth"
+            <form :class="[checkDate === '0' ? 'hidden' : 'active']" @submit.prevent="fetchPlanDateUpdate()">
+                <input type="number" step="1" v-model="parsedStartDate.year" id="startYear" style="width: 45px;">년
+                <input type="number" step=1 v-model="parsedStartDate.month" min="1" max="12" id="startMonth"
                     style="width: 45px;">월
-                <input type="number" step=1 v-model="parsedStartDate.startDate" min="1" max="31" id="startDate"
+                <input type="number" step=1 v-model="parsedStartDate.date" min="1" max="31" id="startDate"
                     style="width: 45px;">일
                 ~
-                <input type="number" step="1" v-model="parsedEndDate.endYear" id="endYear" style="width: 45px;">년
-                <input type="number" step=1 v-model="parsedEndDate.endMonth" min="1" max="12" id="endMonth"
+                <input type="number" step="1" v-model="parsedEndDate.year" id="endYear" style="width: 45px;">년
+                <input type="number" step=1 v-model="parsedEndDate.month" min="1" max="12" id="endMonth"
                     style="width: 45px;">월
-                <input type="number" step=1 v-model="parsedEndDate.endDate" min="1" max="31" id="endDate"
+                <input type="number" step=1 v-model="parsedEndDate.date" min="1" max="31" id="endDate"
                     style="width: 45px;">일
                 <input class="primary" type="submit" value="확인">
             </form>
@@ -34,7 +35,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from "vue-router";
-import { planDateUpdateApi, planGetApi, planNameUpdateApi } from "@/api/planApi"
+import { planGetApi, planNameUpdateApi, planDateUpdateApi } from "@/api/planApi"
 import { usePlanStore } from "@/stores/planStore";
 
 // 여행계획 단일조회 추가
@@ -47,30 +48,6 @@ const planId = route.params.id;
 
 const planDetail = ref(null);
 
-
-const goDateUpdate = () => {
-    if (checkDate.value === '0') {
-        checkDate.value = '1'
-    } else {
-        checkDate.value = '0'
-        const payload = {
-            "startDate": `${startYear.value}` + '-' + `${startMonth.value - 1}` - `${startDate.value}`,
-            "endDate": `${endYear.value}` + '-' + `${endMonth.value - 1}` - `${endDate.value}`
-        }
-
-        planDateUpdateApi(route.params.id, payload, (response) => {
-            if (response.data.dataHeader.successCode === 1) {
-                let msg = "계획 날짜 변경 중 문제가 발생했습니다.";
-                alert(msg);
-            } else {
-                console.log("계획 날짜 변경 성공");
-            }
-        }, (error) => {
-            console.log(error)
-        }
-        )
-    }
-};
 
 // 여행 계획을 가져오는 메서드
 const fetchPlanDetail = async () => {
@@ -100,7 +77,7 @@ const getDayOfWeek = (date) => {
     return daysOfWeek[new Date(date).getDay()];
 };
 
-// 시작 및 종료 날짜를 년, 월, 일로 파싱하는 computed 속성
+// 시작 날짜를 년, 월, 일로 파싱하는 computed 속성
 const parsedStartDate = computed(() => {
     if (planDetail.value && planDetail.value.startDate) {
         const date = new Date(planDetail.value.startDate);
@@ -114,7 +91,7 @@ const parsedStartDate = computed(() => {
     return { year: '', month: '', date: '', day: '' };
 });
 
-
+// 종료 날짜를 년, 월, 일로 파싱하는 computed 속성
 const parsedEndDate = computed(() => {
     if (planDetail.value && planDetail.value.endDate) {
         const date = new Date(planDetail.value.endDate);
@@ -157,8 +134,51 @@ const fetchPlanNameUpdate = async () => {
 
         checkName.value = '0';
     }
-
 };
+
+// 날짜 포맷을 'YYYY-MM-DD' 형식으로 변경
+const formatDateString = (year, month, day) => {
+    const formattedMonth = month.toString().padStart(2, '0');
+    const formattedDay = day.toString().padStart(2, '0');
+    return `${year}-${formattedMonth}-${formattedDay}`;
+};
+
+// 여행 일자 수정 메서드
+const fetchPlanDateUpdate = async () => {
+    if (checkDate.value === '0') {
+        checkDate.value = '1';
+    } else {
+        try {
+            const startDate = formatDateString(parsedStartDate.value.year, parsedStartDate.value.month, parsedStartDate.value.date);
+            const endDate = formatDateString(parsedEndDate.value.year, parsedEndDate.value.month, parsedEndDate.value.date);
+
+            const param = {
+                startDate: startDate,
+                endDate: endDate
+            };
+            const response = await planDateUpdateApi(planId, param);
+            if (response.data.dataHeader.successCode === 0) {
+                // 성공 시, UI 상에서 변경된 날짜 반영
+                planDetail.value.startDate = param.startDate;
+                planDetail.value.endDate = param.endDate;
+                console.log(planDetail.value);
+            } else {
+                alert(response.data.dataHeader.resultMessage);
+            }
+        } catch (error) {
+            if (error.response) {
+                console.error(error);
+                const errorResponse = error.response.data;
+                alert(errorResponse.dataHeader.resultMessage);
+            } else if (error.message === 'Network Error' || error.code === 'ERR_NETWORK') {
+                // 네트워크 에러 처리
+                alert("서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.");
+            }
+        }
+
+        checkDate.value = '0';
+    }
+}
 
 onMounted(fetchPlanDetail);
 </script>
@@ -187,4 +207,5 @@ onMounted(fetchPlanDetail);
 
 .hidden {
     display: none;
-}</style>
+}
+</style>
