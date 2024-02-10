@@ -37,6 +37,9 @@ import { ref, computed, onMounted } from 'vue';
 import { useRoute } from "vue-router";
 import { planGetApi, planNameUpdateApi, planDateUpdateApi } from "@/api/planApi"
 import { usePlanStore } from "@/stores/planStore";
+import { defineEmits } from 'vue';
+
+const emit = defineEmits(['update-dates']);
 
 // 여행계획 단일조회 추가
 const planStore = usePlanStore()
@@ -54,8 +57,11 @@ const fetchPlanDetail = async () => {
     try {
         const response = await planGetApi(planId);
         if (response.data.dataHeader.successCode === 0) {
-            planDetail.value = response.data.dataBody;
-            console.log(planDetail.value);
+            const fetchedPlan = response.data.dataBody;
+            planDetail.value = fetchedPlan;
+
+            emit('update-dates', { startDate: fetchedPlan.startDate, endDate: fetchedPlan.endDate });
+            // console.log(planDetail.value);
         } else {
             alert(response.data.dataHeader.resultMessage);
         }
@@ -118,6 +124,9 @@ const fetchPlanNameUpdate = async () => {
             if (response.data.dataHeader.successCode === 0) {
                 // 성공 시, UI 상에서 변경된 이름 반영
                 planDetail.value.name = param.name;
+
+                // planStore에 저장
+                planStore.plan.name = param.name;
             } else {
                 alert(response.data.dataHeader.resultMessage);
             }
@@ -161,7 +170,9 @@ const fetchPlanDateUpdate = async () => {
                 // 성공 시, UI 상에서 변경된 날짜 반영
                 planDetail.value.startDate = param.startDate;
                 planDetail.value.endDate = param.endDate;
-                console.log(planDetail.value);
+
+                emit('update-dates', { startDate: param.startDate, endDate: param.endDate });
+                // console.log(planDetail.value);
             } else {
                 alert(response.data.dataHeader.resultMessage);
             }

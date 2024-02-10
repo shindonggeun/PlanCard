@@ -128,7 +128,7 @@ function handleChange() {
 function onCardMove() {
 
     console.log("카드 움직임");
-    console.log('days', days.value);
+    // console.log('days', days.value);
     // handleChange()
     // filteredPlan.value = JSON.parse(localStorage.getItem(`day${checkD.value}`));
     // filteredCard.value = JSON.parse(localStorage.getItem('noneFixCards'));
@@ -191,28 +191,34 @@ async function fetchCardList() {
     }
 }
 
+// 여행 일수를 계산하는 함수
+const calculateDateDiff = (startDate, endDate) => {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const diffTime = Math.abs(end - start);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays;
+};
+
 // days 배열을 초기화하는 함수
-function initializeDays(dayCount) {
-    days.value = Array.from({ length: dayCount }, () => []);
-}
+const initializeDays = (dayCount) => {
+  days.value = Array.from({ length: dayCount }, () => []);
+};
 
 
+
+
+// `update-dates` 이벤트를 처리하는 메서드
+const handleUpdateDates = ({ startDate, endDate }) => {
+    // 여행 일수 계산
+    const dayCount = calculateDateDiff(startDate, endDate);
+    // days 배열 초기화
+    initializeDays(dayCount);
+};
 
 onMounted(() => {
-    if (days.value.length !== day.value) {
-        days.value = []
-        for (let i = 1; i <= day.value; i++) {
-            const dayPlan = planList.value.filter((item) => item.day === i).sort((a, b) => a.orderNumber - b.orderNumber)
-            days.value.push(dayPlan)
-        }
-    }
-    loadCards()
-    initializeDays(planStore.dateDiff);
-    console.log('days', days.value);
-
-    fetchCardList(); // 컴포넌트가 마운트되면 카드 데이터를 가져옵니다.
-})
-
+  fetchCardList();
+});
 
 </script>
 
@@ -220,7 +226,7 @@ onMounted(() => {
     <div class="drag-container">
         <div class="row" style="display: flex;">
             <div class="drag-list">
-                <ItemTitle class="title" />
+                <ItemTitle class="title" @update-dates="handleUpdateDates"></ItemTitle>
                 <h6 style="margin-left: 11%;">카드 목록</h6>
                 <div>
                     <draggable class="DragArea list-group" :list="cardList" :group="{ name: 'card', pull: 'clone', put: false }"
