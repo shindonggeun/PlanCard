@@ -30,52 +30,7 @@ const wsProvider = new WebsocketProvider(wsUrl, roomId, doc);
 const visible = ref(false);
 
 
-const planList = ref([
-    {
-        cardId: 100,
-        placeName: "마루샤브",
-        placeAddress: "장덕동 1634",
-        Lat: 35.1905106,
-        Lng: 126.8169632,
-        image: "https://lh5.googleusercontent.com/p/AF1QipM2Bk8GPiHYC3Zms9ngsgr3X2MS3wvwJ-t1b-Zl=w260-h175-n-k-no",
-        orderNumber: 2,
-        day: 1,
-        memo: "",
-    },
-    {
-        cardId: 104,
-        placeName: "24시 콩나물국밥",
-        placeAddress: "장덕동 1302",
-        Lat: 35.1911555,
-        Lng: 126.8194957,
-        image: "https://lh5.googleusercontent.com/p/AF1QipMb3Ne3u_yKvQvLzVgIetlDhZfJYU7i9giMvc2W=w426-h240-k-no",
-        orderNumber: 3,
-        day: 1,
-        memo: "",
-    },
-    {
-        cardId: 102,
-        placeName: "장인족발",
-        placeAddress: "장덕동 1574",
-        Lat: 35.190427,
-        Lng: 126.8125625,
-        image: "https://lh5.googleusercontent.com/p/AF1QipNPSfW6JXjsjckMdkZAyejA0YmpQ3TZOTyFziK_=w408-h306-k-no",
-        orderNumber: 1,
-        day: 1,
-        memo: "",
-    },
-    {
-        cardId: 101,
-        placeName: "안청근린공원",
-        placeAddress: "안청동 736-1",
-        Lat: 35.2129735,
-        Lng: 126.8037158,
-        image: "https://lh5.googleusercontent.com/p/AF1QipOjnZPOnGIUGtOkualkcMrX-gudl4hLP5vzfOug=w493-h240-k-no",
-        orderNumber: 1,
-        day: 2,
-        memo: "",
-    },
-]);
+const planList = ref([]);
 
 const days = ref([]);
 
@@ -141,11 +96,23 @@ function onCardMove(event) {
         // 여행 상세 계획에 카드를 추가한 경우, 카드 목록에서 해당 카드를 제거
         const indexToRemove = cardList.value.findIndex(card => card.cardId === cardId);
         if (indexToRemove !== -1) {
-            cardList.value.splice(indexToRemove, 1);
+            const [cardToAdd] = cardList.value.splice(indexToRemove, 1);
+            const newCard = {
+                cardId: cardToAdd.cardId, // 여기서는 예시로 cardId만 매핑했습니다. 실제로는 모든 필요한 필드를 매핑해야 합니다.
+                placeName: cardToAdd.placeName,
+                placeAddress: cardToAdd.placeAddress,
+                Lat: cardToAdd.latitude,
+                Lng: cardToAdd.longitude,
+                image: cardToAdd.placeImage,
+                orderNumber: added.newIndex + 1,
+                // day: ,
+                memo: cardToAdd.memo,
+            };
+            planList.value.push(newCard);
         }
     }
 
-    
+    console.log(planList.value)
 
 }
 
@@ -167,10 +134,10 @@ function onCardMove(event) {
 //   cardList.value = [...cardList.value];
 // };
 
-// const changeDate = (day) => {
-//     checkD.value = day
-//     filteredPlan.value = JSON.parse(localStorage.getItem(`day${day}`));
-// }
+const changeDate = (day) => {
+    checkD.value = day
+    // filteredPlan.value = JSON.parse(localStorage.getItem(`day${day}`));
+}
 
 // const newCenter = ref({ lat: 33.450701, lng: 126.570667 })
 // const setCenter = (element) => {
@@ -216,8 +183,6 @@ const calculateDateDiff = (startDate, endDate) => {
 const initializeDays = (dayCount) => {
     days.value = Array.from({ length: dayCount }, () => []);
 };
-
-
 
 
 // `update-dates` 이벤트를 처리하는 메서드
@@ -272,6 +237,7 @@ onMounted(() => {
                     </div>
                 </div>
                 <div>
+                    <!-- 여행 상세 계획 -->
                     <div class="plan-list-margin">
                         <div class="drag-plan-list" v-for="(fixCard, index) in days" :key="index">
                             <h6 style="cursor: pointer; margin-left: 6%;" @click="changeDate(index + 1)">Day {{ index + 1 }}
