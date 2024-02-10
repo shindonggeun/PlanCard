@@ -18,9 +18,8 @@ async function planGetApi(planId) {
 }
 
 // 여행 계획 수정 (계획명)
-async function planNameUpdateApi(planId, param, success, fail) {
-  console.log("param", param);
-  await local.post(`/plan/${planId}`, param).then(success).catch(fail);
+async function planNameUpdateApi(planId, param) {
+  return await local.patch(`/plan/update/${planId}/name`, param);
 }
 
 // 여행 계획 수정 (일정)
@@ -49,11 +48,11 @@ async function planDetailUpdateApi(param, success, fail) {
 
 export {
   planCreateApi,
+  planListGetApi,
+  planGetApi,
   planNameUpdateApi,
   planDateUpdateApi,
   planDetailCreateApi,
   planDetailGetApi,
   planDetailUpdateApi,
-  planListGetApi,
-  planGetApi,
 };
