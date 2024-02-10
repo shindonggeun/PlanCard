@@ -27,58 +27,8 @@ const yArray = doc.getArray('travelPlan');
 
 // WebSocket 프로바이더 초기화
 const wsProvider = new WebsocketProvider(wsUrl, roomId, doc);
-
-
-
 const visible = ref(false);
 
-// const cardList = ref([
-//     {
-//         cardId: 2,
-//         placeName: "장인족발",
-//         placeAddress: "장덕동 1574",
-//         Lat: 35.190427,
-//         Lng: 126.8125625,
-//         image: "https://lh5.googleusercontent.com/p/AF1QipNPSfW6JXjsjckMdkZAyejA0YmpQ3TZOTyFziK_=w408-h306-k-no",
-//         memo: "",
-//     },
-//     {
-//         cardId: 3,
-//         placeName: "마루샤브",
-//         placeAddress: "장덕동 1634",
-//         Lat:35.1905106,
-//         Lng: 126.8169632,
-//         image: "https://lh5.googleusercontent.com/p/AF1QipM2Bk8GPiHYC3Zms9ngsgr3X2MS3wvwJ-t1b-Zl=w260-h175-n-k-no",
-//         memo: "",
-//     },
-//     {
-//         cardId: 4,
-//         placeName: "24시 콩나물국밥",
-//         placeAddress: "장덕동 1302",
-//         Lat:35.1911555,
-//         Lng: 126.8194957,
-//         image:"https://lh5.googleusercontent.com/p/AF1QipMb3Ne3u_yKvQvLzVgIetlDhZfJYU7i9giMvc2W=w426-h240-k-no",
-//         memo: "",
-//     },
-//     {
-//         cardId: 1,
-//         placeName: "안청근린공원",
-//         placeAddress: "안청동 736-1",
-//         Lat:35.2129735,
-//         Lng: 126.8037158,
-//         image:"https://lh5.googleusercontent.com/p/AF1QipOjnZPOnGIUGtOkualkcMrX-gudl4hLP5vzfOug=w493-h240-k-no",
-//         memo: "",
-//     },
-//     {
-//         cardId: 5,
-//         placeName: "삼성전자 광주사업장",
-//         placeAddress: "하남산단6번로 107",
-//         Lat:35.2040949,
-//         Lng: 126.8071876,
-//         image:"https://maps.gstatic.com/tactile/pane/default_geocode-2x.png",
-//         memo: "",
-//     },
-// ]);
 
 const planList = ref([
     {
@@ -127,7 +77,8 @@ const planList = ref([
     },
 ]);
 
-const days = ref([])
+const days = ref([]);
+
 const day = computed(() => planStore.dateDiff)
 
 const checkD = ref(1)
@@ -136,8 +87,8 @@ const countP = computed(() => days.value.reduce((acc, r) => acc + r.length, 0))
 const filteredPlan = ref([])
 const filteredCard = ref([])
 const noneFixCards = ref(cardList.value)
-const FixCards = ref(days.value)
-const controlOnStart = ref(true)
+const FixCards = ref(days.value);
+const controlOnStart = ref(true);
 const loadCards = () => {
     const storedCards1 = JSON.parse(localStorage.getItem("noneFixCards"));
     const storedCards2 = JSON.parse(localStorage.getItem("FixCards"));
@@ -161,40 +112,59 @@ function pullFunction() {
 
 function saveCards() {
     // 현재 카드 데이터를 로컬 스토리지에 저장
-    localStorage.setItem("noneFixCards", JSON.stringify(noneFixCards.value));
-    localStorage.setItem("FixCards", JSON.stringify(days.value));
+    // localStorage.setItem("noneFixCards", JSON.stringify(noneFixCards.value));
+    // localStorage.setItem("FixCards", JSON.stringify(days.value));
 
     // 나중에 axios연결
 }
 
 function handleChange() {
-    localStorage.setItem('noneFixCards', JSON.stringify(noneFixCards.value));
-    localStorage.setItem("FixCards", JSON.stringify(days.value));
-    for (let index = 0; index < days.value.length; index++) {
-        localStorage.setItem(`day${index + 1}`, JSON.stringify(days.value[index]));
-    }
+    // localStorage.setItem('noneFixCards', JSON.stringify(noneFixCards.value));
+    // localStorage.setItem("FixCards", JSON.stringify(days.value));
+    // for (let index = 0; index < days.value.length; index++) {
+    //     localStorage.setItem(`day${index + 1}`, JSON.stringify(days.value[index]));
+    // }
 }
-function onCardMove() {
-    handleChange()
-    filteredPlan.value = JSON.parse(localStorage.getItem(`day${checkD.value}`));
-    filteredCard.value = JSON.parse(localStorage.getItem('noneFixCards'));
+// function onCardMove() {
 
-    // saveCards()
-    // loadCards()
-}
+//     handleChange()
+//     filteredPlan.value = JSON.parse(localStorage.getItem(`day${checkD.value}`));
+//     filteredCard.value = JSON.parse(localStorage.getItem('noneFixCards'));
 
-const changeDate = (day) => {
-    checkD.value = day
-    filteredPlan.value = JSON.parse(localStorage.getItem(`day${day}`));
-}
+//     saveCards()
+//     loadCards()
+// }
 
-const newCenter = ref({ lat: 33.450701, lng: 126.570667 })
-const setCenter = (element) => {
-    console.log('클릭됨', element)
-    newCenter.value.lat = element.Lat
-    newCenter.value.lng = element.Lng
-    console.log(newCenter.value)
-};
+// 카드 이동 로직 업데이트
+// const onCardMove = (element, fromDay) => {
+//   // `element`는 이동된 카드 객체, `fromDay`는 이 카드가 이동한 날짜(예: 1, 2 등)
+//   // 카드를 cardList에서 제거
+//   const indexToRemove = cardList.value.findIndex(card => card.cardId === element.cardId);
+//   if (indexToRemove !== -1) {
+//     cardList.value.splice(indexToRemove, 1);
+//   }
+//   // 카드를 적절한 'day' 배열에 추가
+//   if (!days.value[fromDay]) {
+//     days.value[fromDay] = [];
+//   }
+//   days.value[fromDay].push(element);
+//   // Vue 반응성을 유지하기 위해 새로운 배열 할당
+//   days.value = [...days.value];
+//   cardList.value = [...cardList.value];
+// };
+
+// const changeDate = (day) => {
+//     checkD.value = day
+//     filteredPlan.value = JSON.parse(localStorage.getItem(`day${day}`));
+// }
+
+// const newCenter = ref({ lat: 33.450701, lng: 126.570667 })
+// const setCenter = (element) => {
+//     console.log('클릭됨', element)
+//     newCenter.value.lat = element.Lat
+//     newCenter.value.lng = element.Lng
+//     console.log(newCenter.value)
+// };
 
 
 // 카드 데이터를 가져오는 메서드

@@ -1,22 +1,23 @@
 <template>
-    <div class="title">
+    <div class="title" v-if="planDetail">
         <div class="title-name font-title">
-            <div :class="[checkName=== '0' ? 'active' : 'hidden']" @click="goNameUpdate()">{{ planName }}</div>
-            <form :class="[checkName=== '0' ? 'hidden' : 'active']" @submit.prevent="goNameUpdate()">
-                <input type="text" v-model="planName" style="width: 250px; color: gray;">
+            <div :class="[checkName === '0' ? 'active' : 'hidden']" @click="goNameUpdate()">{{ planDetail.name }}</div>
+            <form :class="[checkName === '0' ? 'hidden' : 'active']" @submit.prevent="goNameUpdate()">
+                <input type="text" v-model="planDetail.name" style="width: 250px; color: gray;">
                 <!-- <input class="primary" type="submit" value="확인"> -->
             </form>
         </div>
         <div class="title-date font-content" style="color:silver;">
-            <div :class="[checkDate=== '0' ? 'active' : 'hidden']"  @click="goDateUpdate()" >{{ startYear }}년 {{ startMonth }}월 {{ startDate }}일({{ startDay }}) ~ {{ endYear }}년 {{ endMonth }}월 {{ endDate }}일({{ endDay }})</div>
-            <form :class="[checkDate=== '0' ? 'hidden' : 'active']" @submit.prevent="goDateUpdate()">
-                <input type="number" step="1" v-model="startYear" id="startYear" style="width: 45px;">년 
-                <input type="number" step=1 v-model="startMonth" min="1" max="12" id="startMonth" style="width: 45px;">월
-                <input type="number" step=1 v-model="startDate" min="1" max="31"  id="startDate" style="width: 45px;">일
+            <div :class="[checkDate === '0' ? 'active' : 'hidden']" @click="goDateUpdate()">{{ parsedStartDate.year }}년 {{ parsedStartDate.month
+            }}월 {{ parsedStartDate.date }}일({{ parsedStartDate.day }}) ~ {{ parsedEndDate.year }}년 {{ parsedEndDate.month }}월 {{ parsedEndDate.date }}일({{ parsedEndDate.day }})</div>
+            <form :class="[checkDate === '0' ? 'hidden' : 'active']" @submit.prevent="goDateUpdate()">
+                <input type="number" step="1" v-model="parsedStartDate.startYear" id="startYear" style="width: 45px;">년
+                <input type="number" step=1 v-model="parsedStartDate.startMonth" min="1" max="12" id="startMonth" style="width: 45px;">월
+                <input type="number" step=1 v-model="parsedStartDate.startDate" min="1" max="31" id="startDate" style="width: 45px;">일
                 ~
-                <input type="number" step="1" v-model="endYear" id="endYear" style="width: 45px;">년 
-                <input type="number" step=1 v-model="endMonth" min="1" max="12" id="endMonth" style="width: 45px;">월
-                <input type="number" step=1 v-model="endDate" min="1" max="31" id="endDate" style="width: 45px;">일
+                <input type="number" step="1" v-model="parsedEndDate.endYear" id="endYear" style="width: 45px;">년
+                <input type="number" step=1 v-model="parsedEndDate.endMonth" min="1" max="12" id="endMonth" style="width: 45px;">월
+                <input type="number" step=1 v-model="parsedEndDate.endDate" min="1" max="31" id="endDate" style="width: 45px;">일
                 <input class="primary" type="submit" value="확인">
             </form>
         </div>
@@ -24,9 +25,9 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRoute } from "vue-router";
-import { planNameUpdateApi, planDateUpdateApi } from "@/api/planApi"
+import { planNameUpdateApi, planDateUpdateApi, planGetApi } from "@/api/planApi"
 import { usePlanStore } from "@/stores/planStore";
 
 // 여행계획 단일조회 추가
@@ -36,58 +37,9 @@ const checkDate = ref('0')  // 클래스 체크용
 const planName = ref('텐텐여행1')
 
 const route = useRoute()
+const planId = route.params.id;
 
-// 시작날짜
-const startYear = ref(planStore.plan.startDate.getYear()+1900)
-const startMonth = ref(planStore.plan.startDate.getMonth()+1)
-const startDate = ref(planStore.plan.startDate.getDate())
-const startDay = computed(() => {
-    let startDayRaw = new Date(startYear.value, startMonth.value-1, startDate.value).getDay()
-    if (startDayRaw === 0){
-        return '일'
-    } else if (startDayRaw === 1){
-        return '월'
-    } else if (startDayRaw === 2){
-        return '화'
-    } else if (startDayRaw === 3){
-        return '수'
-    } else if (startDayRaw === 4){
-        return '목'
-    } else if (startDayRaw === 5){
-        return '금'
-    } else if (startDayRaw === 6){
-        return '토'
-    } else{
-        return 'error'
-    }
-})
-
-// 끝난날짜
-const endYear = ref(planStore.plan.endDate.getYear()+1900)
-// ref(planStore.plan.endDate.getYear())
-const endMonth = ref(planStore.plan.endDate.getMonth()+1)
-const endDate = ref(planStore.plan.endDate.getDate())
-const endDay = computed(() => {
-    let endDayRaw = new Date(endYear.value, endMonth.value-1, endDate.value).getDay()
-    if (endDayRaw === 0){
-        return '일'
-    } else if (endDayRaw === 1){
-        return '월'
-    } else if (endDayRaw === 2){
-        return '화'
-    } else if (endDayRaw === 3){
-        return '수'
-    } else if (endDayRaw === 4){
-        return '목'
-    } else if (endDayRaw === 5){
-        return '금'
-    } else if (endDayRaw === 6){
-        return '토'
-    } else{
-        return 'error'
-    }
-})
-
+const planDetail = ref(null);
 
 const goNameUpdate = () => {
     if (checkName.value === '0') {
@@ -115,10 +67,10 @@ const goDateUpdate = () => {
     if (checkDate.value === '0') {
         checkDate.value = '1'
     } else {
-        checkDate.value ='0'
+        checkDate.value = '0'
         const payload = {
             "startDate": `${startYear.value}` + '-' + `${startMonth.value - 1}` - `${startDate.value}`,
-            "endDate":`${endYear.value}` + '-' + `${endMonth.value - 1}` - `${endDate.value}`
+            "endDate": `${endYear.value}` + '-' + `${endMonth.value - 1}` - `${endDate.value}`
         }
 
         planDateUpdateApi(route.params.id, payload, (response) => {
@@ -133,12 +85,70 @@ const goDateUpdate = () => {
         }
         )
     }
-}
+};
 
+// 여행 계획을 가져오는 메서드
+const fetchPlanDetail = async () => {
+    try {
+        const response = await planGetApi(planId);
+        if (response.data.dataHeader.successCode === 0) {
+            planDetail.value = response.data.dataBody;
+            console.log(planDetail.value);
+        } else {
+            alert(response.data.dataHeader.resultMessage);
+        }
+    } catch (error) {
+        if (error.response) {
+            console.error(error);
+            const errorResponse = error.response.data;
+            alert(errorResponse.dataHeader.resultMessage);
+        } else if (error.message === 'Network Error' || error.code === 'ERR_NETWORK') {
+            // 네트워크 에러 처리
+            alert("서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.");
+        }
+    }
+};
+
+// startDate와 endDate의 요일을 계산하는 computed 속성
+const getDayOfWeek = (date) => {
+  const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+  return daysOfWeek[new Date(date).getDay()];
+};
+
+// 시작 및 종료 날짜를 년, 월, 일로 파싱하는 computed 속성
+const parsedStartDate = computed(() => {
+  if (planDetail.value && planDetail.value.startDate) {
+    const date = new Date(planDetail.value.startDate);
+    return {
+      year: date.getFullYear(),
+      month: date.getMonth() + 1,
+      date: date.getDate(),
+      day: getDayOfWeek(planDetail.value.startDate)
+    };
+  }
+  return { year: '', month: '', date: '', day: '' };
+});
+
+
+const parsedEndDate = computed(() => {
+  if (planDetail.value && planDetail.value.endDate) {
+    const date = new Date(planDetail.value.endDate);
+    return {
+      year: date.getFullYear(),
+      month: date.getMonth() + 1,
+      date: date.getDate(),
+      day: getDayOfWeek(planDetail.value.endDate)
+    };
+  }
+  return { year: '', month: '', date: '', day: '' };
+});
+
+
+onMounted(fetchPlanDetail);
 </script>
 
 <style scoped>
-.title{
+.title {
     display: flex;
     flex-direction: column;
     gap: 1%;
@@ -146,18 +156,20 @@ const goDateUpdate = () => {
     align-items: start;
     justify-content: end;
 }
-.title-name{
+
+.title-name {
     font-size: 20px;
 }
-.title-date{
+
+.title-date {
     font-size: 14px;
 }
-.active{
+
+.active {
     display: block;
 }
 
-.hidden{
+.hidden {
     display: none;
 }
-
 </style>
