@@ -125,9 +125,7 @@ function handleChange() {
     //     localStorage.setItem(`day${index + 1}`, JSON.stringify(days.value[index]));
     // }
 }
-function onCardMove() {
-
-    console.log("카드 움직임");
+function onCardMove(event) {
     // console.log('days', days.value);
     // handleChange()
     // filteredPlan.value = JSON.parse(localStorage.getItem(`day${checkD.value}`));
@@ -135,6 +133,20 @@ function onCardMove() {
 
     // saveCards()
     // loadCards()
+
+    const { added } = event;
+
+    if (added) {
+        const cardId = added.element.cardId;
+        // 여행 상세 계획에 카드를 추가한 경우, 카드 목록에서 해당 카드를 제거
+        const indexToRemove = cardList.value.findIndex(card => card.cardId === cardId);
+        if (indexToRemove !== -1) {
+            cardList.value.splice(indexToRemove, 1);
+        }
+    }
+
+    
+
 }
 
 // 카드 이동 로직 업데이트
@@ -193,16 +205,16 @@ async function fetchCardList() {
 
 // 여행 일수를 계산하는 함수
 const calculateDateDiff = (startDate, endDate) => {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-  const diffTime = Math.abs(end - start);
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  return diffDays;
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const diffTime = Math.abs(end - start);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
 };
 
 // days 배열을 초기화하는 함수
 const initializeDays = (dayCount) => {
-  days.value = Array.from({ length: dayCount }, () => []);
+    days.value = Array.from({ length: dayCount }, () => []);
 };
 
 
@@ -217,7 +229,7 @@ const handleUpdateDates = ({ startDate, endDate }) => {
 };
 
 onMounted(() => {
-  fetchCardList();
+    fetchCardList();
 });
 
 </script>
@@ -229,8 +241,8 @@ onMounted(() => {
                 <ItemTitle class="title" @update-dates="handleUpdateDates"></ItemTitle>
                 <h6 style="margin-left: 11%;">카드 목록</h6>
                 <div>
-                    <draggable class="DragArea list-group" :list="cardList" :group="{ name: 'card', pull: 'clone', put: false }"
-                        item-key="id" @change="onCardMove">
+                    <draggable class="DragArea list-group" :list="cardList"
+                        :group="{ name: 'card', pull: 'clone', put: false }" item-key="id" @change="onCardMove">
                         <template #item="{ element }">
                             <div
                                 :class="[FixCards.reduce((acc, item) => acc || (item.cardId === element.cardId), false) ? 'hidden' : 'active']">
@@ -459,4 +471,5 @@ onMounted(() => {
     font: bolder;
     display: inline-block;
     text-align: center;
-}</style>
+}
+</style>
