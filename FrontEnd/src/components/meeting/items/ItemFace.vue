@@ -6,14 +6,14 @@
     <div id="join" v-if="!session">
       <div id="join-dialog">
         <div>
-          <p>
+          <!-- <p>
             <label>이름 : </label>
             <input v-model="myUserName" type="text" required />
           </p>
           <p>
             <label>세션 이름 : </label>
             <input v-model="mySessionId" type="text" required />
-          </p>
+          </p> -->
           <p>
             <button @click="joinSession">
               입장!
@@ -96,6 +96,7 @@ import { ref, computed } from 'vue'
 import axios from 'axios'
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/meeting/items/UserVideo.vue";
+import { createSessionApi, connectionSessionApi } from "@/api/webRTCApi";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
