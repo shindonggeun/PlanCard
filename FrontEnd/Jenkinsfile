@@ -52,9 +52,9 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'Docker-hub', usernameVariable: 'DOCKER_USER_ID', passwordVariable: 'DOCKER_USER_PASSWORD')]) {
-                        sh "docker stop -f front || true"
-                        sh "docker rm -f front || true"
-                        sh "docker rmi ${DOCKERHUB_REGISTRY}"     //images 날리기
+                        sh "docker stop front || true"
+                        sh "docker rm front || true"
+                        sh "docker rmi ${DOCKERHUB_REGISTRY}|| true"     //images 날리기
                         sh "docker pull ${DOCKERHUB_REGISTRY}"
 
                                                
