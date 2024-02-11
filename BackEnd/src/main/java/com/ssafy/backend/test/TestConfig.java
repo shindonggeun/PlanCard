@@ -253,7 +253,6 @@ public class TestConfig {
         friendshipRepository.save(friendship3);
         friendshipRepository.save(friendship4);
         friendshipRepository.save(friendship5);
-
     }
 
 
