@@ -174,6 +174,7 @@ public class TestConfig {
                 .type(AlarmType.CONFERENCE)
                 .content(member2.getNickname() + " 님이 화상 회의 요청을 보냈습니다.")
                 .status(AlarmStatus.UNREAD)
+                .url("http://localhost:5173/meeting/view/1")
                 .build();
 
         Alarm alarm2 = Alarm.builder()

@@ -67,7 +67,7 @@ const { emit } = getCurrentInstance();
 
 const friends = ref([]); // 현재 페이지에 표시된 친구들의 목록
 const page = ref(0); // 현재 페이지 번호
-const size = ref(2); // 페이지당 아이템 수
+const size = ref(10); // 페이지당 아이템 수
 const isLastPage = ref(false); // 마지막 페이지 여부
 
 // MyPage로 이동
