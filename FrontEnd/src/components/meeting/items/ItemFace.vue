@@ -46,7 +46,7 @@
       </div>
 
       <!-- 채팅창 -->
-      <div id="chat-container" style="border: 3px solid black;">
+      <!-- <div id="chat-container" style="border: 3px solid black;">
         <div id="chat-window">
           <ul id="chat-history">
             <li v-for="(message, index) in messages" :key="index">
@@ -58,7 +58,7 @@
           <input type="text" placeholder="전달할 내용을 입력하세요." v-model="inputMessage" style="border: 3px black solid;">
           <button @click="sendMessage" style="border: 3px black solid;">전송</button>
         </form>
-      </div>
+      </div> -->
 
       <!-- 캠활성화, 음소거 버튼 -->
       <button id="camera-activate" @click="handleCameraBtn" style="border: 3px black solid;">캠 비활성화</button>
@@ -88,6 +88,7 @@ import { useRoute } from 'vue-router';
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/meeting/items/UserVideo.vue";
 import { createSessionApi, connectionSessionApi } from "@/api/webrtcApi";
+import { useAccountsStore } from '@/stores/accountsStore'; // accountsStore 가져오기
 
 // OpenVidu objects
 const OV = ref(undefined)
@@ -95,6 +96,7 @@ const session = ref()
 let mainStreamManager = ref(undefined)
 const publisher = ref(undefined)
 const subscribers = ref([])
+const accountStore = useAccountsStore(); // accountsStore 사용
 
 // Join form
 const mySessionId = ref('');
@@ -104,7 +106,7 @@ const route = useRoute();
 
 // 라우트 파라미터에서 세션 ID를 가져와서 mySessionId에 할당
 mySessionId.value = route.params.id;
-const myUserName = ref("Participant" + Math.floor(Math.random() * 100))
+const myUserName = accountStore.memberInfo.nickname;
 
 // 채팅창을 위한 변수
 const inputMessage = ref("")
@@ -168,7 +170,7 @@ async function joinSession() {
 
   // WebSocket 연결 시도
   if (connectionToken.value) {
-    session.value.connect(connectionToken.value, { clientData: myUserName.value })
+    session.value.connect(connectionToken.value, { clientData: myUserName })
       .then(() => {
         let publisher_tmp = OV.value.initPublisher(undefined, {
           audioSource: undefined, // The source of audio. If undefined default microphone
@@ -406,11 +408,15 @@ async function replaceAudioTrack(deviceId) {
 
 <style scoped>
 #video-container {
-  max-width: 100%;
-  /* 비디오의 최대 너비를 화면 너비에 맞춤 */
-  height: auto;
-  /* 높이를 자동으로 조정하여 비디오의 비율을 유지 */
-  overflow: hidden;
-  /* 내용이 넘칠 경우 숨김 처리 */
+  width: 100%;         /* 컨테이너의 너비를 부모 요소의 100%로 설정 */
+  height: auto;        /* 높이를 자동으로 조정 */
+  overflow: hidden;    /* 내용이 넘칠 경우 숨김 처리 */
+  position: relative;  /* 비디오 포지셔닝을 위한 상대 위치 지정 */
+}
+
+.video {
+  width: 100%;         /* 비디오 너비를 컨테이너의 100%로 설정 */
+  height: auto;        /* 높이를 자동으로 조정 */
+  object-fit: cover;   /* 비디오를 컨테이너에 맞추어 확장 */
 }
 </style>
