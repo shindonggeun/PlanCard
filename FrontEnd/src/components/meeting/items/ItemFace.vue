@@ -6,14 +6,14 @@
     <div id="join" v-if="!session">
       <div id="join-dialog">
         <div>
-          <!-- <p>
+          <p>
             <label>이름 : </label>
             <input v-model="myUserName" type="text" required />
           </p>
           <p>
             <label>세션 이름 : </label>
             <input v-model="mySessionId" type="text" required />
-          </p> -->
+          </p>
           <p>
             <button @click="joinSession">
               입장!
@@ -96,7 +96,6 @@ import { ref, computed } from 'vue'
 import axios from 'axios'
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/meeting/items/UserVideo.vue";
-import { createSessionApi, connectionSessionApi } from "@/api/webRTCApi";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -249,13 +248,13 @@ async function createSession(sessionId) {
   const response = await axios.post(APPLICATION_SERVER_URL, { customSessionId: sessionId, userNo: 53, endHour: 1, endMinute: 30, quota: 16, isPrivacy: false }, {
     headers: { 'Content-Type': 'application/json', },
   });
-  return response.data.sessionId; // The sessionId
+  return response.data.dataBody.sessionId; // The sessionId
 }
 async function createToken(sessionId) {
   const response = await axios.post(APPLICATION_SERVER_URL + '/' + sessionId + '/connections', {}, {
     headers: { 'Content-Type': 'application/json', },
   });
-  return response.data; // The token
+  return response.data.dataBody.connectionToken; // The token
 }
 
 
