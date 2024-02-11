@@ -4,7 +4,7 @@
       <p id="notificatonSet">알림 내역</p>
       <v-btn id="clearBtn" @click="deleteAlarmAll()">모두 지우기</v-btn>
     </div>
-    <div id="notificationsList">
+    <div id="notificationsList" ref="notificationsList" @scroll="onScroll">
       <div id="notificationDivider1"></div>
       <div v-for="notification in notifications" :key="notification.index" style="width: 95%;">
         <div style="display: flex;">
@@ -40,6 +40,18 @@ onMounted(() => {
 
 const lastAlarmId = ref(null);
 const notifications = ref([]);
+
+const notificationsList = ref(null); // 알람 목록을 담는 DOM 요소의 ref
+
+  // 스크롤 이벤트 핸들러
+  const onScroll = () => {
+    const container = notificationsList.value;
+    // 스크롤 끝에 도달했는지 확인
+    if (container.scrollHeight - container.scrollTop === container.clientHeight) {
+      // 마지막 알람 ID로 API 호출
+      fetchAlarms();
+    }
+  };
 
 // 알람 가져오기 메서드
 const fetchAlarms = async () => {
