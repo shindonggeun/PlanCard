@@ -77,7 +77,7 @@ function onCardMove(event, index) {
                 Lng: cardToAdd.longitude,
                 image: cardToAdd.placeImage,
                 orderNumber: added.newIndex + 1,
-                day: index, // 0부터 들어감
+                day: index + 1, // 0부터 들어감 (그러므로 1 더해줘야 함)
                 memo: cardToAdd.memo,
             };
             planList.value.push(newCard);
@@ -243,7 +243,7 @@ onMounted(() => {
             </div>
 
             <div class="map">
-                {{ newC }}
+                <!-- {{ newC }} -->
                 <KaKaoMap :new-center="newC" :detail-list="filteredPlan"></KaKaoMap>
             </div>
         </div>
