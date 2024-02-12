@@ -40,32 +40,24 @@ const doc = new Y.Doc();// Yjs 배열 초기화
 
 const yCardList = doc.getArray('cardList');
 const yPlanList = doc.getArray('planList');
+const yDays = doc.getArray('days');
 
 
 // WebSocket 프로바이더 초기화
 const wsProvider = new WebsocketProvider(wsUrl, roomId, doc);
 const visible = ref(false);
 
-// sharedCardList의 변화를 감지하여 cardList 업데이트
+// yCardList의 변화를 감지하여 cardList 업데이트
 yCardList.observe(debounce(() => {
     cardList.value = yCardList.toArray();
     console.log('이벤트 발생 및 cardList 확인', cardList.value);
 }, 500));
 
-
-yPlanList.observe(event => {
-    //   planList.value = yPlanList.toArray();
-});
-
-// 로컬 상태 변경 감지 및 Yjs 배열 업데이트
-// watch(cardList, (newVal, oldVal) => {
-//     if (newVal !== oldVal) {
-//         // Yjs 배열에 로컬 상태 동기화
-//         yCardList.delete(0, yCardList.length);
-//         yCardList.push(newVal);
-//     }
-
-// });
+// yPlanList의 변화를 감지하여 planList 업데이트
+yPlanList.observe(debounce(() => {
+    planList.value = yPlanList.toArray();
+    console.log('이벤트 발생 및 planList 확인', planList.value);
+}, 500));
 
 
 // cardList의 변화 감지 및 처리
@@ -81,6 +73,16 @@ watch(cardList, (newVal, oldVal) => {
         yCardList.push(newVal);
     }
 }, { deep: true });
+
+
+watch(planList, (newVal, oldVal) => {
+    const yPlanListArray = yPlanList.toArray();
+    if (JSON.stringify(newVal) !== JSON.stringify(yPlanListArray)) {
+        yPlanList.delete(0, yPlanList.length);
+        yPlanList.push(newVal);
+    }
+}, { deep: true });
+
 
 // draggable js에 필요한 거////////////////////////////
 const controlOnStart = ref(true);                   //
@@ -127,48 +129,53 @@ function onCardMove(event, index) {
                 memo: cardToAdd.memo,
             };
             planList.value.push(newCard);
+
+            // Yjs 상태에도 동일한 카드 추가
+            yPlanList.push(newCard);
+
             days.value[index].forEach((item, i) => {
                 const changeIndex = planList.value.findIndex(plan => plan.cardId === item.cardId);
                 planList.value[changeIndex].orderNumber = i;
-
-                // Yjs 배열에 카드 추가
-                yPlanList.insert(added.newIndex, [newCard]);
             })
+
         } else {
             planList.value[indexToRemovePlan].day = index + 1;
+
+            yPlanList[indexToRemovePlan].day = index + 1;
+
             days.value[index].forEach((item, i) => {
                 const changeIndex = planList.value.findIndex(plan => plan.cardId === item.cardId);
                 planList.value[changeIndex].orderNumber = i;
+                yPlanList[changeIndex].orderNumber = i;
             })
+
+
         }
     }
     else if (moved) {
         days.value[index].forEach((item, i) => {
             const changeIndex = planList.value.findIndex(plan => plan.cardId === item.cardId);
             planList.value[changeIndex].orderNumber = i;
+            yPlanList[changeIndex].orderNumber = i;
         })
+
+
         // moved된 날의 전체 order를 다시 덮어씀
 
-
-        const item = yPlanList.get(moved.oldIndex);
-        yPlanList.delete(moved.oldIndex, 1);
-        yPlanList.insert(moved.newIndex, [item]);
     }
     else if (removed) {
         days.value[index].forEach((item, i) => {
             const changeIndex = planList.value.findIndex(plan => plan.cardId === item.cardId);
             planList.value[changeIndex].orderNumber = i;
-
-            // Yjs 배열에서 카드 제거
-            yPlanList.delete(removed.oldIndex, 1);
+            yPlanList[changeIndex].orderNumber = i;
         })
+
+
         // removed된 날의 전체 order를 다시 덮어씀
     }
 
     // console.log('planList에 추가', planList.value)
 
-    // 변경 사항 로그 출력
-    // console.log('Yjs 공유 배열 업데이트', yArray.toJSON());
 }
 
 const changeDate = (day) => {
@@ -207,10 +214,8 @@ async function fetchCardList() {
             } else {
                 // Yjs 배열에 백엔드로부터 가져온 카드리스트를 초기화합니다.
                 yCardList.push(backendCardList);
-                // 로컬 상태도 백엔드로부터 가져온 데이터로 설정합니다.
-                cardList.value = backendCardList;
             }
-            
+
         } else {
             alert(response.data.dataHeader.resultMessage);
         }
@@ -280,6 +285,16 @@ async function fetchPlanDetailList() {
                 const filterday = computed(() => planList.value.filter((item) => item.day === index + 1).sort((a, b) => a.orderNumber - b.orderNumber))
                 d.push(...filterday.value)
             })
+
+            // Yjs의 현재 상태와 비교하여, 로컬 상태를 업데이트합니다.
+            // 이미 yCardList에 카드가 존재하는 경우, 로컬 카드리스트를 yCardList의 상태로 설정합니다.
+            if (yPlanList.length > 0) {
+                planList.value = yPlanList.toArray();
+            } else {
+                // Yjs 배열에 백엔드로부터 가져온 여행 상세 계획 리스트를 초기화합니다.
+                yPlanList.push(planList.value);
+            }
+
         } else {
             alert(response.data.dataHeader.resultMessage);
         }
