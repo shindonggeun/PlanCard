@@ -421,6 +421,19 @@ onBeforeMount(async () => {
     await fetchPlanDetailList();
 });
 
+
+const sttOn = ref(false)
+
+const sttToggle = () => {
+    if (sttOn.value == false) {
+        sttOn.value = true
+        console.log(sttOn.value)
+    } else {
+        sttOn.value = false
+        console.log(sttOn.value)
+    }
+}
+
 </script>
 
 <template>
@@ -498,8 +511,8 @@ onBeforeMount(async () => {
                     </div>
                     <div class="btns">
                         <div class="btns-box">
-                            <button class="btn sttBtn">
-                                STT
+                            <button class="btn sttBtn" @click="sttToggle()">
+                                {{ sttOn ? "stt OFF" : "stt ON" }}
                             </button>
                             <button class="btn quit-btn" @click="goMain">
                                 <i class="pi pi-times"></i> 종료
