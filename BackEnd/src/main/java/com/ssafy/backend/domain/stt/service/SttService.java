@@ -15,4 +15,6 @@ public interface SttService {
 
     void stopStt(Long planId);
 
+    void processAudioData(byte[] audioData);
+
 }

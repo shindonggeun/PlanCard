@@ -96,8 +96,8 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-    if (stompClient && stompClient.connected) {
-        stompClient.disconnect();
+    if (getStompClient() && getStompClient().connected) {
+        getStompClient().disconnect();
     }
 });
 </script>

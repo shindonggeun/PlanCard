@@ -163,6 +163,27 @@ public class SttServiceImpl implements SttService {
         log.info("Stopped STT session for planId: {}", planId);
     }
 
+    // 오디오 데이터를 STT 서비스로 전송하고 변환된 텍스트를 처리
+    @Override
+    public void processAudioData(byte[] audioData) {
+        // STT 서비스 호출 및 텍스트 변환 로직 구현
+        // 예시 코드는 실제 STT API 호출 과정을 단순화하여 표현합니다.
+        String text = callSttService(audioData);
+
+        // 변환된 텍스트 처리 로직 (예: 데이터베이스 저장, 로깅 등)
+        log.info("Converted text: {}", text);
+
+        // 변환된 텍스트를 기반으로 필요한 처리 수행
+        // 예: 특정 조건에 맞는 데이터 처리, 응답 메시지 전송 등
+    }
+
+    private String callSttService(byte[] audioData) {
+        // 여기에 STT API 호출 로직 구현
+        // 이 부분은 실제 STT 서비스 제공자의 API 문서를 참조하여 구현합니다.
+        // 이 예시에서는 변환된 가상의 텍스트를 반환합니다.
+        return "여기에 변환된 텍스트";
+    }
+
 }
 
 
@@ -271,5 +292,6 @@ class RTZRWebSocketListener extends WebSocketListener {
     public void onFailure(WebSocket webSocket, Throwable t, Response response) {
         log.error("WebSocket Failure: ", t);
     }
+
 }
 
