@@ -15,11 +15,12 @@
             <input type="text" class="box, card p-fluid font-content" id="tripTitleInput" v-model.trim="tripTitle"
               placeholder="여행 이름을 알려주세요">
 
-            <h3>여행 일정 선택</h3>
-            <Calendar v-model="selectedDates" dataFormat="yy/mm/dd" selectionMode="range" :manualInput="false"
-              showButtonBar locale="ko-KR" placeholder="여행 일정을 선택하세요" class="field box card p-fluid"
-              id="selectDateCalendar" />
-          </div>
+            <div>
+              <h3>여행 일정 선택</h3>
+              <Calendar v-model="selectedDates" dataFormat="yy/mm/dd" selectionMode="range" :manualInput="false"
+                showButtonBar locale="ko-KR" placeholder="여행 일정을 선택하세요" class="field box card p-fluid"
+                id="selectDateCalendar" />
+            </div>
 
           <div style="width: 295px;">
             <h3>친구 선택 ({{ selectedFriends.length }})</h3>
@@ -29,16 +30,14 @@
               <div>
                 <div class="box, card p-fluid" id="selectFriendsDiv">
                   <div style="width: 150px; ;">
-                    <v-chip closable v-for="selectedFriend in selectedFriends" :key="selectedFriend.id"
-                      class="font-content" id="selectedFriend" @click="removeFriend(selectedFriend)">
-                      <p style="margin: 0;">{{ selectedFriend.name }}</p>
-                      <!-- <i class="pi pi-times"></i> -->
+                    <v-chip v-for="selectedFriend in selectedFriends" :key="selectedFriend.id" class="font-content" id="selectedFriend" @click="removeFriend(selectedFriend)">
+                      <p style="margin: 0;">{{ selectedFriend.name }}&nbsp;&nbsp;</p>
+                      <i class="pi pi-times-circle"></i>
                     </v-chip>
                   </div>
                 </div>
 
                 <div style="display: flex;">
-
                   <div class="box, card p-fluid" id="FriendsDiv" ref="FriendsDiv" @scroll="handleScroll">
                     <div v-for="friend in friends" :key="friend.friendId" @click="addFriend(friend)" id="friendList">
                       <p class=" font-content" style="
@@ -55,12 +54,11 @@
                   </div>
 
                   <div>
-                    <input class="box, card p-fluid font-content" id="searchFriendsDiv" type="text" v-model="searchText"
-                      placeholder="이메일 검색">
+                    <input class="box, card p-fluid font-content" id="searchFriendsDiv" type="text" v-model="searchText" placeholder="이메일 검색">
                     <div class="box, card p-fluid" id="FriendsDiv2">
-                      <div v-for="friend in filteredFriends" :key="friend.friendId" @click="addFriend(friend)"
-                        id="friendList">
-                        <p class=" font-content" style="
+                      <div v-for="friend in filteredUsers" :key="friend.id" @click="addFriend(friend)" id="friendList">
+                        <p class=" font-content"
+                            style="
                               font-weight: bold;
                               font-size: medium;
                               color: #3498DB;
@@ -73,6 +71,8 @@
                     </div>
                   </div>
                 </div>
+
+
               </div>
 
 
@@ -196,7 +196,7 @@ const searchText = ref("");
 
 
 // 검색어를 기반으로 친구 필터링
-const filteredFriends = computed(() => {
+const filteredUsers = computed(() => {
   if (!searchText.value) {
     return;
   } else {
@@ -217,11 +217,12 @@ const addFriend = (friend) => {
     selectedFriends.value.unshift(friend);
   }
 }
-// 선택된 친구를 selectedFriends 배열에서 삭제
+// 친구를 선택하여 배열에서 삭제 (email을 추적)
 const removeFriend = (friend) => {
-  const index = selectedFriends.value.findIndex(fr => fr.id === friend.id);
+  const index = selectedFriends.value.findIndex(fr => fr.email === friend.email);
   if (index !== -1) {
     selectedFriends.value.splice(index, 1);
+    console.log(selectedFriends.value);
   }
 }
 
@@ -349,7 +350,7 @@ h3 {
   position: relative;
   margin: 0;
   margin-right: 10px;
-  padding: 10%;
+  padding: 7%;
   font-weight: bold;
   border-radius: 5cm;
   white-space: nowrap;
