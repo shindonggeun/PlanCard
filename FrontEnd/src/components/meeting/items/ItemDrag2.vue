@@ -20,6 +20,9 @@ const cardList = ref([])
 const cardHidden = ref([])
 const cardToPlan = ref(false)
 const planList = ref([]);
+
+const dayCountRef = ref('');
+
 watch(() => planList,
     (newplanList) => {
         cardList.value = cardListRaw.value.filter(data => planList.value.reduce((acc, item) => acc && (item.cardId !== data.cardId), true))
@@ -41,7 +44,6 @@ const doc = new Y.Doc();// Yjs 배열 초기화
 const yCardList = doc.getArray('cardList');
 const yPlanList = doc.getArray('planList');
 
-
 // WebSocket 프로바이더 초기화
 const wsProvider = new WebsocketProvider(wsUrl, roomId, doc);
 const visible = ref(false);
@@ -57,6 +59,9 @@ yPlanList.observe(debounce(() => {
     planList.value = yPlanList.toArray();
     console.log('이벤트 발생 및 planList 확인', planList.value);
 }, 500));
+
+
+
 
 
 // cardList의 변화 감지 및 처리
@@ -80,7 +85,23 @@ watch(planList, (newVal, oldVal) => {
         yPlanList.delete(0, yPlanList.length);
         yPlanList.push(newVal);
     }
+
+    // planList의 변화에 따라 days 배열을 업데이트
+    days.value = Array.from({ length: dayCountRef.value }, () => []);
+    days.value.forEach((d, index) => {
+        const filterday = computed(() => planList.value.filter((item) => item.day === index + 1).sort((a, b) => a.orderNumber - b.orderNumber))
+        d.push(...filterday.value)
+    })
+    
 }, { deep: true });
+
+// watch(days, (newVal, oldVal) => {
+//     const yDaysArray = yDays.toArray();
+//     if (JSON.stringify(newVal) !== JSON.stringify(yDaysArray)) {
+//         yPlanList.delete(0, yPlanList.length);
+//         yPlanList.push(newVal);
+//     }
+// }, { deep: true });
 
 
 // draggable js에 필요한 거////////////////////////////
@@ -101,7 +122,7 @@ function goMain() {
 
 
 function onCardMove(event, index) {
-    // console.log(event);
+    console.log(event);
     //planList에 day추가용
 
 
@@ -135,7 +156,14 @@ function onCardMove(event, index) {
             days.value[index].forEach((item, i) => {
                 const changeIndex = planList.value.findIndex(plan => plan.cardId === item.cardId);
                 planList.value[changeIndex].orderNumber = i;
+                yPlanList[changeIndex].orderNumber = i;
             })
+
+
+            // yDays[index].forEach((item, i) => {
+            //     const changeIndex = yPlanList.findIndex(plan => plan.cardId === item.cardId);
+                
+            // })
 
         } else {
             planList.value[indexToRemovePlan].day = index + 1;
@@ -148,6 +176,11 @@ function onCardMove(event, index) {
                 yPlanList[changeIndex].orderNumber = i;
             })
 
+            // yDays[index].forEach((item, i) => {
+            //     const changeIndex = yPlanList.findIndex(plan => plan.cardId === item.cardId);
+            //     yPlanList[changeIndex].orderNumber = i;
+            // })
+
 
         }
     }
@@ -158,7 +191,6 @@ function onCardMove(event, index) {
             yPlanList[changeIndex].orderNumber = i;
         })
 
-
         // moved된 날의 전체 order를 다시 덮어씀
 
     }
@@ -168,7 +200,6 @@ function onCardMove(event, index) {
             planList.value[changeIndex].orderNumber = i;
             yPlanList[changeIndex].orderNumber = i;
         })
-
 
         // removed된 날의 전체 order를 다시 덮어씀
     }
@@ -253,6 +284,7 @@ const initializeDays = (dayCount) => {
 const handleUpdateDates = ({ startDate, endDate }) => {
     // 여행 일수 계산
     const dayCount = calculateDateDiff(startDate, endDate);
+    dayCountRef.value = dayCount;
     // days 배열 초기화
     initializeDays(dayCount);
 };
