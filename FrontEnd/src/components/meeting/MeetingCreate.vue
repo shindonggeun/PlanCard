@@ -212,11 +212,12 @@ const filteredUsers = computed(() => {
 
 // 친구를 선택하여 selectedFriends 배열에 추가
 const addFriend = (friend) => {
-  if (!selectedFriends.value.some(fr => fr.friendId === friend.friendId)) {
+  if (!selectedFriends.value.some(fr => fr.email === friend.email)) {
     selectedFriends.value.unshift(friend);
     console.log(selectedFriends.value);
   }
 }
+
 // 친구를 선택하여 배열에서 삭제 (email을 추적)
 const removeFriend = (friend) => {
   const index = selectedFriends.value.findIndex(fr => fr.email === friend.email);

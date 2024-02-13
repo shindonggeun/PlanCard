@@ -498,6 +498,9 @@ onBeforeMount(async () => {
                     </div>
                     <div class="btns">
                         <div class="btns-box">
+                            <button class="btn sttBtn">
+                                STT
+                            </button>
                             <button class="btn quit-btn" @click="goMain">
                                 <i class="pi pi-times"></i> 종료
                             </button>
@@ -640,6 +643,26 @@ onBeforeMount(async () => {
 .save-btn:hover {
   transform: scale(1.05);
 }
+.save-btn:hover {
+  transform: scale(1.05);
+}
+
+.sttBtn {
+    top: 5px;
+    right: 170px;
+    border: rgba(0, 0, 0, 0.1) 2.5px solid;
+    border-radius: 5cm;
+    background-color: #FFC0CB;
+    color: #fff;
+    transition: transform 0.3s ease;
+}
+.sttBtn:hover {
+  transform: scale(1.05);
+}
+
+
+
+
 
 .drag-plan-list {
     margin-bottom: 15%;
