@@ -40,7 +40,6 @@ const doc = new Y.Doc();// Yjs 배열 초기화
 
 const yCardList = doc.getArray('cardList');
 const yPlanList = doc.getArray('planList');
-const yDays = doc.getArray('days');
 
 
 // WebSocket 프로바이더 초기화
