@@ -171,7 +171,7 @@ public class TestConfig {
         Alarm alarm1 = Alarm.builder()
                 .fromMember(member2)
                 .toMember(member1)
-                .type(AlarmType.CONFERENCE)
+                .type(AlarmType.PLAN)
                 .content(member2.getNickname() + " 님이 화상 회의 요청을 보냈습니다.")
                 .status(AlarmStatus.UNREAD)
                 .url("http://localhost:5173/meeting/view/1")
@@ -188,7 +188,7 @@ public class TestConfig {
         Alarm alarm3 = Alarm.builder()
                 .fromMember(member3)
                 .toMember(member1)
-                .type(AlarmType.CONFERENCE)
+                .type(AlarmType.PLAN)
                 .content(member3.getNickname() + " 님이 화상 회의 요청을 보냈습니다.")
                 .status(AlarmStatus.UNREAD)
                 .build();
@@ -212,7 +212,7 @@ public class TestConfig {
         Alarm alarm6 = Alarm.builder()
                 .fromMember(member4)
                 .toMember(member1)
-                .type(AlarmType.CONFERENCE)
+                .type(AlarmType.PLAN)
                 .content(member4.getNickname() + " 님이 화상 회의 요청을 보냈습니다.")
                 .status(AlarmStatus.UNREAD)
                 .build();

@@ -3,6 +3,7 @@ package com.ssafy.backend.domain.alarm.service;
 import com.ssafy.backend.domain.alarm.dto.AlarmCreateRequestDto;
 import com.ssafy.backend.domain.alarm.dto.AlarmDto;
 import com.ssafy.backend.domain.alarm.dto.AlarmFriendRequestDto;
+import com.ssafy.backend.domain.alarm.dto.AlarmPlanRequestDto;
 import com.ssafy.backend.domain.alarm.entity.Alarm;
 import com.ssafy.backend.domain.alarm.entity.enums.AlarmStatus;
 import com.ssafy.backend.domain.alarm.entity.enums.AlarmType;
@@ -65,6 +66,23 @@ public class AlarmServiceImpl implements AlarmService {
         fcmService.sendMessageTo(toMember.getId(), alarm.getContent());
     }
 
+    @Override
+    public void planRequestAlarm(Long fromMemberId, List<AlarmPlanRequestDto> planRequestDtoList) {
+        Member fromMember = memberRepository.findById(fromMemberId).orElseThrow(() ->
+                new MemberException(MemberError.NOT_FOUND_MEMBER));
+
+        planRequestDtoList.forEach(planRequestDto -> {
+            Member toMember = memberRepository.findById(planRequestDto.getFriendId()).orElseThrow(() ->
+                    new MemberException(MemberError.NOT_FOUND_MEMBER));
+
+            Alarm alarm = planRequestDto.toEntity(fromMember, toMember);
+            alarmRepository.save(alarm);
+
+            // FCM 서비스를 이용하여 알람 메시지 전송
+            fcmService.sendMessageTo(toMember.getId(), alarm.getContent());
+        });
+
+    }
 
 //    @Override
 //    public SliceResponse getAlarmList(Long memberId, Pageable pageable) {
