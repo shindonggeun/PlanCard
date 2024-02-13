@@ -4,29 +4,23 @@
       <h2 style="color: black;">미팅 생성</h2>
     </div>
     <hr id="separator">
-
     <div>
       <form @submit.prevent="goMeeting" style="width: 800px;">
-        <div style="display: flex;
-             /* justify-content: space-between; */
-             ">
+
+        <div style="display: flex;">
           <div style="width: 295px;">
             <h3>여행 이름</h3>
-            <input type="text" class="box, card p-fluid font-content" id="tripTitleInput" v-model.trim="tripTitle"
-              placeholder="여행 이름을 알려주세요">
-
+            <input type="text" class="box, card p-fluid font-content" id="tripTitleInput" v-model.trim="tripTitle" placeholder="여행 이름을 알려주세요">
             <div>
               <h3>여행 일정 선택</h3>
               <Calendar v-model="selectedDates" dataFormat="yy/mm/dd" selectionMode="range" :manualInput="false"
                 showButtonBar locale="ko-KR" placeholder="여행 일정을 선택하세요" class="field box card p-fluid"
                 id="selectDateCalendar" />
             </div>
-
+          </div>
           <div style="width: 295px;">
             <h3>친구 선택 ({{ selectedFriends.length }})</h3>
-
             <div style="display: flex; justify-content: space-between;">
-
               <div>
                 <div class="box, card p-fluid" id="selectFriendsDiv">
                   <div style="width: 150px; ;">
@@ -36,7 +30,6 @@
                     </v-chip>
                   </div>
                 </div>
-
                 <div style="display: flex;">
                   <div class="box, card p-fluid" id="FriendsDiv" ref="FriendsDiv" @scroll="handleScroll">
                     <div v-for="friend in friends" :key="friend.friendId" @click="addFriend(friend)" id="friendList">
@@ -52,7 +45,6 @@
                           color: rgba(0, 0, 0, 0.5);">{{ friend.email }}</p>
                     </div>
                   </div>
-
                   <div>
                     <input class="box, card p-fluid font-content" id="searchFriendsDiv" type="text" v-model="searchText" placeholder="이메일 검색">
                     <div class="box, card p-fluid" id="FriendsDiv2">
@@ -74,11 +66,7 @@
 
 
               </div>
-
-
             </div>
-
-
           </div>
         </div>
 
@@ -91,12 +79,8 @@
           </v-btn>
         </div>
 
-
-
       </form>
     </div>
-
-
   </div>
 </template>
 
@@ -215,6 +199,7 @@ const filteredUsers = computed(() => {
 const addFriend = (friend) => {
   if (!selectedFriends.value.some(fr => fr.friendId === friend.friendId)) {
     selectedFriends.value.unshift(friend);
+    console.log(selectedFriends.value);
   }
 }
 // 친구를 선택하여 배열에서 삭제 (email을 추적)
@@ -259,7 +244,6 @@ const fetchFriendList = async () => {
     }
   }
 
-  console.log(friends.value);
 };
 
 onMounted(() => {
