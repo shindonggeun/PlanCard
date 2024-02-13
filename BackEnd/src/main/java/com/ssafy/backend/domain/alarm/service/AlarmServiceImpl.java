@@ -17,6 +17,7 @@ import com.ssafy.backend.domain.member.entity.Member;
 import com.ssafy.backend.domain.member.exception.MemberError;
 import com.ssafy.backend.domain.member.exception.MemberException;
 import com.ssafy.backend.domain.member.repository.MemberRepository;
+import com.ssafy.backend.domain.plan.service.PlanMemberService;
 import com.ssafy.backend.global.common.dto.SliceResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +36,7 @@ public class AlarmServiceImpl implements AlarmService {
     private final AlarmRepository alarmRepository;
     private final FriendshipService friendshipService;
     private final FCMService fcmService;
+    private final PlanMemberService planMemberService;
 
     @Override
     public void createAlarm(Long fromMemberId, AlarmCreateRequestDto createRequestDto) {
@@ -124,8 +126,33 @@ public class AlarmServiceImpl implements AlarmService {
         alarm.accept();
         if (alarm.getType() == AlarmType.FRIEND) {
             friendshipService.accept(memberId, alarm.getFromMember().getId());
-        } else if (alarm.getType() == AlarmType.CONFERENCE) {
-            // TODO: 회의 참여 요청 알람인 경우, 추가적인 처리하기 (화상회의 url 반환 등)
+        } else if (alarm.getType() == AlarmType.PLAN) {
+            // TODO: 여행 계획 참여 요청 알람인 경우 (DB에 저장된 url의 planId 통해서 여행 계획 참여하기)
+            // ex. http://localhost:5173/meeting/view/4 여기서 4가 planId
+            // 알람에서 URL 추출
+            String url = alarm.getUrl();
+            // URL에서 planId 추출
+            Long planId = extractPlanIdFromUrl(url);
+
+            // 추출된 planId로 여행 계획 참여 처리
+            if (planId != null) {
+                planMemberService.acceptPlan(planId, memberId);
+            } else {
+                // planId 추출 실패 혹은 처리 오류 관련 로직
+                throw new RuntimeException("해당 여행 계획 ID가 없습니다.");
+            }
         }
+    }
+
+    /**
+     * URL에서 planId를 추출하는 메소드
+     * 예: "http://localhost:5173/meeting/view/4"에서 4를 추출
+     * @param url 여행 계획 참여 요청 알람 URL
+     * @return 추출된 planId
+     */
+    private Long extractPlanIdFromUrl(String url) {
+        String[] parts = url.split("/");
+        String lastPart = parts[parts.length - 1];
+        return Long.parseLong(lastPart);
     }
 }
