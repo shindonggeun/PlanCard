@@ -124,6 +124,7 @@ import UserVideo from "@/components/meeting/items/UserVideo.vue";
 import { createSessionApi, connectionSessionApi } from "@/api/webrtcApi";
 import { useAccountsStore } from '@/stores/accountsStore'; // accountsStore 가져오기
 import { useCookies } from 'vue3-cookies';
+import Stomp from 'webstomp-client';
 
 const { cookies } = useCookies();
 
@@ -459,7 +460,7 @@ async function replaceAudioTrack(deviceId) {
 
 
 
-
+const stompClient = ref(null);
 const mediaRecorder = ref(null); // MediaRecorder 인스턴스를 관리할 ref
 const socket = ref(null); // WebSocket 인스턴스를 관리할 ref
 
@@ -484,43 +485,41 @@ async function getAudioStreamFromPublisher(publisher) {
 }
 
 // 오디오 스트림을 캡쳐하여 WebSocket을 통해 백엔드로 전송합니다.
-async function captureAndSendAudio(publisher) {
-  try {
-    const serverURL = `${import.meta.env.VITE_VUE_WS_URL}`;
+async function captureAndSendAudio() {
+  const serverURL = `${import.meta.env.VITE_VUE_WS_URL}`;
+  
+  // WebSocket 연결 초기화 (이미 연결되어 있지 않다면 새로 연결)
+  if (!socket.value || socket.value.readyState === WebSocket.CLOSED) {
+    socket.value = new WebSocket(serverURL);
+  
+    socket.value.onopen = () => {
+      console.log("WebSocket 연결이 열렸습니다. (오디오 전송 할 WebSocket)");
+      
+      // 오디오 스트림 설정 및 MediaRecorder 초기화
+      getAudioStreamFromPublisher(publisher.value).then(audioStream => {
+        mediaRecorder.value = new MediaRecorder(audioStream, { mimeType: 'audio/webm;codecs=opus' });
+        
+        mediaRecorder.value.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            socket.value.send(event.data);
+            console.log("mediaRecorder 데이터 전송 확인: ", event.data);
+          }
+        };
 
-    const audioStream = await getAudioStreamFromPublisher(publisher);
-    const mediaRecorder = new MediaRecorder(audioStream, { mimeType: 'audio/webm' });
-    console.log("mediaRecorder 확인: ", mediaRecorder);
-    // WebSocket 연결을 초기화합니다.
-    const socket = new WebSocket(serverURL);
-
-    mediaRecorder.ondataavailable = (event) => {
-      if (event.data.size > 0 && socket.readyState === WebSocket.OPEN) {
-        socket.send(event.data);
-        console.log("mediaRecorder 이벤트 데이터 확인하기: ", event.data);
-      }
+        // 오디오 캡쳐 시작
+        mediaRecorder.value.start(5000);
+      }).catch(error => console.error("오디오 스트림 설정 오류: ", error));
     };
 
-    // 오디오 캡쳐를 시작합니다.
-    mediaRecorder.start(5000); // 매 5초마다 오디오 데이터를 전송합니다.
-
-    // WebSocket 연결 종료 시 미디어 레코더를 정지합니다.
-    socket.onclose = () => {
+    socket.value.onclose = () => {
+      console.log("WebSocket 연결이 종료되었습니다.");
+      // 연결이 종료될 때 미디어 레코더를 정지
       if (mediaRecorder.value && mediaRecorder.value.state !== 'inactive') {
         mediaRecorder.value.stop();
-
-        console.log("webSocket 연결 종료 됐으므로 미디어 레코더를 정지합니다.");
       }
     };
-  } catch (error) {
-    console.error('Error capturing or sending audio:', error);
   }
 }
-
-// 세션에 참여한 후 captureAndSendAudio 함수를 호출합니다.
-// joinSession().then(() => {
-//   captureAndSendAudio(publisher.value);
-// });
 
 const sttOn = ref(false);
 
@@ -529,7 +528,7 @@ const sttToggle = () => {
 
   if (sttOn.value) {
     // STT가 활성화된 경우, 오디오 캡처 및 WebSocket 연결 시작
-    captureAndSendAudio();
+    captureAndSendAudio(publisher.value);
   } else {
     // STT가 비활성화된 경우, 오디오 캡처 중지 및 WebSocket 연결 종료
     if (mediaRecorder.value && mediaRecorder.value.state !== 'inactive') {
