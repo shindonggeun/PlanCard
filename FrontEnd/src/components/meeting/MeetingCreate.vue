@@ -355,6 +355,10 @@ h3 {
   white-space: nowrap;
   justify-content: space-between;
   cursor: pointer;
+  transition: transform 0.3s ease;
+}
+#selectedFriend:hover {
+  transform: scale(1.03);
 }
 
 #FriendsDiv {
@@ -401,6 +405,7 @@ h2 {
   height: 20px;
   padding: 20px;
   line-height: 0px;
+  transition: transform 0.3s ease;
 }
 
 #createSubmit:hover {
@@ -426,5 +431,10 @@ h2 {
 #friendList {
   cursor: pointer;
   display: flex;
+  transition: transform 0.3s ease;
+}
+#friendList:hover {
+  transform: scale(1.03);
+
 }
 </style>

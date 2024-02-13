@@ -499,7 +499,7 @@ onBeforeMount(async () => {
                     <div class="btns">
                         <div class="btns-box">
                             <button class="btn quit-btn" @click="goMain">
-                                <i class="pi pi-times"></i> 끝내기
+                                <i class="pi pi-times"></i> 종료
                             </button>
                             <button class="btn save-btn" @click="planDetailSave">
                                 <i class="pi pi-check"></i> 저장
@@ -608,29 +608,37 @@ onBeforeMount(async () => {
     bottom: 2rem;
     width: 70px;
     height: 30px;
-    text-align: start;
-    padding-left: 8px;
-    padding-top: 3px;
+    text-align: center;
     z-index: 10;
+    padding-top: 3px;
+    
 }
 
 .quit-btn {
-    top: 10px;
+    top: 5px;
     right: 10px;
-    border: red 1px solid;
-    border-radius: 5px;
+    border: red 2.5px solid;
+    border-radius: 5cm;
     background-color: #fff;
     color: red;
+    transition: transform 0.3s ease;
 
+}
+.quit-btn:hover {
+    transform: scale(1.05);
 }
 
 .save-btn {
-    top: 10px;
+    top: 5px;
     right: 90px;
-    border: #3498DB 1px solid;
-    border-radius: 5px;
+    border: rgba(0, 0, 0, 0.1) 2.5px solid;
+    border-radius: 5cm;
     background-color: #3498DB;
     color: #fff;
+    transition: transform 0.3s ease;
+}
+.save-btn:hover {
+  transform: scale(1.05);
 }
 
 .drag-plan-list {
