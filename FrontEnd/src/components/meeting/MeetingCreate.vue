@@ -11,11 +11,24 @@
           <div style="width: 295px;">
             <h3>여행 이름</h3>
             <input type="text" class="box, card p-fluid font-content" id="tripTitleInput" v-model.trim="tripTitle" placeholder="여행 이름을 알려주세요">
-            <div>
+            <div class="font-content flex-auto">
               <h3>여행 일정 선택</h3>
               <Calendar v-model="selectedDates" dataFormat="yy/mm/dd" selectionMode="range" :manualInput="false"
-                showButtonBar locale="ko-KR" placeholder="여행 일정을 선택하세요" class="field box card p-fluid"
-                id="selectDateCalendar" />
+                locale="ko-KR" placeholder="여행 일정을 선택하세요" class="field box font-content"
+                id="selectDateCalendar"
+                showIcon
+                iconDisplay="input"
+                :inputStyle="{'border-radius':'5px', 'width':'280px'}"
+                :panelStyle="{
+                  'width':'200px', 
+                  'display':'flex', 
+                  'align-items':'center', 
+                  'justify-content':'center', 
+                  'font-family':'Pretendard Variable',
+                  'padding':'0'
+                  }"
+                  panelClass="panel"
+              />
             </div>
           </div>
           <div style="width: 295px;">
@@ -87,11 +100,11 @@
 
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, watch, onMounted, onUnmounted, nextTick } from "vue";
 import Calendar from 'primevue/calendar'
 import { useRouter } from "vue-router";
 import { planCreateApi } from "@/api/planApi"; // planApi.js에서 API 함수를 import
-import { friendListGetApi } from '@/api/friendApi';
+import { friendListGetApi, userSearchGetApi } from '@/api/friendApi';
 import { alarmPlanRequestApi } from "@/api/alarmApi";
 
 const router = useRouter();
@@ -140,14 +153,6 @@ const goMeeting = async () => {
     console.error("여행 계획 생성 중 오류가 발생했습니다:", error);
     alert("여행 계획 생성 중 오류가 발생했습니다.");
   }
-
-
-  // 화상회의 생성
-  // 여행계획 생성
-  // 여행 세부계획 생성
-  // 사람들에게 초대 요청
-  // 화상회의로 바로 이동
-  // router.push({ name: 'meeting-detail', params: { id: 1 } })
 }
 
 const fetchAlarmPlan = async (planId) => {
@@ -177,38 +182,24 @@ const fetchAlarmPlan = async (planId) => {
 }
 
 
-
-// 유저 리스트 dummy
-const users = ref([
-  { id: 12, name: '유저에요1', email: "user1@ssafy.com" },
-  { id: 13, name: '유저에요2', email: "user2@ssafy.com" },
-  { id: 14, name: '유저에요3', email: "user3@ssafy.com" },
-  { id: 15, name: '유저에요4', email: "user4@ssafy.com" },
-  { id: 16, name: '유저에요5', email: "user5@ssafy.com" },
-  { id: 17, name: '유저에요6', email: "user6@ssafy.com" },
-  { id: 18, name: '유저에요7', email: "user7@ssafy.com" },
-  { id: 19, name: '유저에요8', email: "user8@ssafy.com" },
-]);
-
 // 친구 검색어
 const searchText = ref("");
 
-
-// 검색어를 기반으로 친구 필터링
-const filteredUsers = computed(() => {
-  if (!searchText.value) {
-    return;
+const filteredUsers = ref([])
+watch(searchText, async(newV, oldV) => {
+  console.log('검색어가 바껴요', newV)
+  if (newV === "") {
+    filteredUsers.value = []
   } else {
-
-    // 유저 목록 중 이메일이 맞는 친구 필터링 (동명이인 이슈로 유저는 이름으로 서치 x)
-    const filteredUsersList = users.value.filter(user =>
-      user.email.toLowerCase().includes(searchText.value.toLowerCase())
-    );
-    // 합치기
-    const combinedList = [...filteredUsersList];
-    return combinedList;
+    const response = await userSearchGetApi(newV);
+    console.log(response)
+    if (response.data.dataHeader.successCode === 0) {
+      filteredUsers.value = response.data.dataBody
+      console.log('검색완?',filteredUsers.value)
+    }
   }
-});
+  }, { deep: true })
+
 
 // 친구를 선택하여 selectedFriends 배열에 추가
 const addFriend = (friend) => {
@@ -272,6 +263,26 @@ onUnmounted(() => {
 </script>
 
 
+<style>
+.panel, .p-datepicker-group-container{
+  margin: 0px;
+  padding: 0px;
+}
+.p-datepicker-header{
+  width: 236.56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.p-datepicker-calendar{
+  width: 100%;
+}
+.p-datepicker table td {
+  padding: 0.5rem;
+  cursor: pointer;
+
+}
+</style>
 
 <style scoped>
 h3 {
@@ -295,6 +306,9 @@ h3 {
   padding: 15px;
   margin-bottom: 10px;
 }
+#tripTitleInput:focus {
+  outline: 2px solid #3498DB;
+}
 
 #selectDateCalendar {
   background-color: rgba(245, 245, 245, 0.1);
@@ -302,12 +316,12 @@ h3 {
   display: flex;
   align-items: center;
   border: 1px solid rgba(52, 152, 219, 0.5);
+  border-radius: 10px;
   height: 30px;
   padding: 15px;
   margin-bottom: 10px;
   justify-content: center;
 }
-
 
 
 
@@ -320,6 +334,9 @@ h3 {
   padding: 15px;
   margin-bottom: 10px;
   margin-left: 5px;
+}
+#searchFriendsDiv:focus {
+  outline: 2px solid #3498DB;
 }
 
 #selectFriendsDiv {

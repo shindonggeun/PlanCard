@@ -8,7 +8,7 @@ import { WebsocketProvider } from 'y-websocket';
 // import * as Y from 'yjs';
 import _ from 'lodash'
 import { debounce } from "lodash";
-import { cardListGetApi } from '@/api/cardApi';
+import { cardListGetApi, cardCreateApi, placeSearchApi } from '@/api/cardApi';
 import { planDetailCreateApi, planDetailListGetApi } from '@/api/planApi';
 import { doc, yCardList, yPlanList } from '@/api/yjs';
 
@@ -415,6 +415,23 @@ async function planDetailSave() {
     }
 }
 
+// 여행지 검색
+const searchText = ref("")
+const searchPlaces = ref([])
+watch(searchText, async(newV, oldV) => {
+    if (newV === "") {
+        searchPlaces.value = []
+    } else {
+        console.log('검색어가 바껴요', newV, typeof(newV))
+        const response = await placeSearchApi(newV);
+        if (response.data.dataHeader.successCode === 0) {
+            searchPlaces.value = response.data.dataBody
+            console.log('검색완?',searchPlaces.value)
+        }
+    }
+    }, {deep:true})
+
+
 
 onBeforeMount(async () => {
     await fetchCardList();
@@ -442,13 +459,18 @@ const sttToggle = () => {
             <div class="drag-list">
                 <ItemTitle class="title" @update-dates="handleUpdateDates"></ItemTitle>
                 <h6 style="margin-left: 11%;">카드 목록</h6>
-                <!-- {{ cardList }} -->
-                <!-- <div class="font-content">
-                    <div>카드정렬 {{ cardList }}</div>
-                    <div>카드원본 {{ cardListRaw.map(data=>data.cardId) }}</div>
-                    <div>{{ cardHidden }}</div>
-                    <div>{{ planList.map(item=>[item.day, item.orderNumber]) }}</div>
-                </div> -->
+                
+                <!-- 검색 -->
+                <div class="searchPlace">
+                    <input type="text" v-model="searchText" placeholder="너뭐야">
+                    <div class="searchResult">
+                        <div v-for="place in searchPlaces" :key="place.placeId">
+                            {{ place.placeName }}
+                        </div>
+                    </div>
+                </div>
+                <!-- 검색 -->
+                
                 <div>
                     <draggable class="DragArea list-group" :list="cardList"
                         :group="{ name: 'card', pull: 'clone', put: false }" item-key="id" @change="onCardMove">
