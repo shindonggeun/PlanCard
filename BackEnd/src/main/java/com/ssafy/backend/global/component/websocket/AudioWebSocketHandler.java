@@ -8,7 +8,11 @@ import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.BinaryWebSocketHandler;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,7 +29,11 @@ public class AudioWebSocketHandler extends BinaryWebSocketHandler {
         byte[] audioData = new byte[payload.remaining()];
         payload.get(audioData);
 
-        // STT 서비스를 통해 오디오 데이터를 텍스트로 변환하고 결과를 처리
+
+        // 변환된 오디오 데이터를 STT 서비스에 전달
         sttService.processAudioData(audioData);
+
     }
+
+
 }

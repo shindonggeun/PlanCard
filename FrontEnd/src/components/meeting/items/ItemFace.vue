@@ -510,10 +510,13 @@ function closeAudioWebSocket() {
     }
 
 
-// 오디오 스트림을 캡쳐하고 STOMP를 통해 서버로 전송합니다.
+// 오디오 스트림을 캡쳐하고 AudioWebSocket을 통해 서버로 전송합니다.
 async function captureAndSendAudio(publisher) {
   try {
     const audioStream = await getAudioStreamFromPublisher(publisher);
+    // 오디오 스트림 가져오기
+    // const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
     mediaRecorder.value = new MediaRecorder(audioStream, { mimeType: 'audio/webm' });
     console.log("MediaRecorder 객체 생성됨:", mediaRecorder.value);
 
@@ -521,7 +524,7 @@ async function captureAndSendAudio(publisher) {
       if (event.data.size > 0 && webSocket.value && webSocket.value.readyState === WebSocket.OPEN) {
         const arrayBuffer = await event.data.arrayBuffer();
         webSocket.value.send(arrayBuffer); // WebSocket을 통해 바이너리 데이터 전송
-        console.log("서버로 오디오 데이터 전송됨");
+        console.log("서버로 오디오 데이터 전송됨: ", arrayBuffer);
       }
     };
 
