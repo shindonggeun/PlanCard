@@ -146,6 +146,7 @@ input:focus{
   width: 100%;
   height: 62vh;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 .place-list{
   margin-top: 0.5rem ;
