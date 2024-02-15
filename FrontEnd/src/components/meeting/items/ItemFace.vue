@@ -99,6 +99,7 @@
       <button class="btn sttBtn" @click="sttToggle()">
         {{ sttOn ? "stt OFF" : "stt ON" }}
       </button>
+
     </div>
 
 
@@ -114,7 +115,7 @@ import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/meeting/items/UserVideo.vue";
 import { createSessionApi, connectionSessionApi } from "@/api/webrtcApi";
 import { useAccountsStore } from '@/stores/accountsStore'; // accountsStore 가져오기
-
+import RecordRTC from 'recordrtc';
 
 // OpenVidu objects
 const OV = ref(undefined)
@@ -449,6 +450,8 @@ async function replaceAudioTrack(deviceId) {
 
 const webSocket = ref(null);
 const mediaRecorder = ref(null); // MediaRecorder 인스턴스를 관리할 ref
+const recorder = ref(null);
+
 
 // OpenVidu Publisher 객체에서 오디오 스트림을 얻습니다.
 async function getAudioStreamFromPublisher(publisher) {
@@ -460,7 +463,7 @@ async function getAudioStreamFromPublisher(publisher) {
   const mediaStream = publisher.stream.mediaStream;
   // console.log("mediaStream 확인: ", mediaStream);
   const audioTracks = mediaStream.getAudioTracks();
-  // console.log("audioTracks 확인하기: ", audioTracks);
+  console.log("audioTracks 확인하기: ", audioTracks);
 
   // 오디오 트랙이 존재하는지 확인
   if (audioTracks.length === 0) {
@@ -475,58 +478,108 @@ function startAudioWebSocket() {
   const serverURL = `${import.meta.env.VITE_VUE_AUDIO_WS_URL}`;
   webSocket.value = new WebSocket(serverURL);
 
-  webSocket.value.onopen = function(event) {
+  webSocket.value.onopen = function (event) {
     console.log("Audio WebSocket is open now.", event);
   };
 
-  webSocket.value.onmessage = function(event) {
+  webSocket.value.onmessage = function (event) {
     console.log("Received message from server", event.data);
   };
 
-  webSocket.value.onclose = function(event) {
+  webSocket.value.onclose = function (event) {
     console.log("Audio WebSocket is closed now.", event);
   };
 
-  webSocket.value.onerror = function(event) {
+  webSocket.value.onerror = function (event) {
     console.error("Audio WebSocket error observed:", event);
   };
 }
 
 // 웹소켓 종료 메서드
 function closeAudioWebSocket() {
-      if (webSocket.value) {
-        webSocket.value.close();
-        webSocket.value = null;
-      }
-    }
+  if (webSocket.value) {
+    webSocket.value.close();
+    webSocket.value = null;
+  }
+}
+
 
 
 // 오디오 스트림을 캡쳐하고 AudioWebSocket을 통해 서버로 전송합니다.
-async function captureAndSendAudio(publisher) {
-  try {
-    const audioStream = await getAudioStreamFromPublisher(publisher);
-    // 오디오 스트림 가져오기
-    // const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+// async function captureAndSendAudio(publisher) {
+//   try {
+//     const audioStream = await getAudioStreamFromPublisher(publisher);
+//     // 오디오 스트림 가져오기
+//     // const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+//     const options = {
+//       audioBitsPerSecond: 128000,
+//       mimeType: 'audio/webm'
+//     };
 
-    mediaRecorder.value = new MediaRecorder(audioStream, { mimeType: 'audio/webm' });
-    console.log("MediaRecorder 객체 생성됨:", mediaRecorder.value);
+//     mediaRecorder.value = new MediaRecorder(audioStream, options);
+//     console.log("MediaRecorder 객체 생성됨:", mediaRecorder.value);
 
-    mediaRecorder.value.ondataavailable = async (event) => {
-      if (event.data.size > 0 && webSocket.value && webSocket.value.readyState === WebSocket.OPEN) {
-        const arrayBuffer = await event.data.arrayBuffer();
-        webSocket.value.send(arrayBuffer); // WebSocket을 통해 바이너리 데이터 전송
-        console.log("서버로 오디오 데이터 전송됨: ", arrayBuffer);
+//     mediaRecorder.value.ondataavailable = async (event) => {
+//       if (event.data.size > 0) {
+//         // webm 오디오를 wav로 변환
+//         const arrayBuffer = await convertWebmToWav(event.data);
+//         // WebSocket이 열려 있고, 준비 상태인 경우 변환된 오디오 데이터 전송
+//         if (event.data.size > 0 && webSocket.value && webSocket.value.readyState === WebSocket.OPEN) {
+//           webSocket.value.send(arrayBuffer); // WebSocket을 통해 바이너리 데이터 전송
+//           console.log("서버로 오디오 데이터 전송됨: ", arrayBuffer);
+//         }
+//       }
+//     };
+
+//     // 5초 간격으로 데이터 캡쳐 시작
+//     mediaRecorder.value.start(5000);
+//     console.log("MediaRecorder 캡쳐 시작됨");
+
+//   } catch (error) {
+//     console.error('Error capturing audio:', error);
+//   }
+// }
+
+// 실시간 오디오 캡쳐 시작
+function startAudioCapture() {
+  // 오디오 캡처 설정
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+    recorder.value = new RecordRTC(stream, {
+      type: 'audio',
+      mimeType: 'audio/webm;codecs=opus', 
+      timeSlice: 3000, // 4초마다 데이터를 전송
+      ondataavailable: blob => {
+        if (webSocket.value && webSocket.value.readyState === WebSocket.OPEN) {
+          console.log("음성 데이터 확인: ", blob);
+          webSocket.value.send(blob); // Blob 데이터를 웹소켓을 통해 전송
+        }
       }
-    };
+    });
 
-    // 5초 간격으로 데이터 캡쳐 시작
-    mediaRecorder.value.start(5000);
-    console.log("MediaRecorder 캡쳐 시작됨");
+    recorder.value.startRecording();
+  }).catch(error => console.error("오디오 캡처 시작 실패:", error));
+}
 
-  } catch (error) {
-    console.error('Error capturing audio:', error);
+// 웹소켓 연결 종료 및 오디오 캡처 중지
+function stopAudioCapture() {
+  if (recorder.value) {
+    recorder.value.stopRecording(() => {
+      let blob = recorder.value.getBlob();
+      if (webSocket.value && webSocket.value.readyState === WebSocket.OPEN) {
+        webSocket.value.send(blob);
+      }
+      recorder.value.destroy();
+      recorder.value = null;
+    });
+  }
+
+  if (webSocket.value) {
+    webSocket.value.close();
+    webSocket.value = null;
   }
 }
+
+
 
 const sttOn = ref(false);
 
@@ -535,20 +588,22 @@ const sttToggle = async () => {
 
   if (sttOn.value) {
     // STT가 활성화된 경우, 오디오 캡처 시작
-    await captureAndSendAudio(publisher.value);
+    // await captureAndSendAudio(publisher.value);
+    startAudioCapture();
   } else {
     // STT 비활성화
-    mediaRecorder.value.stop();
-    mediaRecorder.value = null;
+    recorder.value.destroy();
+    recorder.value = null;
   }
 }
+
 
 onMounted(() => {
   startAudioWebSocket();
 });
 
 onUnmounted(() => {
-  closeAudioWebSocket();
+  stopAudioCapture();
 })
 </script>
 
