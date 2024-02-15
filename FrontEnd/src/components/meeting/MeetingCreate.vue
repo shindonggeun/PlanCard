@@ -11,7 +11,7 @@
           <div style="width: 295px;">
             <h3>여행 이름</h3>
             <input type="text" class="box, card p-fluid font-content" id="tripTitleInput" v-model.trim="tripTitle" placeholder="여행 이름을 알려주세요">
-            <div class="font-content flex-auto">
+            <div>
               <h3>여행 일정 선택</h3>
               <Calendar v-model="selectedDates" dataFormat="yy/mm/dd" selectionMode="range" :manualInput="false"
                 locale="ko-KR" placeholder="여행 일정을 선택하세요" class="field box font-content"
@@ -100,12 +100,13 @@
 
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, watch, onMounted, onUnmounted, nextTick, getCurrentInstance } from "vue";
 import Calendar from 'primevue/calendar'
 import { useRouter } from "vue-router";
 import { planCreateApi } from "@/api/planApi"; // planApi.js에서 API 함수를 import
 import { friendListGetApi, userSearchGetApi } from '@/api/friendApi';
 import { alarmPlanRequestApi } from "@/api/alarmApi";
+const { emit } = getCurrentInstance();
 
 const router = useRouter();
 
@@ -136,8 +137,10 @@ const goMeeting = async () => {
       (response) => {
         // MeetingCreate.vue 내 goMeeting 함수 수정 부분
         // 성공 후 created 이벤트를 발생시키는 부분
+
         if (response.data.dataHeader.successCode === 0) {
           alert("여행 계획이 성공적으로 생성되었습니다.");
+          emit('closeMeetingCreate');
           const planId = response.data.dataBody;
           fetchAlarmPlan(planId);
           router.push(`/meeting/view/${planId}`); // 생성된 planId를 사용하여 라우팅
@@ -154,9 +157,10 @@ const goMeeting = async () => {
 }
 
 const fetchAlarmPlan = async (planId) => {
-  // 친구들에게 여행 요청 알람 보내기
+  // 친구들에게  여행 요청알람 보내기
   const alarmRequests = selectedFriends.value.map(friend => ({
         friendId: friend.friendId,
+        // memberID; friend.memberId,
         type: "PLAN",
         planName: tripTitle.value,
         url: `${window.location.origin}/meeting/view/${planId}`

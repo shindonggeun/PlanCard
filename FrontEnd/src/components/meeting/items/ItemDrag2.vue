@@ -2,7 +2,7 @@
 import ItemTitle from '@/components/meeting/items/ItemTitle.vue'
 import draggable from "@/vuedraggable";
 import KaKaoMap from '@/components/common/map/KaKaoMap.vue'
-import { ref, computed, watch, onMounted, onBeforeMount } from "vue";
+import { ref, computed, watch, onMounted, onBeforeMount, getCurrentInstance } from "vue";
 import { useRoute, useRouter } from 'vue-router';
 import { WebsocketProvider } from 'y-websocket';
 // import * as Y from 'yjs';
@@ -568,9 +568,9 @@ const truncateName = (name) => {
                     <!-- 버튼 -->
                     <div class="btns">
                         <div class="btns-box">
-                            <button class="btn sttBtn" @click="sttToggle()">
+                            <!-- <button class="btn sttBtn" @click="sttToggle()">
                                 {{ sttOn ? "stt OFF" : "stt ON" }}
-                            </button>
+                            </button> -->
                             <button class="btn quit-btn" @click="goMain">
                                 <i class="pi pi-times"></i> 종료
                             </button>
