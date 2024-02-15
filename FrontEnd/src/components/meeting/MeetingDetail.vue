@@ -136,8 +136,7 @@ const whatIsActive = (tab) => {
 }
 
 .itemFace {
-    height: 30vh;
-    width: 30vw;
+  /* height: 30%; */
 }
 .chat {
     /* position: absolute; */
@@ -148,18 +147,11 @@ const whatIsActive = (tab) => {
     left: 0px;
 }
 .search{
-    position: absolute;
+    /* position: absolute; */
     background-color: #dfecf7 ;
-    height: 70vh;
+    /* height: 70vh; */
     bottom: 0px;
     width: 30vw;
-    left: 0px;
-}
-.search{
-    position: absolute;
-    background-color: #dfecf7 ;
-    height: 100%;
-    bottom: 0px;
     left: 0px;
 }
 </style>

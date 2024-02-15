@@ -446,6 +446,14 @@ const sttToggle = () => {
     }
 }
 
+// 20글자를 넘어가면 요약 ("...")
+const truncateName = (name) => {
+  if (name.length > 20) {
+    return name.slice(0, 20) + "...";
+  } else {
+    return name;
+  }
+}
 </script>
 
 <template>
@@ -464,11 +472,11 @@ const sttToggle = () => {
                             <div >
                                 <div class="list-group-item font-content">
                                     <div class="d-flex align-items-center gap-3 justify-content-center">
-                                        <div class="card-card-list d-flex justify-content-start gap-3 align-items-center">
+                                        <div class="card-card-list d-flex justify-content-start gap-3 align-items-center" id="card1">
                                             <img class="card-image" :src="element.placeImage" alt="">
                                             <div style="display: flex; flex-direction: column;">
                                                 <div style="font-weight: bold;">{{ element.placeName }}</div>
-                                                <div>{{ element.placeAddress }}</div>
+                                                <div>{{ truncateName(element.placeAddress) }}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -495,8 +503,8 @@ const sttToggle = () => {
                     <!-- 여행 상세 계획 -->
                     <div class="plan-list-margin">
                         <div class="drag-plan-list" v-for="(fixCard, index) in days" :key="index">
-                            <h6 style="cursor: pointer; margin-left: 6%;" @click="changeDate(index)">Day {{ index + 1 }}
-                            </h6>
+                            <hr style="width: 90%; margin: 0 auto; border: 1.5px solid; opacity: 0.1; border-radius: 10cm;">
+                            <h6 id="travelDay" @click="changeDate(index)">Day {{ index + 1 }}</h6>
                             <div>
                                 <draggable class="DragArea list-group" :list="fixCard" :group="{ name: 'card', put: true }"
                                     item-key="id" @change="onCardMove($event, index)">
@@ -506,8 +514,7 @@ const sttToggle = () => {
                                             <div class="d-flex align-items-center gap-3 justify-content-center"
                                                 style="position: relative; margin-bottom: 10px;">
                                                 <div class="orderNumber">{{ index + 1 }}</div>
-                                                <div
-                                                    class="card-detail d-flex justify-content-start gap-3 align-items-center">
+                                                <div class="card-detail d-flex justify-content-start gap-3 align-items-center" id="card2">
                                                     <img class="card-image" :src="element.placeImage" alt="">
                                                     <div>{{ element.placeName }}</div>
                                                 </div>
@@ -738,4 +745,30 @@ const sttToggle = () => {
     display: inline-block;
     text-align: center;
 }
+
+#travelDay {
+  cursor: pointer;
+  margin-left: 6%;
+  transition: transform 0.3s ease;
+}
+#travelDay:hover {
+  transform: scale(1.05);
+}
+
+#card1 {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+#card1:hover {
+  transform: scale(1.05);
+}
+
+#card2 {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+#card2:hover {
+  transform: scale(1.05);
+}
+
 </style>

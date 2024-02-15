@@ -6,7 +6,7 @@
                     <div class="background-image">
                         <div class="first-text-content">
                             <div style="font-size: 1.6rem;">
-                                <div>친구, 연인, 가족, 나와 함께 쓰는 여행 플래너</div>
+                                <div id="pageTop">친구, 연인, 가족, 나와 함께 쓰는 여행 플래너</div>
                             </div>
                             <div style="font-size: 5rem; color: #3498DB;">플랜카드</div>
                             <div style="font-size: 1.2rem;">플랜카드로 모두 함께 즐거운 여행을 만들어요.</div>
@@ -88,6 +88,9 @@
                         <div style="text-align: center; margin-top: 1rem; font-size: 2rem; width: 300px;">
                             <div>다같이 쓰는 플랜카드,</div>
                             <div>한번 시작해볼까요? </div>
+                            <div>
+                                <a href="#pageTop">맨위로가즈아</a>
+                            </div>
                         </div>
                     </div>
                 </div>
