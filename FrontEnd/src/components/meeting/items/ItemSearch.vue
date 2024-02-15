@@ -83,7 +83,8 @@ async function addToCardList(place) {
             <div 
             :class="place-list" 
             v-for="place in searchPlaces" 
-            :key="place.placeId">
+            :key="place.placeId"
+            id="placeThing">
               <div @click.self.prevent 
               :class="{'card-in':true, 
               'active':cardListRaw.findIndex(card => card.placeName === place.placeName)!==-1, 
@@ -162,5 +163,15 @@ input:focus{
 .card-in{
   color: #3498DB;
   cursor: default;
+}
+
+#placeThing {
+  padding-left: 15px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  margin: 5px 0px 5px 0px;
+}
+#placeThing:hover {
+  transform: scale(1.05);
 }
 </style>

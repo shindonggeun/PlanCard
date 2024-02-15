@@ -19,10 +19,6 @@
               <p id="signUpGuide">아직 회원이 아니신가요?</p>
               <button id="signUpBtn" @click="goSignUp()">[회원가입]</button>
             </div>
-            <div id="guide2">
-              <p id="pwSearchGuide">비밀번호를 잊어버렸나요?</p>
-              <button id="pwSearchBtn">[비밀번호 찾기]</button>
-            </div>
             <div class="card p-fluid" id="socialLogin">
               <p id="socialLoginGuide">다른 방법으로 로그인</p>
               <hr id="separator">
@@ -197,7 +193,7 @@ const goSignUp = function () {
 
   #guide1 {
     display: flex;
-    margin-top: 10px;
+    margin-top: 20px;
   }
   #signUpGuide {
     color: rgba(0, 0, 0, 0.3);
@@ -213,23 +209,7 @@ const goSignUp = function () {
     transform: scale(1.05);
     border-color: #3498db;
   }
-  #guide2 {
-    display: flex;
-  }
-  #pwSearchGuide {
-    color: rgba(0, 0, 0, 0.3);
-    /* font-weight: bold; */
-    margin: 0;
-    margin-right: 10px;
-  }
-  #pwSearchBtn {
-    /* font-weight: bold; */
-    color: #3498db;
-  }
-  #pwSearchBtn:hover {
-    transform: scale(1.05);
-    border-color: #3498db;
-  }
+ 
 
 
   #socialLogin {
