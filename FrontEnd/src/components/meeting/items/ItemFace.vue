@@ -96,9 +96,9 @@
       </div> -->
 
 
-      <button class="btn sttBtn" @click="sttToggle()">
+      <!-- <button class="btn sttBtn" @click="sttToggle()">
         {{ sttOn ? "stt OFF" : "stt ON" }}
-      </button>
+      </button> -->
 
     </div>
 
@@ -581,29 +581,13 @@ function stopAudioCapture() {
 
 
 
-const sttOn = ref(false);
-
-const sttToggle = async () => {
-  sttOn.value = !sttOn.value;
-
-  if (sttOn.value) {
-    // STT가 활성화된 경우, 오디오 캡처 시작
-    // await captureAndSendAudio(publisher.value);
-    startAudioCapture();
-  } else {
-    // STT 비활성화
-    recorder.value.destroy();
-    recorder.value = null;
-  }
-}
-
 
 onMounted(() => {
-  startAudioWebSocket();
+  // startAudioWebSocket();
 });
 
 onUnmounted(() => {
-  stopAudioCapture();
+  // stopAudioCapture();
 })
 </script>
 
