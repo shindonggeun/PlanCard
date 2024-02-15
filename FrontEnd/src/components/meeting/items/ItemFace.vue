@@ -72,17 +72,8 @@
       <hr>
 
 
-
-
-
-
-
-
-
-
-
       <!-- 모든 캠 -->
-      <div class="card p-fluid" id="video-container">
+      <div :class="{'card': true, 'p-fluid': true, 'video-container': true, 'scrollable': subscribersComputed.length > 3 }">
         <UserVideo :stream-manager="publisherComputed" @click.native="updateMainVideoStreamManager(publisher)" />
 
         <UserVideo v-for="sub in subscribersComputed" :key="sub.stream.connection.connectionId" :stream-manager="sub"
@@ -566,23 +557,24 @@ onUnmounted(() => {
   margin: 0;
 }
 
-#video-container {
+.video-container {
   width: 100%;
-  /* 컨테이너의 너비를 부모 요소의 100%로 설정 */
   height: auto;
-  /* 높이를 자동으로 조정 */
-  overflow: auto;
-  /* 내용이 넘칠 경우 숨김 처리 */
   position: relative;
-  /* 비디오 포지셔닝을 위한 상대 위치 지정 */
 
   display: flex;
-
+  flex-wrap: wrap;
+  justify-content: center;
   padding: 5px;
   padding-bottom: 0;
 
   margin-bottom: 0;
 }
+.video-container.scrollable {
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: 250px;
+  }
 
 .video {
   width: 100%;
@@ -614,10 +606,20 @@ onUnmounted(() => {
 .sttBtn {
   top: 5px;
   right: 170px;
+
+  width: 70px;
+  height: 30px;
+
   border: rgba(0, 0, 0, 0.1) 2.5px solid;
   border-radius: 5cm;
   background-color: #FFC0CB;
   color: #fff;
+
+  text-align: center;
+  padding-top: 3px;
+  z-index: 10;
+
   transition: transform 0.3s ease;
+
 }
 </style>

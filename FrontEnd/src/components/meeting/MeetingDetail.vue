@@ -125,13 +125,12 @@ const whatIsActive = (tab) => {
 }
 
 .itemFace {
-    height: 30vh;
-    width: 30vw;
+  /* height: 30%; */
 }
 .chat {
-    position: absolute;
+    /* position: absolute; */
     background-color: #dfecf7 ;
-    height: 70vh;
+    /* height: 70vh; */
     bottom: 0px;
     width: 30vw;
     left: 0px;
