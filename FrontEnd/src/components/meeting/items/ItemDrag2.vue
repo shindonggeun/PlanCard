@@ -462,7 +462,7 @@ const sttToggle = async () => {
         const text = transcript.split(" "); // 변환된 텍스트를 공백단위로 끊어서 배열로 저장
         // console.log(text);
         const lastWord = text[text.length - 1]; // 배열의 맨 마지막 요소(단어) 추출
-  
+        planStore.sttSearchText = lastWord
         console.log(lastWord); // 맨 마지막 단어 
       };
 
